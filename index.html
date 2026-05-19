@@ -171,10 +171,17 @@
             <div class="bg-pink-50 border border-pink-100 rounded-xl p-5 mb-6">
                 <p class="text-xs text-pink-500 font-semibold mb-1">กิจกรรม:</p>
                 <h3 id="confirm-act-name" class="text-gray-800 font-bold text-lg mb-4">-</h3>
+                
+                <!-- ส่วนที่เพิ่มมา: เลือกรอบเวลา -->
+                <p class="text-xs text-pink-500 font-semibold mb-2">เลือกรอบเวลา:</p>
+                <div id="time-slot-container" class="grid grid-cols-2 gap-2 mb-4">
+                    <!-- ปุ่มเวลาจะมาแทรกตรงนี้ -->
+                </div>
+        
                 <p class="text-xs text-pink-500 font-semibold mb-1">ผู้จอง:</p>
                 <p id="confirm-user-name" class="text-gray-700 font-medium">-</p>
             </div>
-            <button onclick="submitBooking(this)" class="w-full theme-pink text-white py-3.5 rounded-xl font-semibold shadow-md">✅ ยืนยันการจอง</button>
+            <button onclick="submitBooking(this)" id="btn-submit-booking" disabled class="w-full bg-gray-300 text-white py-3.5 rounded-xl font-semibold shadow-md transition">✅ ยืนยันการจอง</button>
             <button onclick="showPage('book')" class="w-full bg-gray-100 text-gray-600 py-3 rounded-xl font-medium mt-3">ยกเลิก</button>
         </div>
 
@@ -216,6 +223,7 @@
         let currentDate = new Date();
         const monthNames = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
         let currentLineUid = ""; 
+        let selectedTimeSlot = null;
 
         async function callAPI(action, data = {}) {
             try {
@@ -493,18 +501,62 @@
         }
 
         function handleBookClick(name) {
-            pendingActivity = name; 
+            const act = allActivities.find(a => a.name === name);
+            if(!act) return;
+            
+            pendingActivity = act; 
+            selectedTimeSlot = null; // รีเซ็ตรอบเวลาทุกครั้งที่กดเข้าใหม่
+            document.getElementById('btn-submit-booking').disabled = true;
+            document.getElementById('btn-submit-booking').className = "w-full bg-gray-300 text-white py-3.5 rounded-xl font-semibold shadow-md transition";
+        
             if(!loggedInUser) { showPage('login'); } 
             else {
-                document.getElementById('confirm-act-name').innerText = name;
+                document.getElementById('confirm-act-name').innerText = act.name;
                 document.getElementById('confirm-user-name').innerText = loggedInUser.name;
+                
+                // สร้างปุ่มรอบเวลา
+                let slotsHtml = act.slots.map(slot => {
+                    if (slot.remaining > 0) {
+                        return `<button onclick="selectSlot(this, '${slot.time}')" class="slot-btn border border-pink-200 text-pink-600 py-2 rounded-lg text-sm font-medium hover:bg-pink-100">${slot.time} (ว่าง ${slot.remaining})</button>`;
+                    } else {
+                        return `<button disabled class="bg-gray-100 text-gray-400 py-2 rounded-lg text-sm font-medium cursor-not-allowed">${slot.time} (เต็ม)</button>`;
+                    }
+                }).join('');
+                document.getElementById('time-slot-container').innerHTML = slotsHtml;
+        
                 showPage('confirm');
             }
         }
 
+        function selectSlot(btn, time) {
+    // รีเซ็ตสีปุ่มอื่น
+            document.querySelectorAll('.slot-btn').forEach(b => {
+                b.classList.remove('bg-pink-500', 'text-white');
+                b.classList.add('text-pink-600');
+            });
+            // ไฮไลต์ปุ่มที่เลือก
+            btn.classList.add('bg-pink-500', 'text-white');
+            btn.classList.remove('text-pink-600');
+            
+            selectedTimeSlot = time;
+            
+            // เปิดปุ่มยืนยัน
+            const submitBtn = document.getElementById('btn-submit-booking');
+            submitBtn.disabled = false;
+            submitBtn.className = "w-full theme-pink text-white py-3.5 rounded-xl font-semibold shadow-md transition";
+        }
+        
         async function submitBooking(btn) {
-            btn.disabled = true; btn.innerHTML = "กำลังจอง...";
-            const res = await callAPI("saveBooking", { user: loggedInUser, activity: pendingActivity });
+            if (!selectedTimeSlot) return alert("กรุณาเลือกรอบเวลาก่อนครับ");
+            
+            btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังจอง...';
+            // ส่งข้อมูล activityName และ timeSlot ไปที่ API
+            const res = await callAPI("saveBooking", { 
+                user: loggedInUser, 
+                activityName: pendingActivity.name,
+                timeSlot: selectedTimeSlot
+            });
+            
             btn.disabled = false; btn.innerText = "✅ ยืนยันการจอง";
             if(res.success) {
                 document.getElementById('show-booking-id').innerText = res.bookingId;
