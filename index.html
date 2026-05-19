@@ -338,14 +338,14 @@
 
             let html = list.map(a => {
                 let isBooked = myBookedActivities.includes(a.name);
-                let badgeHtml = a.remaining > 0 
-                    ? `<span class="bg-green-100 text-green-700 text-[10px] px-2 py-1 rounded font-bold">ว่าง ${a.remaining} ที่</span>` 
-                    : `<span class="bg-red-100 text-red-600 text-[10px] px-2 py-1 rounded font-bold">เต็มแล้ว</span>`;
-                
-                let btnHtml = '';
-                if(isBooked) {
-                    btnHtml = `<button disabled class="w-full bg-green-50 text-green-600 py-2.5 rounded-lg font-bold border border-green-200 cursor-not-allowed shadow-sm">✅ จองเรียบร้อย</button>`;
-                } else if (a.remaining > 0) {
+                let badgeHtml = a.totalRemaining > 0 
+                ? `<span class="bg-green-100 text-green-700 text-[10px] px-2 py-1 rounded font-bold">ว่าง ${a.totalRemaining} ที่</span>` 
+                : `<span class="bg-red-100 text-red-600 text-[10px] px-2 py-1 rounded font-bold">เต็มแล้ว</span>`;
+                            
+            let btnHtml = '';
+            if(isBooked) {
+                btnHtml = `<button disabled class="w-full bg-green-50 text-green-600 py-2.5 rounded-lg font-bold border border-green-200 cursor-not-allowed shadow-sm">✅ จองเรียบร้อย</button>`;
+            } else if (a.totalRemaining > 0) {
                     btnHtml = `<button onclick="handleBookClick('${a.name}')" class="w-full theme-pink text-white py-2.5 rounded-lg font-medium shadow-sm hover:bg-pink-700 transition">จองทันที</button>`;
                 } else {
                     btnHtml = `<button disabled class="w-full bg-gray-200 text-gray-400 py-2.5 rounded-lg font-medium cursor-not-allowed">เต็มแล้ว</button>`;
