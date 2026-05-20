@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goodday Member</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Sarabun', sans-serif; background-color: #F3F4F6; }
+        .theme-pink { background-color: #d81b60; }
+        .theme-text { color: #d81b60; }
+        .theme-border { border-color: #d81b60; }
+        .page-section { display: none; animation: fadeIn 0.3s; }
+        .page-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* สไตล์ Input ให้อ่านง่าย ชัดเจน */
+        .form-input {
+            width: 100%; border: 1px solid #D1D5DB; border-radius: 0.75rem; padding: 0.75rem;
+            font-family: 'Sarabun', sans-serif; font-size: 1rem; color: #374151; transition: border-color 0.2s;
+        }
+        .form-input:focus { outline: none; border-color: #d81b60; box-shadow: 0 0 0 1px #d81b60; }
+        .form-label { display: block; font-size: 0.875rem; font-weight: 600; color: #4B5563; margin-bottom: 0.25rem; }
+    </style>
+</head>
+<body class="antialiased text-gray-800">
+
+    <div class="max-w-md mx-auto bg-white min-h-screen shadow-lg relative pb-20">
+        
+        <div class="theme-pink text-white p-4 sticky top-0 z-50 shadow-md flex justify-between items-center">
+            <h1 class="text-xl font-bold tracking-wide"><i class="fa-solid fa-address-card mr-2"></i>ระบบสมาชิก</h1>
+            <div id="loading-header" class="text-sm"><i class="fa-solid fa-spinner fa-spin"></i></div>
+        </div>
+
+        <div id="page-login" class="page-section p-6 pt-10">
+            <div class="text-center mb-8">
+                <div class="w-20 h-20 bg-pink-50 text-pink-500 rounded-full flex items-center justify-center text-4xl mx-auto mb-4"><i class="fa-solid fa-user-lock"></i></div>
+                <h2 class="text-2xl font-bold theme-text">เข้าสู่ระบบสมาชิก</h2>
+                <p class="text-gray-500 mt-2">กรุณาเข้าสู่ระบบเพื่อใช้งาน</p>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="form-label">เบอร์โทรศัพท์ หรือ อีเมล</label>
+                    <input type="text" id="login-id" class="form-input" placeholder="กรอกข้อมูล...">
+                </div>
+                <div>
+                    <label class="form-label">รหัสผ่าน</label>
+                    <input type="password" id="login-pass" class="form-input" placeholder="กรอกรหัสผ่าน...">
+                </div>
+                <div id="login-error" class="bg-red-50 text-red-600 text-sm p-3 rounded-lg text-center font-medium hidden"></div>
+                
+                <button onclick="doLogin(this)" class="w-full theme-pink text-white py-3.5 rounded-xl font-bold text-lg shadow-md hover:bg-pink-700 transition">เข้าสู่ระบบ</button>
+                <div class="text-center mt-4">
+                    <p class="text-gray-600">ยังไม่เป็นสมาชิก?</p>
+                    <button onclick="showPage('reg-1')" class="mt-2 w-full bg-white border-2 theme-border theme-text py-3 rounded-xl font-bold text-lg hover:bg-pink-50 transition">สมัครสมาชิกใหม่</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="page-reg-1" class="page-section p-6 pt-6">
+            <div class="flex items-center mb-6">
+                <button onclick="showPage('login')" class="w-10 h-10 bg-gray-100 rounded-full text-gray-600 mr-3"><i class="fa-solid fa-arrow-left"></i></button>
+                <h2 class="text-2xl font-bold theme-text">ข้อมูลส่วนตัว (1/2)</h2>
+            </div>
+            
+            <div class="space-y-4">
+                <div class="grid grid-cols-3 gap-3">
+                    <div class="col-span-1">
+                        <label class="form-label">คำนำหน้า *</label>
+                        <input type="text" id="reg-prefix" class="form-input" placeholder="นาย/นาง/นางสาว">
+                    </div>
+                    <div class="col-span-2">
+                        <label class="form-label">ชื่อ-นามสกุล *</label>
+                        <input type="text" id="reg-name" class="form-input" placeholder="ชื่อ นามสกุล">
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="form-label">ปีเกิด (พ.ศ.)</label>
+                        <input type="number" id="reg-birth" class="form-input" placeholder="เช่น 2530">
+                    </div>
+                    <div>
+                        <label class="form-label">อายุ</label>
+                        <input type="number" id="reg-age" class="form-input" placeholder="เช่น 35">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="form-label">เบอร์โทรศัพท์ (ใช้เข้าระบบ) *</label>
+                    <input type="tel" id="reg-phone" class="form-input" placeholder="08xxxxxxxx">
+                </div>
+                <div>
+                    <label class="form-label">LINE ID</label>
+                    <input type="text" id="reg-lineid" class="form-input" placeholder="ไอดีไลน์ของคุณ">
+                </div>
+
+                <div id="reg1-error" class="text-red-500 text-sm text-center font-medium hidden"></div>
+                <button onclick="nextToReg2()" class="w-full theme-pink text-white py-3.5 rounded-xl font-bold text-lg shadow-md mt-4">ถัดไป <i class="fa-solid fa-arrow-right ml-2"></i></button>
+            </div>
+        </div>
+
+        <div id="page-reg-2" class="page-section p-6 pt-6">
+            <div class="flex items-center mb-6">
+                <button onclick="showPage('reg-1')" class="w-10 h-10 bg-gray-100 rounded-full text-gray-600 mr-3"><i class="fa-solid fa-arrow-left"></i></button>
+                <h2 class="text-2xl font-bold theme-text">บัญชี & ที่อยู่ (2/2)</h2>
+            </div>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="form-label">อีเมล (ใช้เข้าระบบได้)</label>
+                    <input type="email" id="reg-email" class="form-input" placeholder="example@email.com">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="form-label">รหัสผ่าน *</label>
+                        <input type="password" id="reg-pass" class="form-input" placeholder="รหัสผ่าน">
+                    </div>
+                    <div>
+                        <label class="form-label">ยืนยันรหัสผ่าน *</label>
+                        <input type="password" id="reg-pass2" class="form-input" placeholder="ยืนยันอีกครั้ง">
+                    </div>
+                </div>
+
+                <hr class="my-4 border-gray-200">
+                <p class="font-bold text-gray-800 mb-2"><i class="fa-solid fa-location-dot theme-text mr-2"></i>ที่อยู่ปัจจุบัน</p>
+                
+                <div class="grid grid-cols-2 gap-3">
+                    <div><label class="form-label">บ้านเลขที่ *</label><input type="text" id="reg-house" class="form-input"></div>
+                    <div><label class="form-label">หมู่ / หมู่บ้าน</label><input type="text" id="reg-moo" class="form-input"></div>
+                </div>
+                <div><label class="form-label">ซอย / ถนน</label><input type="text" id="reg-road" class="form-input"></div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div><label class="form-label">ตำบล/แขวง *</label><input type="text" id="reg-subdist" class="form-input"></div>
+                    <div><label class="form-label">อำเภอ/เขต *</label><input type="text" id="reg-dist" class="form-input"></div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="form-label">จังหวัด *</label>
+                        <select id="reg-prov" class="form-input bg-white">
+                            <option value="">เลือกจังหวัด</option>
+                            <option>กรุงเทพมหานคร</option><option>สมุทรปราการ</option><option>นนทบุรี</option>
+                        </select>
+                    </div>
+                    <div><label class="form-label">รหัสไปรษณีย์ *</label><input type="text" id="reg-zip" class="form-input"></div>
+                </div>
+
+                <div id="reg2-error" class="bg-red-50 text-red-600 text-sm p-3 rounded-lg text-center font-medium hidden"></div>
+                <button onclick="submitRegister(this)" class="w-full theme-pink text-white py-3.5 rounded-xl font-bold text-lg shadow-md mt-4">✅ ยืนยันสมัครสมาชิก</button>
+            </div>
+        </div>
+
+        <div id="page-profile" class="page-section p-6 pt-8">
+            <div class="bg-gradient-to-r from-pink-500 to-pink-600 rounded-2xl p-6 text-white shadow-lg relative overflow-hidden mb-6">
+                <div class="absolute right-[-20px] top-[-20px] opacity-10 text-9xl"><i class="fa-solid fa-id-badge"></i></div>
+                <p class="text-pink-100 text-sm mb-1">รหัสสมาชิก</p>
+                <h2 id="prof-memberid" class="text-3xl font-bold tracking-wider mb-4">MEM-00000</h2>
+                <h3 id="prof-fullname" class="text-xl font-semibold mb-1">ชื่อ นามสกุล</h3>
+                <p id="prof-phone" class="text-pink-100 text-sm"><i class="fa-solid fa-phone mr-2"></i>08xxxxxxxx</p>
+            </div>
+
+            <div id="box-join-waste" class="bg-green-50 border border-green-200 rounded-xl p-5 mb-6 text-center">
+                <div class="text-3xl mb-2 text-green-500"><i class="fa-solid fa-recycle"></i></div>
+                <h3 class="font-bold text-green-800 text-lg mb-2">โครงการ Waste Money</h3>
+                <p class="text-sm text-green-700 mb-4 leading-relaxed">ร่วมจัดการขยะกับเรา รับทันทีส่วนลด 25% สำหรับซื้อสินค้าในร้าน Goodday Shop</p>
+                <button onclick="showPage('waste-reg')" class="bg-green-500 text-white px-6 py-2.5 rounded-full font-bold shadow-md hover:bg-green-600 transition">เข้าร่วมโครงการฟรี!</button>
+            </div>
+
+            <div id="box-active-waste" class="bg-gradient-to-r from-green-400 to-green-500 rounded-xl p-4 mb-6 text-white flex items-center shadow-md hidden">
+                <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center text-2xl mr-4"><i class="fa-solid fa-leaf"></i></div>
+                <div>
+                    <h3 class="font-bold text-lg">สมาชิก Waste Money</h3>
+                    <p class="text-xs text-green-100">คุณได้รับสิทธิพิเศษส่วนลดเรียบร้อยแล้ว</p>
+                </div>
+            </div>
+
+            <div class="bg-white border rounded-xl shadow-sm overflow-hidden mb-6">
+                <button onclick="showPage('edit-address')" class="w-full flex justify-between items-center p-4 border-b hover:bg-gray-50 transition">
+                    <span class="font-bold text-gray-700"><i class="fa-solid fa-map-location-dot w-6 text-center text-pink-500 mr-2"></i> แก้ไขที่อยู่จัดส่ง</span>
+                    <i class="fa-solid fa-chevron-right text-gray-400"></i>
+                </button>
+            </div>
+
+            <button onclick="doLogout()" class="w-full bg-red-50 text-red-600 py-3.5 rounded-xl font-bold border border-red-100 hover:bg-red-100 transition"><i class="fa-solid fa-arrow-right-from-bracket mr-2"></i> ออกจากระบบ</button>
+        </div>
+
+        <div id="page-edit-address" class="page-section p-6 pt-6">
+            <div class="flex items-center mb-6">
+                <button onclick="showPage('profile')" class="w-10 h-10 bg-gray-100 rounded-full text-gray-600 mr-3"><i class="fa-solid fa-arrow-left"></i></button>
+                <h2 class="text-xl font-bold text-gray-800">แก้ไขที่อยู่ปัจจุบัน</h2>
+            </div>
+            <div class="space-y-4">
+                <div class="grid grid-cols-2 gap-3">
+                    <div><label class="form-label">บ้านเลขที่</label><input type="text" id="edit-house" class="form-input"></div>
+                    <div><label class="form-label">หมู่ / หมู่บ้าน</label><input type="text" id="edit-moo" class="form-input"></div>
+                </div>
+                <div><label class="form-label">ซอย / ถนน</label><input type="text" id="edit-road" class="form-input"></div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div><label class="form-label">ตำบล/แขวง</label><input type="text" id="edit-subdist" class="form-input"></div>
+                    <div><label class="form-label">อำเภอ/เขต</label><input type="text" id="edit-dist" class="form-input"></div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div><label class="form-label">จังหวัด</label><input type="text" id="edit-prov" class="form-input"></div>
+                    <div><label class="form-label">รหัสไปรษณีย์</label><input type="text" id="edit-zip" class="form-input"></div>
+                </div>
+                <button onclick="saveAddress(this)" class="w-full theme-pink text-white py-3.5 rounded-xl font-bold shadow-md mt-4">บันทึกที่อยู่</button>
+            </div>
+        </div>
+
+        <div id="page-waste-reg" class="page-section p-6 pt-6 bg-green-50 min-h-screen">
+            <div class="flex items-center mb-6">
+                <button onclick="showPage('profile')" class="w-10 h-10 bg-white rounded-full text-gray-600 mr-3 shadow-sm"><i class="fa-solid fa-arrow-left"></i></button>
+                <h2 class="text-xl font-bold text-green-700">ยืนยันจุดรับขยะ</h2>
+            </div>
+            
+            <div class="bg-white p-5 rounded-2xl shadow-sm mb-6 border border-green-100">
+                <p class="text-gray-600 text-sm mb-4 leading-relaxed">กรุณาตรวจสอบที่อยู่ด้านล่าง เพื่อใช้เป็น <strong class="text-green-600">จุดวางกระสอบขยะ</strong> หากถูกต้องแล้วสามารถกดยืนยันได้เลย (หากไม่ใช่ สามารถแก้ไขได้ที่นี่ จะไม่กระทบกับที่อยู่โปรไฟล์หลัก)</p>
+                
+                <div class="space-y-3">
+                    <div class="grid grid-cols-2 gap-3">
+                        <div><label class="text-xs font-bold text-gray-500">บ้านเลขที่</label><input type="text" id="wm-house" class="form-input bg-gray-50"></div>
+                        <div><label class="text-xs font-bold text-gray-500">หมู่</label><input type="text" id="wm-moo" class="form-input bg-gray-50"></div>
+                    </div>
+                    <div><label class="text-xs font-bold text-gray-500">ถนน</label><input type="text" id="wm-road" class="form-input bg-gray-50"></div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div><label class="text-xs font-bold text-gray-500">ตำบล</label><input type="text" id="wm-subdist" class="form-input bg-gray-50"></div>
+                        <div><label class="text-xs font-bold text-gray-500">อำเภอ</label><input type="text" id="wm-dist" class="form-input bg-gray-50"></div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div><label class="text-xs font-bold text-gray-500">จังหวัด</label><input type="text" id="wm-prov" class="form-input bg-gray-50"></div>
+                        <div><label class="text-xs font-bold text-gray-500">รหัสไปรษณีย์</label><input type="text" id="wm-zip" class="form-input bg-gray-50"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <button onclick="confirmWasteMoney(this)" class="w-full bg-green-500 text-white py-3.5 rounded-xl font-bold text-lg shadow-md hover:bg-green-600 transition">ยืนยันเข้าร่วมโครงการ</button>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = "https://script.google.com/macros/s/AKfycbwN8QmRIb5gVByL6nrZ_H_kYWiYwULaSQOBT5ahS0XBISwTONw80GZgiTRssPcUmIWQ/exec";
+        const LIFF_ID = "2009970638-dqNKJ4CJ"; // ถ้าไม่มี LIFF แยกให้ใช้ของ Booking ได้เลย
+        
+        let currentUser = null;
+        let currentLineUid = "";
+
+        async function callAPI(action, data = {}) {
+            try {
+                const response = await fetch(API_URL, {
+                    method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" },
+                    body: JSON.stringify({ action: action, data: data }), redirect: "follow"
+                });
+                return await response.json();
+            } catch (error) { return { success: false, message: "เชื่อมต่อฐานข้อมูลไม่ได้" }; }
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const saved = localStorage.getItem('gooddaySession');
+            if(saved) {
+                currentUser = JSON.parse(saved);
+                renderProfile();
+            }
+
+            liff.init({ liffId: LIFF_ID }).then(() => {
+                if(liff.isLoggedIn()) {
+                    liff.getProfile().then(async profile => {
+                        currentLineUid = profile.userId;
+                        const res = await callAPI("autoLoginByUid", { uid: currentLineUid });
+                        document.getElementById('loading-header').innerHTML = "";
+                        
+                        if(res && res.memberId) {
+                            currentUser = res;
+                            localStorage.setItem('gooddaySession', JSON.stringify(currentUser));
+                            renderProfile();
+                        } else {
+                            if(!currentUser) showPage('login');
+                        }
+                    });
+                } else { liff.login(); }
+            }).catch(err => {
+                document.getElementById('loading-header').innerHTML = "";
+                if(!currentUser) showPage('login');
+            });
+        });
+
+        function showPage(pageId) {
+            document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
+            document.getElementById('page-' + pageId).classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        function nextToReg2() {
+            const err = document.getElementById('reg1-error');
+            const prefix = document.getElementById('reg-prefix').value.trim();
+            const name = document.getElementById('reg-name').value.trim();
+            const phone = document.getElementById('reg-phone').value.trim();
+            if(!prefix || !name || !phone) {
+                err.innerText = "กรุณากรอกข้อมูลที่มี * ให้ครบถ้วน"; err.classList.remove('hidden'); return;
+            }
+            err.classList.add('hidden');
+            showPage('reg-2');
+        }
+
+        async function submitRegister(btn) {
+            const err = document.getElementById('reg2-error');
+            const pass = document.getElementById('reg-pass').value;
+            const pass2 = document.getElementById('reg-pass2').value;
+            
+            if(pass !== pass2) { err.innerText = "รหัสผ่านไม่ตรงกัน"; err.classList.remove('hidden'); return; }
+            if(!pass || !document.getElementById('reg-house').value || !document.getElementById('reg-subdist').value || !document.getElementById('reg-dist').value || !document.getElementById('reg-prov').value) {
+                err.innerText = "กรุณากรอกข้อมูลที่มี * ให้ครบถ้วน"; err.classList.remove('hidden'); return;
+            }
+
+            btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังบันทึก...';
+            err.classList.add('hidden');
+
+            const data = {
+                prefix: document.getElementById('reg-prefix').value.trim(),
+                name: document.getElementById('reg-name').value.trim(),
+                birthYear: document.getElementById('reg-birth').value.trim(),
+                age: document.getElementById('reg-age').value.trim(),
+                phone: document.getElementById('reg-phone').value.trim(),
+                lineId: document.getElementById('reg-lineid').value.trim(),
+                email: document.getElementById('reg-email').value.trim(),
+                password: pass,
+                lineUid: currentLineUid,
+                houseNo: document.getElementById('reg-house').value.trim(),
+                village: document.getElementById('reg-moo').value.trim(),
+                road: document.getElementById('reg-road').value.trim(),
+                subDistrict: document.getElementById('reg-subdist').value.trim(),
+                district: document.getElementById('reg-dist').value.trim(),
+                province: document.getElementById('reg-prov').value,
+                zipCode: document.getElementById('reg-zip').value.trim()
+            };
+
+            const res = await callAPI("registerUser", data);
+            if(res.success) {
+                alert("สมัครสมาชิกสำเร็จ ยินดีต้อนรับครับ!");
+                currentUser = res.user;
+                localStorage.setItem('gooddaySession', JSON.stringify(currentUser));
+                renderProfile();
+            } else {
+                err.innerText = res.message; err.classList.remove('hidden');
+                btn.disabled = false; btn.innerText = "✅ ยืนยันสมัครสมาชิก";
+            }
+        }
+
+        async function doLogin(btn) {
+            const id = document.getElementById('login-id').value;
+            const pass = document.getElementById('login-pass').value;
+            const err = document.getElementById('login-error');
+            if(!id || !pass) { err.innerText = "กรุณากรอกข้อมูลให้ครบ"; err.classList.remove('hidden'); return; }
+            
+            btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+            const res = await callAPI("loginUser", { id: id, pass: pass, uid: currentLineUid });
+            btn.disabled = false; btn.innerText = "เข้าสู่ระบบ";
+            
+            if(res.success) {
+                currentUser = res.user;
+                localStorage.setItem('gooddaySession', JSON.stringify(currentUser));
+                renderProfile();
+            } else { err.innerText = res.message; err.classList.remove('hidden'); }
+        }
+
+        function renderProfile() {
+            if(!currentUser) { showPage('login'); return; }
+            
+            document.getElementById('prof-memberid').innerText = currentUser.memberId || "MEM-00000";
+            document.getElementById('prof-fullname').innerText = (currentUser.prefix || "") + " " + currentUser.name;
+            document.getElementById('prof-phone').innerHTML = `<i class="fa-solid fa-phone mr-2"></i>` + currentUser.phone;
+
+            if(currentUser.wasteMoney === "ใช่") {
+                document.getElementById('box-join-waste').classList.add('hidden');
+                document.getElementById('box-active-waste').classList.remove('hidden');
+            } else {
+                document.getElementById('box-join-waste').classList.remove('hidden');
+                document.getElementById('box-active-waste').classList.add('hidden');
+            }
+
+            // เตรียมข้อมูลหน้าเปลี่ยนที่อยู่
+            const a = currentUser.address;
+            if(a) {
+                document.getElementById('edit-house').value = a.house; document.getElementById('edit-moo').value = a.moo;
+                document.getElementById('edit-road').value = a.road; document.getElementById('edit-subdist').value = a.subdist;
+                document.getElementById('edit-dist').value = a.dist; document.getElementById('edit-prov').value = a.prov;
+                document.getElementById('edit-zip').value = a.zip;
+                
+                // เตรียมข้อมูลหน้า Waste Money (ดึงที่อยู่เดิมมาโชว์ให้แก้ได้)
+                document.getElementById('wm-house').value = a.house; document.getElementById('wm-moo').value = a.moo;
+                document.getElementById('wm-road').value = a.road; document.getElementById('wm-subdist').value = a.subdist;
+                document.getElementById('wm-dist').value = a.dist; document.getElementById('wm-prov').value = a.prov;
+                document.getElementById('wm-zip').value = a.zip;
+            }
+            showPage('profile');
+        }
+
+        async function saveAddress(btn) {
+            btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> บันทึก...';
+            
+            const newData = {
+                phone: currentUser.phone,
+                house: document.getElementById('edit-house').value, moo: document.getElementById('edit-moo').value,
+                road: document.getElementById('edit-road').value, subdist: document.getElementById('edit-subdist').value,
+                dist: document.getElementById('edit-dist').value, prov: document.getElementById('edit-prov').value, zip: document.getElementById('edit-zip').value
+            };
+
+            const res = await callAPI("updateProfileAddress", newData);
+            if(res.success) {
+                currentUser.address = newData;
+                localStorage.setItem('gooddaySession', JSON.stringify(currentUser));
+                alert("อัปเดตที่อยู่เรียบร้อย");
+                showPage('profile');
+            } else { alert("ข้อผิดพลาด: " + res.message); }
+            btn.disabled = false; btn.innerText = "บันทึกที่อยู่";
+        }
+
+        async function confirmWasteMoney(btn) {
+            btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังส่งข้อมูล...';
+            
+            const wmAddress = {
+                memberId: currentUser.memberId, name: currentUser.prefix + " " + currentUser.name, phone: currentUser.phone, lineUid: currentLineUid,
+                house: document.getElementById('wm-house').value, moo: document.getElementById('wm-moo').value,
+                road: document.getElementById('wm-road').value, subdist: document.getElementById('wm-subdist').value,
+                dist: document.getElementById('wm-dist').value, prov: document.getElementById('wm-prov').value, zip: document.getElementById('wm-zip').value
+            };
+
+            const res = await callAPI("joinWasteMoney", wmAddress);
+            if(res.success) {
+                currentUser.wasteMoney = "ใช่";
+                localStorage.setItem('gooddaySession', JSON.stringify(currentUser));
+                alert("ยินดีต้อนรับเข้าสู่โครงการ! ระบบได้ส่งข้อความยืนยันไปที่ LINE แล้วครับ");
+                renderProfile();
+            } else {
+                alert("เกิดข้อผิดพลาด: " + res.message);
+                btn.disabled = false; btn.innerText = "ยืนยันเข้าร่วมโครงการ";
+            }
+        }
+
+        async function doLogout() {
+            if(!confirm("ต้องการออกจากระบบใช่หรือไม่?")) return;
+            document.getElementById('loading-header').innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+            if(currentUser && currentUser.phone) {
+                await callAPI("logoutUser", { phone: currentUser.phone });
+            }
+            localStorage.removeItem('gooddaySession'); 
+            currentUser = null;
+            location.reload();
+        }
+    </script>
+</body>
+</html>
