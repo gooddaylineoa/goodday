@@ -19,8 +19,10 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         
+        /* สไตล์ปฏิทิน */
         .cal-day { aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 50%; font-size: 14px; cursor: pointer; transition: 0.2s; position: relative; }
         .cal-active { background-color: #d81b60 !important; color: white !important; font-weight: bold; box-shadow: 0 4px 10px rgba(216,27,96,0.3); }
+        .cal-selected { box-shadow: 0 0 0 2px #d81b60 inset; font-weight: bold; color: #d81b60; } /* วงกลมวันที่ถูกคลิก */
         
         #liff-loading { position:fixed; inset:0; background:#fff; z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; }
         
@@ -99,7 +101,6 @@
             </div>
             
             <p class="font-bold text-gray-800 mb-3"><i class="fa-regular fa-clock theme-text mr-2"></i>เลือกรอบเวลาที่ต้องการ</p>
-            
             <div id="time-slot-container" class="mb-6"></div>
 
             <button onclick="submitBooking(this)" id="btn-submit-booking" disabled class="w-full bg-gray-300 text-white py-3.5 rounded-xl font-bold text-lg shadow-md transition">ยืนยันการจอง</button>
@@ -129,7 +130,7 @@
 
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbwN8QmRIb5gVByL6nrZ_H_kYWiYwULaSQOBT5ahS0XBISwTONw80GZgiTRssPcUmIWQ/exec"; 
-        const LIFF_ID_BOOKING = "2009970638-NL6GN7HE";
+        const LIFF_ID_BOOKING = "ใส่_LIFF_ID_ของระบบจองตรงนี้";
         
         let currentUser = null;
         let allActivities = [];
@@ -139,6 +140,10 @@
         let currentDate = new Date();
         const monthNames = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
         let selectedTimeSlot = null;
+
+        // คำนวณวันที่ปัจจุบัน (เพื่อใช้เช็ควันหมดเขต)
+        const todayDateObj = new Date();
+        const todayStr = todayDateObj.getFullYear() + "-" + String(todayDateObj.getMonth() + 1).padStart(2, '0') + "-" + String(todayDateObj.getDate()).padStart(2, '0');
 
         async function callAPI(action, data = {}) {
             try {
@@ -157,17 +162,14 @@
             liff.init({ liffId: LIFF_ID_BOOKING }).then(() => {
                 if (liff.isLoggedIn()) {
                     liff.getProfile().then(async profile => {
-                        // ดึงข้อมูลสมาชิกล่าสุดจาก UID ทุกครั้งที่เปิดเว็บ
                         const res = await callAPI("autoLoginByUid", { uid: profile.userId });
                         if(res && res.memberId) {
                             currentUser = res;
                             localStorage.setItem('gooddaySession', JSON.stringify(currentUser));
                             updateHeaderUser();
                         } else {
-                            // ถ้าไม่เป็นสมาชิก ให้แจ้งเตือนแล้วเด้งไปหน้าโปรไฟล์ (หรือปิด LIFF)
                             document.getElementById('liff-loading').style.display = 'none';
-                            alert("กรุณาสมัครสมาชิกที่ระบบโปรไฟล์ก่อนทำการจองกิจกรรมครับ");
-                            // liff.closeWindow(); 
+                            alert("กรุณาสมัครสมาชิกที่ระบบโปรไฟล์ก่อนทำการจองกิจกรรม");
                         }
                     });
                 } else { liff.login(); }
@@ -223,12 +225,21 @@
 
             let html = list.map(a => {
                 let isBooked = myBookedActivities.includes(a.name);
-                let badgeHtml = a.totalRemaining > 0 
+                let isPast = a.calDate && (a.calDate < todayStr); // เช็คว่าเลยวันที่จัดกิจกรรมหรือยัง
+                
+                let badgeHtml = '';
+                if(isPast) {
+                    badgeHtml = `<span class="bg-gray-100 text-gray-500 text-[11px] px-2.5 py-1 rounded-md font-bold">หมดเขต</span>`;
+                } else {
+                    badgeHtml = a.totalRemaining > 0 
                     ? `<span class="bg-pink-100 text-pink-600 text-[11px] px-2.5 py-1 rounded-md font-bold">ว่าง ${a.totalRemaining} ที่</span>` 
                     : `<span class="bg-gray-100 text-gray-500 text-[11px] px-2.5 py-1 rounded-md font-bold">เต็มแล้ว</span>`;
+                }
                 
                 let btnHtml = '';
-                if(isBooked) {
+                if(isPast) {
+                    btnHtml = `<button disabled class="w-full bg-gray-200 text-gray-500 py-2.5 rounded-xl font-bold cursor-not-allowed">ปิดรับสมัครแล้ว</button>`;
+                } else if(isBooked) {
                     btnHtml = `<button disabled class="w-full bg-green-50 text-green-600 py-2.5 rounded-xl font-bold border border-green-200 cursor-not-allowed">✅ จองเรียบร้อย</button>`;
                 } else if (a.totalRemaining > 0) {
                     btnHtml = `<button onclick="handleBookClick('${a.name}')" class="w-full theme-pink text-white py-2.5 rounded-xl font-bold shadow-sm hover:bg-pink-700 transition">จองทันที</button>`;
@@ -240,14 +251,14 @@
 
                 return `
                 <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-                    <img src="${a.image || 'https://via.placeholder.com/400'}" class="w-full h-40 object-cover">
+                    <img src="${a.image || 'https://via.placeholder.com/400'}" class="w-full h-40 object-cover ${isPast ? 'grayscale opacity-70' : ''}">
                     <div class="p-4">
                         <div class="flex justify-between items-start mb-2">
                             <h2 class="text-base font-bold text-gray-800 leading-snug w-3/4">${a.name}</h2>
                             ${badgeHtml}
                         </div>
                         <div class="text-sm text-gray-500 space-y-2 mb-4 font-medium">
-                            <p><i class="fa-regular fa-clock w-5 text-center"></i> ${a.datetime}</p>
+                            <p class="${isPast ? 'text-red-500 font-bold' : ''}"><i class="fa-regular fa-clock w-5 text-center"></i> ${a.datetime}</p>
                             <p><i class="fa-solid fa-location-dot w-5 text-center"></i> ${a.province || 'ทุกพื้นที่'}</p>
                             ${detailsHtml}
                         </div>
@@ -271,7 +282,6 @@
             const first = new Date(y, m, 1).getDay(); const days = new Date(y, m + 1, 0).getDate();
             let grid = ''; for(let i=0; i<first; i++) grid += '<div></div>';
             
-            const today = new Date();
             for(let day=1; day<=days; day++){
                 const dStr = `${y}-${String(m+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
                 let acts = allActivities.filter(a => a.calDate === dStr);
@@ -282,8 +292,9 @@
                     const isMine = acts.some(a => myBookedActivities.includes(a.name));
                     dot = `<div class="w-1.5 h-1.5 ${isMine ? 'bg-green-500' : 'bg-pink-500'} rounded-full absolute bottom-1"></div>`;
                 }
-                const isToday = (day === today.getDate() && m === today.getMonth() && y === today.getFullYear());
-                grid += `<div onclick="selectDate('${dStr}',${day},${m})" class="cal-day ${isToday ? 'cal-active' : 'text-gray-700 font-medium'}">${day}${dot}</div>`;
+                const isToday = (dStr === todayStr);
+                // เพิ่ม ID ให้แต่ละวัน เพื่อนำไปใส่คลาสไฮไลต์เวลาถูกคลิก
+                grid += `<div id="cal-day-${dStr}" onclick="selectDate('${dStr}',${day},${m})" class="cal-day ${isToday ? 'cal-active' : 'text-gray-700 font-medium'}">${day}${dot}</div>`;
             }
             document.getElementById('calendar-grid').innerHTML = grid;
         }
@@ -291,20 +302,40 @@
         function changeMonth(step) { currentDate.setMonth(currentDate.getMonth()+step); renderCalendar(); }
         
         function selectDate(dStr, d, m) {
+            // 1. ลบไฮไลต์วงกลมออกจากทุกวันก่อน
+            document.querySelectorAll('.cal-day').forEach(el => el.classList.remove('cal-selected'));
+            
+            // 2. เพิ่มไฮไลต์วงกลมให้วันที่กำลังถูกคลิก
+            const selectedCell = document.getElementById('cal-day-' + dStr);
+            if(selectedCell && !selectedCell.classList.contains('cal-active')) {
+                selectedCell.classList.add('cal-selected');
+            }
+
+            // 3. แสดงรายการกิจกรรม
             document.getElementById('selected-date-text').innerText = `วันที่ ${d} ${monthNames[m]}`;
             let acts = allActivities.filter(a => a.calDate === dStr);
             if (currentUser && currentUser.province) acts = acts.filter(a => a.province === currentUser.province || a.province === "" || a.province === "ทั้งหมด");
             
             let html = acts.length === 0 ? '<p class="text-xs text-gray-400 py-4 text-center w-full font-medium">ไม่มีกิจกรรมในวันนี้</p>' : acts.map(a => {
                 let isBooked = myBookedActivities.includes(a.name);
-                let btn = isBooked ? `<button disabled class="bg-green-50 text-green-600 px-3 py-1.5 rounded-lg text-xs font-bold border border-green-200">✅ จองแล้ว</button>` :
-                          a.totalRemaining > 0 ? `<button onclick="handleBookClick('${a.name}')" class="theme-pink text-white px-4 py-1.5 rounded-lg text-xs font-bold shadow-sm">จอง</button>` :
-                          `<button disabled class="bg-gray-100 text-gray-400 px-3 py-1.5 rounded-lg text-xs font-bold">เต็ม</button>`;
+                let isPast = a.calDate && (a.calDate < todayStr); // เช็คหมดเขต
+
+                let btn = '';
+                if (isPast) {
+                    btn = `<button disabled class="bg-gray-100 text-gray-400 px-3 py-1.5 rounded-lg text-xs font-bold">ปิดรับสมัคร</button>`;
+                } else if (isBooked) {
+                    btn = `<button disabled class="bg-green-50 text-green-600 px-3 py-1.5 rounded-lg text-xs font-bold border border-green-200">✅ จองแล้ว</button>`;
+                } else if (a.totalRemaining > 0) {
+                    btn = `<button onclick="handleBookClick('${a.name}')" class="theme-pink text-white px-4 py-1.5 rounded-lg text-xs font-bold shadow-sm">จอง</button>`;
+                } else {
+                    btn = `<button disabled class="bg-gray-100 text-gray-400 px-3 py-1.5 rounded-lg text-xs font-bold">เต็ม</button>`;
+                }
+                
                 return `
-                <div class="bg-white p-3 rounded-xl flex justify-between items-center text-sm mb-3 border border-gray-100 shadow-sm">
+                <div class="bg-white p-3 rounded-xl flex justify-between items-center text-sm mb-3 border border-gray-100 shadow-sm ${isPast ? 'opacity-70' : ''}">
                     <div class="flex flex-col pr-2">
-                        <span class="font-bold text-gray-800 leading-snug">${a.name}</span>
-                        <span class="text-[11px] text-gray-500 mt-1 font-medium"><i class="fa-regular fa-clock"></i> ${a.datetime}</span>
+                        <span class="font-bold ${isPast ? 'text-gray-500 line-through' : 'text-gray-800'} leading-snug">${a.name}</span>
+                        <span class="text-[11px] ${isPast ? 'text-red-400' : 'text-gray-500'} mt-1 font-medium"><i class="fa-regular fa-clock"></i> ${a.datetime}</span>
                     </div>
                     <div>${btn}</div>
                 </div>`;
@@ -313,7 +344,7 @@
         }
 
         function handleBookClick(name) {
-            if(!currentUser) { alert("กรุณาสมัครสมาชิกก่อนครับ"); return; }
+            if(!currentUser) { alert("กรุณาสมัครสมาชิก"); return; }
             const act = allActivities.find(a => a.name === name);
             if(!act) return;
             
@@ -324,7 +355,6 @@
             document.getElementById('confirm-act-name').innerText = act.name;
             document.getElementById('confirm-act-prov').innerText = act.province || "ทุกพื้นที่";
             
-            // สร้างกล่องเลือกรอบเวลาแบบยาว
             let slotsHtml = act.slots.map(slot => {
                 if (slot.remaining > 0) {
                     return `
@@ -352,7 +382,6 @@
         }
 
         function selectSlot(btn, time) {
-            // รีเซ็ตทุกกล่อง
             document.querySelectorAll('.slot-box').forEach(b => {
                 if(!b.classList.contains('disabled')) {
                     b.classList.remove('active');
@@ -360,7 +389,6 @@
                     b.querySelector('.check-circle').classList.replace('border-pink-500', 'border-gray-300');
                 }
             });
-            // ไฮไลต์กล่องที่เลือก
             btn.classList.add('active');
             btn.querySelector('.check-circle').classList.replace('border-gray-300', 'border-pink-500');
             btn.querySelector('.check-circle').innerHTML = '<div class="w-2.5 h-2.5 bg-pink-500 rounded-full"></div>';
