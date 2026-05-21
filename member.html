@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Goodday Member</title>
+    <title>สมาชิก Goodday</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap');
-        body { font-family: 'Sarabun', sans-serif; background-color: #F8FAFC; }
+        body { font-family: 'Sarabun', sans-serif; background-color: #F3F4F6; }
         .theme-pink { background-color: #d81b60; }
         .theme-text { color: #d81b60; }
         .page-section { display: none; animation: fadeIn 0.3s ease-out; }
@@ -17,257 +17,288 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
         .form-input {
-            width: 100%; border: 1.5px solid #E2E8F0; border-radius: 1rem; padding: 0.85rem;
-            font-size: 1rem; transition: all 0.2s; background-color: white; color: #334155;
+            width: 100%; border: 1px solid #D1D5DB; border-radius: 0.75rem; padding: 0.75rem;
+            font-size: 0.875rem; transition: all 0.2s; background-color: white; color: #374151; font-family: 'Sarabun';
         }
-        .form-input:focus { outline: none; border-color: #d81b60; box-shadow: 0 0 0 3px #fce4ec; }
+        .form-input:focus { outline: none; border-color: #d81b60; box-shadow: 0 0 0 2px #fce4ec; }
         
-        /* สไตล์ Card เด่น */
-        .premium-card {
-            border-radius: 1.5rem; transition: transform 0.2s; overflow: hidden;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-        }
-        .premium-card:active { transform: scale(0.98); }
+        #liff-loading { position:fixed; inset:0; background:#fff; z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; }
     </style>
 </head>
-<body class="antialiased text-slate-800">
+<body class="antialiased text-gray-800 pb-20">
 
-    <div class="max-w-md mx-auto bg-white min-h-screen relative pb-20 shadow-2xl">
+    <div id="liff-loading">
+        <div class="w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center mb-2">
+            <i class="fa-solid fa-id-card-clip text-3xl text-pink-500"></i>
+        </div>
+        <p class="text-gray-500 font-medium text-sm">กำลังโหลดข้อมูลสมาชิก...</p>
+        <i class="fa-solid fa-spinner fa-spin text-pink-400 text-xl hidden"></i>
+    </div>
+
+    <div class="max-w-md mx-auto bg-white min-h-screen relative shadow-lg">
         
-        <div class="theme-pink text-white p-5 sticky top-0 z-50 shadow-lg flex justify-between items-center rounded-b-3xl">
-            <h1 class="text-xl font-bold tracking-tight"><i class="fa-solid fa-circle-user mr-2"></i>Goodday Member</h1>
-            <div id="loading-header" class="text-sm font-medium"><i class="fa-solid fa-spinner fa-spin"></i></div>
+        <div class="theme-pink text-white p-4 sticky top-0 z-50 shadow-md flex justify-between items-center">
+            <h1 class="text-lg font-semibold tracking-wide"><i class="fa-solid fa-circle-user mr-2"></i>Goodday Member</h1>
+            <div id="loading-header" class="w-9 h-9 bg-white rounded-full flex items-center justify-center theme-text font-bold shadow-sm transition">
+                <i class="fa-solid fa-spinner fa-spin"></i>
+            </div>
         </div>
 
-        <div id="page-login" class="page-section p-6 pt-10">
+        <div id="page-login" class="page-section p-4 pt-10">
             <div class="text-center mb-8">
-                <div class="w-20 h-20 bg-pink-50 text-pink-500 rounded-full flex items-center justify-center text-4xl mx-auto mb-4"><i class="fa-solid fa-user-lock"></i></div>
-                <h2 class="text-2xl font-bold theme-text">เข้าสู่ระบบสมาชิก</h2>
-                <p class="text-slate-500 mt-2">กรุณาเข้าสู่ระบบเพื่อใช้งาน</p>
+                <div class="w-16 h-16 bg-pink-50 text-pink-500 rounded-full flex items-center justify-center text-3xl mx-auto mb-4"><i class="fa-solid fa-user-lock"></i></div>
+                <h2 class="text-xl font-bold theme-text">เข้าสู่ระบบสมาชิก</h2>
+                <p class="text-gray-500 mt-1 text-sm">กรุณาเข้าสู่ระบบเพื่อใช้งาน</p>
             </div>
             <div class="space-y-4">
                 <div>
-                    <label class="text-sm font-bold text-slate-500 mb-1 block">เบอร์โทรศัพท์ หรือ อีเมล</label>
+                    <label class="text-xs font-bold text-gray-500 mb-1 block">เบอร์โทรศัพท์ หรือ อีเมล</label>
                     <input type="text" id="login-id" class="form-input" placeholder="กรอกข้อมูล...">
                 </div>
                 <div>
-                    <label class="text-sm font-bold text-slate-500 mb-1 block">รหัสผ่าน</label>
+                    <label class="text-xs font-bold text-gray-500 mb-1 block">รหัสผ่าน</label>
                     <input type="password" id="login-pass" class="form-input" placeholder="กรอกรหัสผ่าน...">
                 </div>
-                <div id="login-error" class="bg-red-50 text-red-600 text-sm p-3 rounded-lg text-center font-bold hidden"></div>
+                <div id="login-error" class="bg-red-50 text-red-600 text-xs p-3 rounded-lg text-center font-bold hidden"></div>
                 
-                <button onclick="doLogin(this)" class="w-full theme-pink text-white py-4 rounded-2xl font-bold text-lg shadow-lg hover:bg-pink-700 transition mt-2">เข้าสู่ระบบ</button>
+                <button onclick="doLogin(this)" class="w-full theme-pink text-white py-3.5 rounded-xl font-semibold shadow-md hover:bg-pink-700 transition mt-2 text-sm">เข้าสู่ระบบ</button>
                 <div class="text-center mt-6">
-                    <p class="text-slate-500 font-medium">ยังไม่เป็นสมาชิก?</p>
-                    <button onclick="showPage('reg-1')" class="mt-3 w-full bg-white border-2 border-pink-500 theme-text py-3.5 rounded-2xl font-bold text-lg hover:bg-pink-50 transition">สมัครสมาชิกใหม่</button>
+                    <p class="text-gray-500 font-medium text-xs">ยังไม่เป็นสมาชิก?</p>
+                    <button onclick="showPage('reg-1')" class="mt-3 w-full bg-white border border-pink-500 theme-text py-3 rounded-xl font-semibold text-sm hover:bg-pink-50 transition">สมัครสมาชิกใหม่</button>
                 </div>
             </div>
         </div>
 
-        <div id="page-reg-1" class="page-section p-6 pt-8">
+        <div id="page-reg-1" class="page-section p-4 pt-6">
             <div class="flex items-center mb-6">
-                <button onclick="showPage('login')" class="w-10 h-10 bg-slate-100 rounded-full text-slate-600 mr-3"><i class="fa-solid fa-arrow-left"></i></button>
-                <h2 class="text-2xl font-bold theme-text">สร้างบัญชี (1/2)</h2>
+                <button onclick="showPage('login')" class="w-8 h-8 bg-gray-100 rounded-full text-gray-600 mr-3"><i class="fa-solid fa-arrow-left"></i></button>
+                <h2 class="text-lg font-bold theme-text">สร้างบัญชี (1/2)</h2>
             </div>
             
-            <div class="space-y-5">
-                <div class="grid grid-cols-3 gap-3">
+            <div class="space-y-4">
+                <div class="grid grid-cols-3 gap-2">
                     <div class="col-span-1">
-                        <label class="text-sm font-bold text-slate-500 mb-1 block">คำนำหน้า *</label>
+                        <label class="text-xs font-bold text-gray-500 mb-1 block">คำนำหน้า *</label>
                         <input type="text" id="reg-prefix" class="form-input" placeholder="นาย/นางสาว/นาง">
                     </div>
                     <div class="col-span-2">
-                        <label class="text-sm font-bold text-slate-500 mb-1 block">ชื่อ-นามสกุล *</label>
+                        <label class="text-xs font-bold text-gray-500 mb-1 block">ชื่อ-นามสกุล *</label>
                         <input type="text" id="reg-name" class="form-input" placeholder="ชื่อ นามสกุล">
                     </div>
                 </div>
 
                 <div>
-                    <label class="text-sm font-bold text-slate-500 mb-1 block">วัน/เดือน/ปีเกิด (พ.ศ.)</label>
+                    <label class="text-xs font-bold text-gray-500 mb-1 block">วัน/เดือน/ปีเกิด (พ.ศ.)</label>
                     <input type="date" id="reg-birthdate" class="form-input">
-                    <label class="inline-flex items-center mt-3 cursor-pointer">
-                        <input type="checkbox" id="no-birthdate" onchange="toggleBirthdate(this)" class="w-5 h-5 rounded border-slate-300 text-pink-600 focus:ring-pink-500 accent-pink-600">
-                        <span class="ml-2 text-sm font-bold text-slate-600">ไม่ทราบวันเกิด (ระบุเฉพาะอายุ)</span>
+                    <label class="inline-flex items-center mt-2 cursor-pointer">
+                        <input type="checkbox" id="no-birthdate" onchange="toggleBirthdate(this)" class="w-4 h-4 rounded border-gray-300 text-pink-600 focus:ring-pink-500">
+                        <span class="ml-2 text-xs font-bold text-gray-600">ไม่ทราบวันเกิด (ระบุเฉพาะอายุ)</span>
                     </label>
                 </div>
 
                 <div id="age-box" class="hidden">
-                    <label class="text-sm font-bold text-slate-500 mb-1 block">อายุ (ปี)</label>
+                    <label class="text-xs font-bold text-gray-500 mb-1 block">อายุ (ปี)</label>
                     <input type="number" id="reg-age" class="form-input" placeholder="ระบุอายุปัจจุบัน">
                 </div>
 
                 <div>
-                    <label class="text-sm font-bold text-slate-500 mb-1 block">เบอร์โทรศัพท์ (ใช้เข้าระบบ) *</label>
+                    <label class="text-xs font-bold text-gray-500 mb-1 block">เบอร์โทรศัพท์ (ใช้เข้าระบบ) *</label>
                     <input type="tel" id="reg-phone" class="form-input" placeholder="08xxxxxxxx">
                 </div>
                 <div>
-                    <label class="text-sm font-bold text-slate-500 mb-1 block">LINE ID</label>
+                    <label class="text-xs font-bold text-gray-500 mb-1 block">LINE ID</label>
                     <input type="text" id="reg-lineid" class="form-input" placeholder="ไอดีไลน์ของคุณ">
                 </div>
 
-                <div id="reg1-error" class="bg-red-50 text-red-600 text-sm p-3 rounded-lg text-center font-bold hidden"></div>
-                <button onclick="nextToReg2()" class="w-full theme-pink text-white py-4 rounded-2xl font-bold text-lg shadow-lg mt-2 active:scale-95 transition-transform">ถัดไป <i class="fa-solid fa-arrow-right ml-2"></i></button>
+                <div id="reg1-error" class="bg-red-50 text-red-600 text-xs p-3 rounded-lg text-center font-bold hidden"></div>
+                <button onclick="nextToReg2()" class="w-full theme-pink text-white py-3.5 rounded-xl font-semibold shadow-md mt-2 transition text-sm">ถัดไป <i class="fa-solid fa-arrow-right ml-1"></i></button>
             </div>
         </div>
 
-        <div id="page-reg-2" class="page-section p-6 pt-8">
+        <div id="page-reg-2" class="page-section p-4 pt-6">
             <div class="flex items-center mb-6">
-                <button onclick="showPage('reg-1')" class="w-10 h-10 bg-slate-100 rounded-full text-slate-600 mr-3"><i class="fa-solid fa-arrow-left"></i></button>
-                <h2 class="text-2xl font-bold theme-text">ข้อมูลที่อยู่ (2/2)</h2>
+                <button onclick="showPage('reg-1')" class="w-8 h-8 bg-gray-100 rounded-full text-gray-600 mr-3"><i class="fa-solid fa-arrow-left"></i></button>
+                <h2 class="text-lg font-bold theme-text">ข้อมูลที่อยู่ (2/2)</h2>
             </div>
             
             <div class="space-y-4">
                 <div>
-                    <label class="text-sm font-bold text-slate-500 mb-1 block">อีเมล (ใช้เข้าระบบได้)</label>
+                    <label class="text-xs font-bold text-gray-500 mb-1 block">อีเมล (ใช้เข้าระบบได้)</label>
                     <input type="email" id="reg-email" class="form-input" placeholder="example@email.com">
                 </div>
-                <div class="grid grid-cols-2 gap-3">
-                    <div><label class="text-sm font-bold text-slate-500 mb-1 block">รหัสผ่าน *</label><input type="password" id="reg-pass" class="form-input" placeholder="รหัสผ่าน"></div>
-                    <div><label class="text-sm font-bold text-slate-500 mb-1 block">ยืนยันรหัสผ่าน *</label><input type="password" id="reg-pass2" class="form-input" placeholder="ยืนยันอีกครั้ง"></div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div><label class="text-xs font-bold text-gray-500 mb-1 block">รหัสผ่าน *</label><input type="password" id="reg-pass" class="form-input" placeholder="รหัสผ่าน"></div>
+                    <div><label class="text-xs font-bold text-gray-500 mb-1 block">ยืนยันรหัสผ่าน *</label><input type="password" id="reg-pass2" class="form-input" placeholder="ยืนยันอีกครั้ง"></div>
                 </div>
 
-                <hr class="my-4 border-slate-200">
-                <p class="font-bold text-slate-800 mb-2"><i class="fa-solid fa-location-dot theme-text mr-2"></i>ที่อยู่ปัจจุบัน</p>
+                <hr class="my-4 border-gray-100">
+                <p class="font-bold text-gray-800 text-sm mb-2"><i class="fa-solid fa-location-dot theme-text mr-1"></i>ที่อยู่ปัจจุบัน</p>
                 
-                <div class="grid grid-cols-2 gap-3">
+                <div class="grid grid-cols-2 gap-2">
                     <input type="text" id="reg-house" class="form-input" placeholder="บ้านเลขที่ *">
                     <input type="text" id="reg-moo" class="form-input" placeholder="หมู่ / หมู่บ้าน">
                 </div>
                 <input type="text" id="reg-road" class="form-input" placeholder="ซอย / ถนน">
-                <div class="grid grid-cols-2 gap-3">
+                <div class="grid grid-cols-2 gap-2">
                     <input type="text" id="reg-subdist" class="form-input" placeholder="ตำบล/แขวง *">
                     <input type="text" id="reg-dist" class="form-input" placeholder="อำเภอ/เขต *">
                 </div>
-                <div class="grid grid-cols-2 gap-3">
-                    <select id="reg-prov" class="form-input bg-slate-50 font-bold"><option value="">-- จังหวัด * --</option></select>
+                <div class="grid grid-cols-2 gap-2">
+                    <select id="reg-prov" class="form-input bg-gray-50 font-bold"><option value="">-- จังหวัด * --</option></select>
                     <input type="text" id="reg-zip" class="form-input" placeholder="รหัสไปรษณีย์ *">
                 </div>
 
-                <div id="reg2-error" class="bg-red-50 text-red-600 text-sm p-3 rounded-lg text-center font-bold hidden"></div>
-                <button onclick="submitRegister(this)" class="w-full theme-pink text-white py-4 rounded-2xl font-bold text-lg shadow-lg mt-4">✅ ยืนยันสมัครสมาชิก</button>
+                <div id="reg2-error" class="bg-red-50 text-red-600 text-xs p-3 rounded-lg text-center font-bold hidden"></div>
+                <button onclick="submitRegister(this)" class="w-full theme-pink text-white py-3.5 rounded-xl font-semibold shadow-md mt-4 text-sm">✅ ยืนยันสมัครสมาชิก</button>
             </div>
         </div>
 
-        <div id="page-profile" class="page-section p-6 pt-6">
+        <div id="page-profile" class="page-section p-4 pt-6">
             
-            <div class="bg-gradient-to-br from-slate-800 to-slate-900 premium-card p-6 text-white mb-6 relative">
-                <div class="absolute right-[-10px] top-[-10px] opacity-10 text-9xl"><i class="fa-solid fa-qrcode"></i></div>
-                <div class="flex justify-between items-start mb-6">
-                    <div class="bg-white/20 p-2.5 rounded-xl backdrop-blur-md shadow-inner">
-                        <i class="fa-solid fa-leaf text-2xl text-pink-400"></i>
-                    </div>
-                    <span class="text-[10px] font-bold uppercase tracking-widest bg-pink-600 px-3 py-1.5 rounded-full shadow-sm">Goodday Life Member</span>
+            <div class="bg-gradient-to-r from-pink-500 to-rose-500 rounded-2xl p-5 text-white shadow-sm mb-6 relative overflow-hidden">
+                <div class="absolute right-[-10px] top-[-10px] opacity-20 text-8xl"><i class="fa-solid fa-address-card"></i></div>
+                <div class="flex justify-between items-start mb-4">
+                    <span class="text-[10px] font-bold uppercase tracking-widest bg-white/20 px-3 py-1.5 rounded-full shadow-sm backdrop-blur-md">Goodday Life Member</span>
                 </div>
-                <p class="text-slate-400 text-xs font-bold uppercase tracking-widest mb-1">Member ID</p>
-                <h2 id="prof-memberid" class="text-3xl font-black tracking-tighter mb-4">GD-00000</h2>
-                <h3 id="prof-fullname" class="text-xl font-bold text-slate-100">-</h3>
+                <p class="text-pink-100 text-xs mb-1">Member ID</p>
+                <h2 id="prof-memberid" class="text-2xl font-bold tracking-widest mb-2">GD-00000</h2>
+                <h3 id="prof-fullname" class="text-base font-semibold">-</h3>
             </div>
 
-            <div onclick="openHealthRecords()" class="bg-gradient-to-br from-blue-600 to-indigo-700 premium-card p-5 mb-4 text-white flex items-center justify-between cursor-pointer">
-                <div class="flex items-center gap-4">
-                    <div class="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center text-3xl shadow-inner relative overflow-hidden">
-                        <i class="fa-solid fa-heart-pulse animate-pulse text-rose-300"></i>
-                    </div>
-                    <div>
-                        <h3 class="font-black text-xl leading-tight">สมุดบันทึกสุขภาพ</h3>
-                        <p class="text-blue-100 text-xs font-medium mt-0.5">ดูประวัติการตรวจสุขภาพย้อนหลัง</p>
-                    </div>
-                </div>
-                <i class="fa-solid fa-circle-chevron-right text-2xl opacity-50"></i>
-            </div>
-
-            <div id="box-join-waste" onclick="showPage('waste-reg')" class="bg-gradient-to-br from-emerald-500 to-teal-700 premium-card p-5 mb-6 text-white flex items-center justify-between cursor-pointer hidden">
-                <div class="flex items-center gap-4">
-                    <div class="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center text-3xl shadow-inner">
-                        <i class="fa-solid fa-recycle text-emerald-200"></i>
-                    </div>
-                    <div>
-                        <h3 class="font-black text-xl leading-tight">Waste Money</h3>
-                        <p class="text-emerald-100 text-xs font-medium mt-0.5">จัดการขยะ รับส่วนลด 25%</p>
-                    </div>
-                </div>
-                <i class="fa-solid fa-circle-plus text-2xl opacity-50"></i>
-            </div>
-
-            <div id="box-active-waste" class="bg-gradient-to-br from-emerald-500 to-teal-600 premium-card p-4 mb-6 text-white flex items-center justify-between hidden">
+            <div onclick="openHealthRecords()" class="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl p-4 mb-4 text-white flex items-center justify-between cursor-pointer shadow-sm">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center text-xl"><i class="fa-solid fa-check"></i></div>
+                    <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center text-2xl shadow-inner relative overflow-hidden">
+                        <i class="fa-solid fa-heart-pulse animate-pulse text-rose-200"></i>
+                    </div>
                     <div>
-                        <h3 class="font-bold text-base leading-tight">สมาชิก Waste Money</h3>
-                        <p class="text-[10px] text-emerald-100 mt-0.5">คุณได้รับสิทธิพิเศษส่วนลด 25% แล้ว</p>
+                        <h3 class="font-bold text-base leading-tight">สมุดบันทึกสุขภาพ</h3>
+                        <p class="text-blue-100 text-[10px] mt-0.5">ดูประวัติการตรวจสุขภาพย้อนหลัง</p>
                     </div>
                 </div>
+                <i class="fa-solid fa-chevron-right text-lg opacity-50"></i>
             </div>
 
-            <div class="bg-white border border-slate-100 rounded-2xl shadow-sm overflow-hidden mb-6">
-                <button onclick="showPage('edit-address')" class="w-full flex justify-between items-center p-4 hover:bg-slate-50 transition">
-                    <span class="font-bold text-slate-700"><i class="fa-solid fa-map-location-dot w-6 text-center text-pink-500 mr-2"></i> แก้ไขที่อยู่จัดส่ง</span>
-                    <i class="fa-solid fa-chevron-right text-slate-300"></i>
+            <div id="box-join-waste" onclick="showPage('waste-reg')" class="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl p-4 mb-4 text-white flex items-center justify-between cursor-pointer shadow-sm hidden">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center text-2xl shadow-inner">
+                        <i class="fa-solid fa-recycle text-emerald-100"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-base leading-tight">Waste Money</h3>
+                        <p class="text-emerald-100 text-[10px] mt-0.5">สะสมขยะ แลกรับคูปองส่วนลด 10-20 บ.</p>
+                    </div>
+                </div>
+                <i class="fa-solid fa-circle-plus text-xl opacity-75"></i>
+            </div>
+
+            <div id="box-active-waste" class="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl p-4 mb-4 text-white shadow-sm hidden">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center text-lg"><i class="fa-solid fa-check"></i></div>
+                    <div>
+                        <h3 class="font-bold text-sm leading-tight">สมาชิก Waste Money</h3>
+                        <p class="text-[10px] text-emerald-100 mt-0.5">สะสมขยะครบ 100.- รับคูปองส่วนลด</p>
+                    </div>
+                </div>
+                <button onclick="showPage('redeem')" class="w-full bg-white text-emerald-600 py-2 rounded-xl font-bold text-xs shadow-sm hover:bg-emerald-50 transition"><i class="fa-solid fa-qrcode mr-1"></i> สแกน / กรอกโค้ดรับคูปอง</button>
+            </div>
+
+            <div class="bg-white border border-gray-100 rounded-xl shadow-sm overflow-hidden mb-6 mt-2">
+                <button onclick="showPage('edit-address')" class="w-full flex justify-between items-center p-4 hover:bg-gray-50 transition">
+                    <span class="font-semibold text-sm text-gray-700"><i class="fa-solid fa-map-location-dot w-5 text-center text-pink-500 mr-2"></i> แก้ไขที่อยู่จัดส่ง</span>
+                    <i class="fa-solid fa-chevron-right text-gray-300 text-sm"></i>
                 </button>
             </div>
 
-            <button onclick="doLogout()" class="w-full text-slate-400 font-bold py-3 text-sm hover:text-red-500 transition"><i class="fa-solid fa-power-off mr-2"></i> ออกจากระบบ</button>
+            <button onclick="doLogout()" class="w-full text-gray-400 font-semibold py-3 text-xs hover:text-red-500 transition"><i class="fa-solid fa-power-off mr-1"></i> ออกจากระบบ</button>
         </div>
 
-        <div id="page-health" class="page-section p-4 pt-6 bg-slate-50 min-h-screen">
+        <div id="page-redeem" class="page-section p-4 pt-6">
             <div class="flex items-center mb-6">
-                <button onclick="showPage('profile')" class="w-10 h-10 bg-white rounded-full text-slate-600 mr-3 shadow-sm border border-slate-200"><i class="fa-solid fa-arrow-left"></i></button>
-                <h2 class="text-xl font-bold text-blue-800">สมุดพกสุขภาพ</h2>
+                <button onclick="showPage('profile')" class="w-8 h-8 bg-gray-100 rounded-full text-gray-600 mr-3 shadow-sm border border-gray-200"><i class="fa-solid fa-arrow-left"></i></button>
+                <h2 class="text-lg font-bold text-emerald-700">รับคูปองส่วนลด</h2>
             </div>
-            
-            <p class="text-sm text-slate-500 mb-4 px-2 font-medium">ประวัติการตรวจสุขภาพและวิเคราะห์ความเสี่ยง</p>
-            
-            <div id="health-list" class="space-y-4 pb-10">
-                <div class="text-center py-10 text-slate-400"><i class="fa-solid fa-spinner fa-spin text-2xl mb-2 text-blue-500"></i><br>กำลังดึงข้อมูล...</div>
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-emerald-100 text-center">
+                <div class="w-16 h-16 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center text-3xl mx-auto mb-4"><i class="fa-solid fa-ticket"></i></div>
+                <h3 class="font-bold text-gray-800 mb-2">กรอกโค้ดรับคูปอง</h3>
+                <p class="text-xs text-gray-500 mb-4">นำขยะไปชั่งที่จุดรับให้ได้มูลค่า 100 บ. เพื่อรับรหัสโค้ดส่วนลดจากทีมงาน</p>
+                <input type="text" id="coupon-code" class="form-input text-center font-bold tracking-widest text-lg uppercase mb-4" placeholder="กรอกรหัส 6 หลัก">
+                <button onclick="redeemCoupon(this)" class="w-full bg-emerald-500 text-white py-3.5 rounded-xl font-semibold shadow-md hover:bg-emerald-600 transition text-sm">ตรวจสอบและรับคูปอง</button>
+                
+                <div class="mt-4 flex items-center justify-center gap-2">
+                    <hr class="w-1/3 border-gray-200">
+                    <span class="text-xs text-gray-400 font-bold">หรือ</span>
+                    <hr class="w-1/3 border-gray-200">
+                </div>
+                
+                <button onclick="scanQR()" class="w-full bg-slate-800 text-white py-3.5 rounded-xl font-semibold shadow-md mt-4 text-sm hover:bg-slate-700 transition"><i class="fa-solid fa-qrcode mr-2"></i> สแกนคิวอาร์โค้ด</button>
             </div>
         </div>
 
-        <div id="page-waste-reg" class="page-section p-6 pt-6 bg-slate-50 min-h-screen">
+        <div id="page-health" class="page-section p-4 pt-6 bg-gray-50 min-h-screen">
             <div class="flex items-center mb-6">
-                <button onclick="showPage('profile')" class="w-10 h-10 bg-white rounded-full text-slate-600 mr-3 shadow-sm border border-slate-200"><i class="fa-solid fa-arrow-left"></i></button>
-                <h2 class="text-xl font-bold text-emerald-700">ยืนยันจุดรับขยะ</h2>
+                <button onclick="showPage('profile')" class="w-8 h-8 bg-white rounded-full text-gray-600 mr-3 shadow-sm border border-gray-200"><i class="fa-solid fa-arrow-left"></i></button>
+                <h2 class="text-lg font-bold text-blue-800">สมุดพกสุขภาพ</h2>
             </div>
-            <div class="bg-white p-5 rounded-2xl shadow-sm mb-6 border border-emerald-100">
-                <p class="text-slate-600 text-sm mb-4 leading-relaxed font-medium">กรุณาตรวจสอบที่อยู่ด้านล่าง เพื่อใช้เป็น <strong class="text-emerald-600">จุดวางกระสอบขยะ</strong> หากต้องการแก้ไขสามารถพิมพ์แก้ได้เลย (ไม่กระทบที่อยู่หลัก)</p>
-                <div class="space-y-3">
-                    <div class="grid grid-cols-2 gap-3">
-                        <input type="text" id="wm-house" class="form-input bg-slate-50" placeholder="บ้านเลขที่">
-                        <input type="text" id="wm-moo" class="form-input bg-slate-50" placeholder="หมู่">
+            
+            <p class="text-xs text-gray-500 mb-4 px-1 font-medium">ประวัติการตรวจสุขภาพและวิเคราะห์ความเสี่ยง</p>
+            
+            <div id="health-list" class="space-y-3 pb-10">
+                <div class="text-center py-10 text-gray-400"><i class="fa-solid fa-spinner fa-spin text-2xl mb-2 text-blue-500"></i><br><span class="text-sm">กำลังดึงข้อมูล...</span></div>
+            </div>
+        </div>
+
+        <div id="page-waste-reg" class="page-section p-4 pt-6 bg-gray-50 min-h-screen">
+            <div class="flex items-center mb-4">
+                <button onclick="showPage('profile')" class="w-8 h-8 bg-white rounded-full text-gray-600 mr-3 shadow-sm border border-gray-200"><i class="fa-solid fa-arrow-left"></i></button>
+                <h2 class="text-lg font-bold text-emerald-700">ลงทะเบียนเข้าร่วมโครงการ</h2>
+            </div>
+            <div class="bg-white p-4 rounded-xl shadow-sm mb-6 border border-emerald-100">
+                <div class="text-xs text-gray-600 mb-4 leading-relaxed font-medium bg-emerald-50 p-3 rounded-lg">
+                    <p class="font-bold text-emerald-700 mb-1"><i class="fa-solid fa-gift mr-1"></i> เปลี่ยนขยะเป็นคูปองส่วนลด!</p>
+                    1. นำขยะมาชั่งรวมกันที่จุดรับ<br>
+                    2. ทีมงานคำนวณมูลค่าขยะให้ ณ จุดรับ<br>
+                    3. หากขยะมีมูลค่ารวม 100 บาทขึ้นไป <strong class="text-emerald-600">สแกนรับคูปองส่วนลด 10-20 บาท</strong>
+                </div>
+                <p class="text-xs font-bold text-gray-500 mb-2 mt-4">กรุณาระบุที่อยู่จุดรับขยะ/กระสอบของท่าน:</p>
+                <div class="space-y-2">
+                    <div class="grid grid-cols-2 gap-2">
+                        <input type="text" id="wm-house" class="form-input bg-gray-50" placeholder="บ้านเลขที่">
+                        <input type="text" id="wm-moo" class="form-input bg-gray-50" placeholder="หมู่">
                     </div>
-                    <input type="text" id="wm-road" class="form-input bg-slate-50" placeholder="ซอย/ถนน">
-                    <div class="grid grid-cols-2 gap-3">
-                        <input type="text" id="wm-subdist" class="form-input bg-slate-50" placeholder="ตำบล">
-                        <input type="text" id="wm-dist" class="form-input bg-slate-50" placeholder="อำเภอ">
+                    <input type="text" id="wm-road" class="form-input bg-gray-50" placeholder="ซอย/ถนน">
+                    <div class="grid grid-cols-2 gap-2">
+                        <input type="text" id="wm-subdist" class="form-input bg-gray-50" placeholder="ตำบล">
+                        <input type="text" id="wm-dist" class="form-input bg-gray-50" placeholder="อำเภอ">
                     </div>
-                    <div class="grid grid-cols-2 gap-3">
-                        <select id="wm-prov" class="form-input bg-slate-50 font-bold"><option value="">-- จังหวัด --</option></select>
-                        <input type="text" id="wm-zip" class="form-input bg-slate-50" placeholder="รหัสไปรษณีย์">
+                    <div class="grid grid-cols-2 gap-2">
+                        <select id="wm-prov" class="form-input bg-gray-50 font-bold"><option value="">-- จังหวัด --</option></select>
+                        <input type="text" id="wm-zip" class="form-input bg-gray-50" placeholder="รหัสไปรษณีย์">
                     </div>
                 </div>
             </div>
-            <button onclick="confirmWasteMoney(this)" class="w-full bg-emerald-500 text-white py-4 rounded-2xl font-bold text-lg shadow-lg hover:bg-emerald-600 transition">ยืนยันเข้าร่วมโครงการ</button>
+            <button onclick="confirmWasteMoney(this)" class="w-full bg-emerald-500 text-white py-3.5 rounded-xl font-semibold shadow-md hover:bg-emerald-600 transition text-sm">ยืนยันเข้าร่วมโครงการ</button>
         </div>
 
-        <div id="page-edit-address" class="page-section p-6 pt-6">
+        <div id="page-edit-address" class="page-section p-4 pt-6">
             <div class="flex items-center mb-6">
-                <button onclick="showPage('profile')" class="w-10 h-10 bg-slate-100 rounded-full text-slate-600 mr-3"><i class="fa-solid fa-arrow-left"></i></button>
-                <h2 class="text-xl font-bold text-slate-800">แก้ไขที่อยู่จัดส่ง</h2>
+                <button onclick="showPage('profile')" class="w-8 h-8 bg-gray-100 rounded-full text-gray-600 mr-3"><i class="fa-solid fa-arrow-left"></i></button>
+                <h2 class="text-lg font-bold text-gray-800">แก้ไขที่อยู่จัดส่ง</h2>
             </div>
-            <div class="space-y-4">
-                <div class="grid grid-cols-2 gap-3">
+            <div class="space-y-3">
+                <div class="grid grid-cols-2 gap-2">
                     <input type="text" id="edit-house" class="form-input" placeholder="บ้านเลขที่">
                     <input type="text" id="edit-moo" class="form-input" placeholder="หมู่ / หมู่บ้าน">
                 </div>
                 <input type="text" id="edit-road" class="form-input" placeholder="ซอย / ถนน">
-                <div class="grid grid-cols-2 gap-3">
+                <div class="grid grid-cols-2 gap-2">
                     <input type="text" id="edit-subdist" class="form-input" placeholder="ตำบล/แขวง">
                     <input type="text" id="edit-dist" class="form-input" placeholder="อำเภอ/เขต">
                 </div>
-                <div class="grid grid-cols-2 gap-3">
-                    <select id="edit-prov" class="form-input bg-slate-50 font-bold"><option value="">-- จังหวัด --</option></select>
+                <div class="grid grid-cols-2 gap-2">
+                    <select id="edit-prov" class="form-input bg-gray-50 font-bold"><option value="">-- จังหวัด --</option></select>
                     <input type="text" id="edit-zip" class="form-input" placeholder="รหัสไปรษณีย์">
                 </div>
-                <button onclick="saveAddress(this)" class="w-full theme-pink text-white py-4 rounded-2xl font-bold shadow-lg mt-4 text-lg">บันทึกข้อมูล</button>
+                <button onclick="saveAddress(this)" class="w-full theme-pink text-white py-3.5 rounded-xl font-semibold shadow-md mt-4 text-sm">บันทึกข้อมูล</button>
             </div>
         </div>
 
@@ -280,7 +311,6 @@
         let currentUser = null;
         let currentLineUid = "";
 
-        // 77 จังหวัด
         const provinces = [
             "กรุงเทพมหานคร","กระบี่","กาญจนบุรี","กาฬสินธุ์","กำแพงเพชร","ขอนแก่น","จันทบุรี","ฉะเชิงเทรา","ชลบุรี","ชัยนาท","ชัยภูมิ","ชุมพร","เชียงราย","เชียงใหม่","ตรัง","ตราด","ตาก","นครนายก","นครปฐม","นครพนม","นครราชสีมา","นครศรีธรรมราช","นครสวรรค์","นนทบุรี","นราธิวาส","น่าน","บึงกาฬ","บุรีรัมย์","ปทุมธานี","ประจวบคีรีขันธ์","ปราจีนบุรี","ปัตตานี","พระนครศรีอยุธยา","พะเยา","พังงา","พัทลุง","พิจิตร","พิษณุโลก","เพชรบุรี","เพชรบูรณ์","แพร่","ภูเก็ต","มหาสารคาม","มุกดาหาร","แม่ฮ่องสอน","ยโสธร","ยะลา","ร้อยเอ็ด","ระนอง","ระยอง","ราชบุรี","ลพบุรี","ลำปาง","ลำพูน","เลย","ศรีสะเกษ","สกลนคร","สงขลา","สตูล","สมุทรปราการ","สมุทรสงคราม","สมุทรสาคร","สระแก้ว","สระบุรี","สิงห์บุรี","สุโขทัย","สุพรรณบุรี","สุราษฎร์ธานี","สุรินทร์","หนองคาย","หนองบัวลำภู","อ่างทอง","อำนาจเจริญ","อุดรธานี","อุตรดิตถ์","อุทัยธานี","อุบลราชธานี"
         ];
@@ -296,7 +326,6 @@
         }
 
         document.addEventListener("DOMContentLoaded", function() {
-            // เติมจังหวัดลง Dropdown
             const selects = ['reg-prov', 'edit-prov', 'wm-prov'];
             selects.forEach(id => {
                 const el = document.getElementById(id);
@@ -317,7 +346,6 @@
                     liff.getProfile().then(async profile => {
                         currentLineUid = profile.userId;
                         const res = await callAPI("autoLoginByUid", { uid: currentLineUid });
-                        document.getElementById('loading-header').innerHTML = `<i class="fa-solid fa-circle-check text-green-300"></i>`;
                         
                         if(res && res.memberId) {
                             currentUser = res;
@@ -325,14 +353,23 @@
                             renderProfile();
                         } else {
                             if(!currentUser) showPage('login');
+                            document.getElementById('loading-header').innerHTML = `<i class="fa-solid fa-user-xmark"></i>`;
                         }
+                        hideLoader();
                     });
                 } else { liff.login(); }
             }).catch(err => {
-                document.getElementById('loading-header').innerHTML = "";
+                hideLoader();
                 if(!currentUser) showPage('login');
             });
+
+            setTimeout(hideLoader, 3000);
         });
+
+        function hideLoader() {
+            const loader = document.getElementById('liff-loading');
+            if (loader) loader.style.display = 'none';
+        }
 
         function showPage(pageId) {
             document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
@@ -344,10 +381,10 @@
             const dateInput = document.getElementById('reg-birthdate');
             const ageBox = document.getElementById('age-box');
             if(cb.checked) {
-                dateInput.disabled = true; dateInput.classList.add('bg-slate-100', 'text-slate-400'); dateInput.value = "";
+                dateInput.disabled = true; dateInput.classList.add('bg-gray-100', 'text-gray-400'); dateInput.value = "";
                 ageBox.classList.remove('hidden');
             } else {
-                dateInput.disabled = false; dateInput.classList.remove('bg-slate-100', 'text-slate-400');
+                dateInput.disabled = false; dateInput.classList.remove('bg-gray-100', 'text-gray-400');
                 ageBox.classList.add('hidden');
                 document.getElementById('reg-age').value = "";
             }
@@ -359,7 +396,6 @@
             const name = document.getElementById('reg-name').value.trim();
             const phone = document.getElementById('reg-phone').value.trim();
             
-            // เช็คเรื่องวันเกิด/อายุ
             const isUnknownDate = document.getElementById('no-birthdate').checked;
             const bDate = document.getElementById('reg-birthdate').value;
             const age = document.getElementById('reg-age').value;
@@ -387,7 +423,7 @@
                 err.innerText = "กรุณากรอกข้อมูลที่มี * ให้ครบถ้วน"; err.classList.remove('hidden'); return;
             }
 
-            btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังบันทึก...';
+            btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
             err.classList.add('hidden');
 
             const isUnknownDate = document.getElementById('no-birthdate').checked;
@@ -433,6 +469,7 @@
             
             document.getElementById('prof-memberid').innerText = currentUser.memberId || "GD-00000";
             document.getElementById('prof-fullname').innerText = (currentUser.prefix || "") + " " + currentUser.name;
+            document.getElementById('loading-header').innerHTML = `<i class="fa-solid fa-user"></i>`;
 
             if(currentUser.wasteMoney === "ใช่") {
                 document.getElementById('box-join-waste').classList.add('hidden');
@@ -473,7 +510,7 @@
         }
 
         async function confirmWasteMoney(btn) {
-            btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังส่งข้อมูล...';
+            btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
             const wmAddress = {
                 memberId: currentUser.memberId, name: currentUser.prefix + " " + currentUser.name, phone: currentUser.phone, lineUid: currentLineUid,
                 house: document.getElementById('wm-house').value, moo: document.getElementById('wm-moo').value,
@@ -483,7 +520,7 @@
             const res = await callAPI("joinWasteMoney", wmAddress);
             if(res.success) {
                 currentUser.wasteMoney = "ใช่"; localStorage.setItem('gooddaySession', JSON.stringify(currentUser));
-                alert("ยินดีต้อนรับเข้าสู่โครงการ! ระบบได้ส่งข้อความยืนยันไปที่ LINE แล้ว"); renderProfile();
+                alert("เข้าร่วมโครงการสำเร็จ! สถานะของคุณได้รับการอัปเดตแล้ว"); renderProfile();
             } else {
                 alert("เกิดข้อผิดพลาด: " + res.message); btn.disabled = false; btn.innerText = "ยืนยันเข้าร่วมโครงการ";
             }
@@ -497,6 +534,39 @@
         }
 
         // ==========================================
+        // 🎫 ระบบรับคูปอง (สแกน / กรอกโค้ด)
+        // ==========================================
+        function scanQR() {
+            if (liff.scanCodeV2) {
+                liff.scanCodeV2().then(result => {
+                    if(result.value) {
+                        document.getElementById('coupon-code').value = result.value;
+                        // สามารถสั่งให้กดรับคูปองอัตโนมัติได้เลยด้วย redeemCoupon(document.querySelector('...'))
+                    }
+                }).catch(err => {
+                    alert("ไม่สามารถเปิดกล้องได้ หรือคุณยกเลิกการสแกน");
+                });
+            } else {
+                alert("อุปกรณ์ของคุณไม่รองรับการสแกน QR Code ในขณะนี้");
+            }
+        }
+
+        async function redeemCoupon(btn) {
+            const code = document.getElementById('coupon-code').value.trim();
+            if(!code) return alert("กรุณากรอกรหัสโค้ด");
+            
+            btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+            
+            // ตอนนี้เป็นการทำระบบจำลอง (Mockup) ว่าได้รับสำเร็จ หากมีฐานข้อมูลคูปองสามารถเปลี่ยนไปยิง API ได้
+            setTimeout(() => {
+                alert("🎉 ยินดีด้วย! คุณได้รับคูปองส่วนลด 20 บาท สำหรับใช้ในร้านค้า Goodday Shop สำเร็จแล้ว!");
+                document.getElementById('coupon-code').value = "";
+                btn.disabled = false; btn.innerText = "ตรวจสอบและรับคูปอง";
+                showPage('profile');
+            }, 1500);
+        }
+
+        // ==========================================
         // 🩺 ระบบ Health Records
         // ==========================================
         async function openHealthRecords() {
@@ -507,94 +577,94 @@
             const listObj = document.getElementById('health-list');
             if(!res || res.length === 0) {
                 listObj.innerHTML = `
-                    <div class="text-center py-12 bg-white rounded-2xl shadow-sm border border-slate-100">
-                        <div class="text-5xl text-slate-200 mb-4"><i class="fa-solid fa-notes-medical"></i></div>
-                        <p class="text-slate-500 font-bold">ยังไม่มีบันทึกข้อมูลสุขภาพของคุณ</p>
+                    <div class="text-center py-12 bg-white rounded-xl shadow-sm border border-gray-100 mt-4">
+                        <div class="text-4xl text-gray-200 mb-3"><i class="fa-solid fa-notes-medical"></i></div>
+                        <p class="text-gray-400 font-medium text-sm">ยังไม่มีบันทึกข้อมูลสุขภาพของคุณ</p>
                     </div>`;
                 return;
             }
 
             let html = res.map(r => {
-                let bpColor = "bg-emerald-100 text-emerald-700 border-emerald-200"; let bpLabel = "ปกติ สุขภาพดี";
+                let bpColor = "bg-green-100 text-green-700 border-green-200"; let bpLabel = "ปกติ สุขภาพดี";
                 if(r.bp) {
                     let parts = r.bp.split('/');
                     if(parts.length === 2) {
                         let sys = parseInt(parts[0]); let dia = parseInt(parts[1]);
-                        if(sys >= 140 || dia >= 90) { bpColor = "bg-rose-100 text-rose-700 border-rose-200"; bpLabel = "อันตราย ควรพบแพทย์"; }
-                        else if(sys >= 120 || dia >= 80) { bpColor = "bg-amber-100 text-amber-700 border-amber-200"; bpLabel = "มีความเสี่ยง ควรเฝ้าระวัง"; }
+                        if(sys >= 140 || dia >= 90) { bpColor = "bg-red-100 text-red-700 border-red-200"; bpLabel = "อันตราย ควรพบแพทย์"; }
+                        else if(sys >= 120 || dia >= 80) { bpColor = "bg-orange-100 text-orange-700 border-orange-200"; bpLabel = "มีความเสี่ยง ควรเฝ้าระวัง"; }
                     }
                 }
 
-                let cvColor = "bg-emerald-100 text-emerald-700 border-emerald-200"; let cvLabel = "เสี่ยงน้อย";
+                let cvColor = "bg-green-100 text-green-700 border-green-200"; let cvLabel = "เสี่ยงน้อย";
                 if(r.cvRisk) {
                     let cv = parseFloat(r.cvRisk);
-                    if(cv > 30) { cvColor = "bg-rose-100 text-rose-700 border-rose-200"; cvLabel = "เสี่ยงสูงมาก"; }
+                    if(cv > 30) { cvColor = "bg-red-100 text-red-700 border-red-200"; cvLabel = "เสี่ยงสูงมาก"; }
                     else if(cv > 20) { cvColor = "bg-orange-100 text-orange-700 border-orange-200"; cvLabel = "เสี่ยงสูง"; }
-                    else if(cv > 10) { cvColor = "bg-amber-100 text-amber-700 border-amber-200"; cvLabel = "เสี่ยงปานกลาง"; }
+                    else if(cv > 10) { cvColor = "bg-yellow-100 text-yellow-700 border-yellow-200"; cvLabel = "เสี่ยงปานกลาง"; }
                 }
 
-                let spo2Color = "bg-emerald-100 text-emerald-700 border-emerald-200"; let spo2Label = "ปกติ";
+                let spo2Color = "bg-green-100 text-green-700 border-green-200"; let spo2Label = "ปกติ";
                 if(r.spo2) {
                     let s = parseFloat(r.spo2);
-                    if(s < 92) { spo2Color = "bg-rose-100 text-rose-700 border-rose-200"; spo2Label = "ต่ำผิดปกติ"; }
-                    else if(s < 96) { spo2Color = "bg-amber-100 text-amber-700 border-amber-200"; spo2Label = "ควรเฝ้าระวัง"; }
+                    if(s < 92) { spo2Color = "bg-red-100 text-red-700 border-red-200"; spo2Label = "ต่ำผิดปกติ"; }
+                    else if(s < 96) { spo2Color = "bg-orange-100 text-orange-700 border-orange-200"; spo2Label = "ควรเฝ้าระวัง"; }
                 }
 
                 let isSattahip = currentUser.address && currentUser.address.dist.includes("สัตหีบ");
                 let liverHtml = "";
                 if(!isSattahip && r.liverFluke) {
-                    let lvColor = (r.liverFluke === "ตรวจพบ") ? "text-rose-600 bg-rose-50" : "text-emerald-600 bg-emerald-50";
+                    let lvColor = (r.liverFluke === "ตรวจพบ") ? "text-red-600 bg-red-50" : "text-green-600 bg-green-50";
                     liverHtml = `
-                    <div class="flex justify-between items-center py-3 border-t border-slate-100">
-                        <span class="text-slate-600 text-sm font-bold"><i class="fa-solid fa-microscope text-slate-400 mr-2"></i> พยาธิใบไม้ตับ</span>
-                        <span class="${lvColor} text-xs font-bold px-3 py-1 rounded-lg">${r.liverFluke}</span>
+                    <div class="flex justify-between items-center py-2 border-t border-gray-100">
+                        <span class="text-gray-600 text-xs font-semibold"><i class="fa-solid fa-microscope text-gray-400 w-4 text-center mr-1"></i> พยาธิใบไม้ตับ</span>
+                        <span class="${lvColor} text-[10px] font-bold px-2 py-0.5 rounded">${r.liverFluke}</span>
                     </div>`;
                 }
 
                 return `
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden mb-4">
-                    <div class="bg-gradient-to-r from-blue-50 to-indigo-50 px-5 py-3 border-b border-blue-100 flex justify-between items-center">
-                        <span class="font-bold text-blue-800"><i class="fa-regular fa-calendar-check mr-2"></i>ตรวจเมื่อ ${r.date}</span>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-3">
+                    <div class="bg-blue-50 px-4 py-2 border-b border-blue-100 flex justify-between items-center">
+                        <span class="font-bold text-blue-800 text-xs"><i class="fa-regular fa-calendar-check mr-2"></i>ตรวจเมื่อ ${r.date}</span>
                     </div>
-                    <div class="p-5 space-y-1">
-                        <div class="grid grid-cols-3 gap-2 mb-4 bg-slate-50 p-3 rounded-xl border border-slate-100 text-center">
-                            <div><p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">น้ำหนัก</p><p class="text-base font-black text-slate-700">${r.weight||"-"} <span class="text-[10px] font-medium text-slate-500">kg</span></p></div>
-                            <div class="border-l border-r border-slate-200"><p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">ส่วนสูง</p><p class="text-base font-black text-slate-700">${r.height||"-"} <span class="text-[10px] font-medium text-slate-500">m</span></p></div>
-                            <div><p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">BMI</p><p class="text-base font-black text-slate-700">${r.bmi||"-"}</p></div>
+                    <div class="p-4 space-y-1">
+                        <div class="grid grid-cols-3 gap-2 mb-3 bg-gray-50 p-2 rounded-lg border border-gray-100 text-center">
+                            <div><p class="text-[9px] text-gray-400 font-bold uppercase">น้ำหนัก</p><p class="text-sm font-black text-gray-700">${r.weight||"-"} <span class="text-[9px] font-medium text-gray-500">kg</span></p></div>
+                            <div class="border-l border-r border-gray-200"><p class="text-[9px] text-gray-400 font-bold uppercase">ส่วนสูง</p><p class="text-sm font-black text-gray-700">${r.height||"-"} <span class="text-[9px] font-medium text-gray-500">m</span></p></div>
+                            <div><p class="text-[9px] text-gray-400 font-bold uppercase">BMI</p><p class="text-sm font-black text-gray-700">${r.bmi||"-"}</p></div>
                         </div>
 
-                        <div class="py-2">
+                        <div class="py-1.5">
                             <div class="flex justify-between items-center mb-1">
-                                <span class="text-slate-700 text-sm font-bold"><i class="fa-solid fa-droplet text-rose-400 mr-2 w-4 text-center"></i> ความดันโลหิต</span>
-                                <span class="text-slate-800 font-bold">${r.bp||"-"} mmHg</span>
+                                <span class="text-gray-700 text-xs font-semibold"><i class="fa-solid fa-droplet text-red-400 w-4 text-center mr-1"></i> ความดันโลหิต</span>
+                                <span class="text-gray-800 font-bold text-xs">${r.bp||"-"} mmHg</span>
                             </div>
-                            <div class="${bpColor} text-[11px] font-bold px-2 py-0.5 rounded border inline-block ml-8">${bpLabel}</div>
+                            <div class="${bpColor} text-[9px] font-bold px-1.5 py-0.5 rounded border inline-block ml-6">${bpLabel}</div>
                         </div>
 
-                        <div class="flex justify-between items-center py-3 border-t border-slate-100">
-                            <span class="text-slate-700 text-sm font-bold"><i class="fa-solid fa-heart-pulse text-rose-500 mr-2 w-4 text-center"></i> ชีพจร (Heart Rate)</span>
-                            <span class="text-slate-800 font-bold bg-slate-100 px-3 py-1 rounded-lg text-xs">${r.hr||"-"} bpm</span>
+                        <div class="flex justify-between items-center py-2 border-t border-gray-100">
+                            <span class="text-gray-700 text-xs font-semibold"><i class="fa-solid fa-heart-pulse text-red-500 w-4 text-center mr-1"></i> ชีพจร (HR)</span>
+                            <span class="text-gray-800 font-bold bg-gray-100 px-2 py-0.5 rounded text-[10px]">${r.hr||"-"} bpm</span>
                         </div>
 
-                        <div class="py-3 border-t border-slate-100">
+                        <div class="py-2 border-t border-gray-100">
                             <div class="flex justify-between items-center mb-1">
-                                <span class="text-slate-700 text-sm font-bold"><i class="fa-solid fa-chart-pie text-orange-400 mr-2 w-4 text-center"></i> ความเสี่ยงหัวใจ (10 ปี)</span>
-                                <span class="text-slate-800 font-bold">${r.cvRisk||"-"} %</span>
+                                <span class="text-gray-700 text-xs font-semibold"><i class="fa-solid fa-chart-pie text-orange-400 w-4 text-center mr-1"></i> ความเสี่ยงหัวใจ</span>
+                                <span class="text-gray-800 font-bold text-xs">${r.cvRisk||"-"} %</span>
                             </div>
-                            <div class="${cvColor} text-[11px] font-bold px-2 py-0.5 rounded border inline-block ml-8">${cvLabel}</div>
+                            <div class="${cvColor} text-[9px] font-bold px-1.5 py-0.5 rounded border inline-block ml-6">${cvLabel}</div>
                         </div>
 
-                        <div class="flex justify-between items-center py-3 border-t border-slate-100">
-                            <span class="text-slate-700 text-sm font-bold"><i class="fa-solid fa-lungs text-sky-400 mr-2 w-4 text-center"></i> สมรรถภาพปอด (PEFR)</span>
-                            <span class="text-slate-800 font-bold bg-slate-100 px-3 py-1 rounded-lg text-xs">${r.pefr||"-"} L/min</span>
+                        <div class="flex justify-between items-center py-2 border-t border-gray-100">
+                            <span class="text-gray-700 text-xs font-semibold"><i class="fa-solid fa-lungs text-sky-400 w-4 text-center mr-1"></i> สมรรถภาพปอด</span>
+                            <span class="text-gray-800 font-bold bg-gray-100 px-2 py-0.5 rounded text-[10px]">${r.pefr||"-"} L/min</span>
                         </div>
                         
-                        <div class="py-3 border-t border-slate-100">
+                        <div class="py-2 border-t border-gray-100">
                             <div class="flex justify-between items-center">
-                                <span class="text-slate-700 text-sm font-bold"><i class="fa-solid fa-wind text-cyan-400 mr-2 w-4 text-center"></i> ออกซิเจนในเลือด (SpO2)</span>
-                                <span class="text-slate-800 font-bold">${r.spo2||"-"} %</span>
+                                <span class="text-gray-700 text-xs font-semibold"><i class="fa-solid fa-wind text-cyan-400 w-4 text-center mr-1"></i> ออกซิเจนในเลือด</span>
+                                <span class="text-gray-800 font-bold text-xs">${r.spo2||"-"} %</span>
                             </div>
-                            <div class="${spo2Color} text-[11px] font-bold px-2 py-0.5 rounded border inline-block ml-8 mt-1">${spo2Label}</div>
+                            <div class="${spo2Color} text-[9px] font-bold px-1.5 py-0.5 rounded border inline-block ml-6 mt-1">${spo2Label}</div>
                         </div>
 
                         ${liverHtml}
