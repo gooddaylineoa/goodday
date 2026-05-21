@@ -16,8 +16,6 @@
         .page-section { display: none; animation: fadeIn 0.3s; }
         .page-section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
-        /* สไตล์ Input ให้อ่านง่าย ชัดเจน */
         .form-input {
             width: 100%; border: 1px solid #D1D5DB; border-radius: 0.75rem; padding: 0.75rem;
             font-family: 'Sarabun', sans-serif; font-size: 1rem; color: #374151; transition: border-color 0.2s;
@@ -50,7 +48,7 @@
                     <label class="form-label">รหัสผ่าน</label>
                     <input type="password" id="login-pass" class="form-input" placeholder="กรอกรหัสผ่าน...">
                 </div>
-                <div id="login-error" class="bg-red-50 text-red-600 text-sm p-3 rounded-lg text-center font-medium hidden"></div>
+                <div id="login-error" class="bg-red-50 text-red-600 text-sm p-3 rounded-lg text-center font-bold hidden"></div>
                 
                 <button onclick="doLogin(this)" class="w-full theme-pink text-white py-3.5 rounded-xl font-bold text-lg shadow-md hover:bg-pink-700 transition">เข้าสู่ระบบ</button>
                 <div class="text-center mt-4">
@@ -65,40 +63,18 @@
                 <button onclick="showPage('login')" class="w-10 h-10 bg-gray-100 rounded-full text-gray-600 mr-3"><i class="fa-solid fa-arrow-left"></i></button>
                 <h2 class="text-2xl font-bold theme-text">ข้อมูลส่วนตัว (1/2)</h2>
             </div>
-            
             <div class="space-y-4">
                 <div class="grid grid-cols-3 gap-3">
-                    <div class="col-span-1">
-                        <label class="form-label">คำนำหน้า *</label>
-                        <input type="text" id="reg-prefix" class="form-input" placeholder="นาย/นาง/นางสาว">
-                    </div>
-                    <div class="col-span-2">
-                        <label class="form-label">ชื่อ-นามสกุล *</label>
-                        <input type="text" id="reg-name" class="form-input" placeholder="ชื่อ นามสกุล">
-                    </div>
+                    <div class="col-span-1"><label class="form-label">คำนำหน้า *</label><input type="text" id="reg-prefix" class="form-input" placeholder="นาย/นาง"></div>
+                    <div class="col-span-2"><label class="form-label">ชื่อ-นามสกุล *</label><input type="text" id="reg-name" class="form-input" placeholder="ชื่อ นามสกุล"></div>
                 </div>
-                
                 <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="form-label">ปีเกิด (พ.ศ.)</label>
-                        <input type="number" id="reg-birth" class="form-input" placeholder="เช่น 2530">
-                    </div>
-                    <div>
-                        <label class="form-label">อายุ</label>
-                        <input type="number" id="reg-age" class="form-input" placeholder="เช่น 35">
-                    </div>
+                    <div><label class="form-label">วันเกิด</label><input type="number" id="reg-birth" class="form-input" placeholder="เช่น 25/08/2550"></div>
+                    <div><label class="form-label">อายุ</label><input type="number" id="reg-age" class="form-input" placeholder="เช่น 19"></div>
                 </div>
-
-                <div>
-                    <label class="form-label">เบอร์โทรศัพท์ (ใช้เข้าระบบ) *</label>
-                    <input type="tel" id="reg-phone" class="form-input" placeholder="08xxxxxxxx">
-                </div>
-                <div>
-                    <label class="form-label">LINE ID</label>
-                    <input type="text" id="reg-lineid" class="form-input" placeholder="ไอดีไลน์ของคุณ">
-                </div>
-
-                <div id="reg1-error" class="text-red-500 text-sm text-center font-medium hidden"></div>
+                <div><label class="form-label">เบอร์โทรศัพท์ *</label><input type="tel" id="reg-phone" class="form-input" placeholder="08xxxxxxxx"></div>
+                <div><label class="form-label">LINE ID</label><input type="text" id="reg-lineid" class="form-input" placeholder="ไอดีไลน์ของคุณ"></div>
+                <div id="reg1-error" class="text-red-500 text-sm text-center font-bold hidden"></div>
                 <button onclick="nextToReg2()" class="w-full theme-pink text-white py-3.5 rounded-xl font-bold text-lg shadow-md mt-4">ถัดไป <i class="fa-solid fa-arrow-right ml-2"></i></button>
             </div>
         </div>
@@ -108,26 +84,14 @@
                 <button onclick="showPage('reg-1')" class="w-10 h-10 bg-gray-100 rounded-full text-gray-600 mr-3"><i class="fa-solid fa-arrow-left"></i></button>
                 <h2 class="text-2xl font-bold theme-text">บัญชี & ที่อยู่ (2/2)</h2>
             </div>
-            
             <div class="space-y-4">
-                <div>
-                    <label class="form-label">อีเมล (ใช้เข้าระบบได้)</label>
-                    <input type="email" id="reg-email" class="form-input" placeholder="example@email.com">
-                </div>
+                <div><label class="form-label">อีเมล </label><input type="email" id="reg-email" class="form-input" placeholder="example@email.com"></div>
                 <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="form-label">รหัสผ่าน *</label>
-                        <input type="password" id="reg-pass" class="form-input" placeholder="รหัสผ่าน">
-                    </div>
-                    <div>
-                        <label class="form-label">ยืนยันรหัสผ่าน *</label>
-                        <input type="password" id="reg-pass2" class="form-input" placeholder="ยืนยันอีกครั้ง">
-                    </div>
+                    <div><label class="form-label">รหัสผ่าน *</label><input type="password" id="reg-pass" class="form-input" placeholder="รหัสผ่าน"></div>
+                    <div><label class="form-label">ยืนยันรหัสผ่าน *</label><input type="password" id="reg-pass2" class="form-input" placeholder="ยืนยันอีกครั้ง"></div>
                 </div>
-
                 <hr class="my-4 border-gray-200">
                 <p class="font-bold text-gray-800 mb-2"><i class="fa-solid fa-location-dot theme-text mr-2"></i>ที่อยู่ปัจจุบัน</p>
-                
                 <div class="grid grid-cols-2 gap-3">
                     <div><label class="form-label">บ้านเลขที่ *</label><input type="text" id="reg-house" class="form-input"></div>
                     <div><label class="form-label">หมู่ / หมู่บ้าน</label><input type="text" id="reg-moo" class="form-input"></div>
@@ -138,17 +102,10 @@
                     <div><label class="form-label">อำเภอ/เขต *</label><input type="text" id="reg-dist" class="form-input"></div>
                 </div>
                 <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="form-label">จังหวัด *</label>
-                        <select id="reg-prov" class="form-input bg-white">
-                            <option value="">เลือกจังหวัด</option>
-                            <option>กรุงเทพมหานคร</option><option>สมุทรปราการ</option><option>นนทบุรี</option>
-                        </select>
-                    </div>
+                    <div><label class="form-label">จังหวัด *</label><input type="text" id="reg-prov" class="form-input"></div>
                     <div><label class="form-label">รหัสไปรษณีย์ *</label><input type="text" id="reg-zip" class="form-input"></div>
                 </div>
-
-                <div id="reg2-error" class="bg-red-50 text-red-600 text-sm p-3 rounded-lg text-center font-medium hidden"></div>
+                <div id="reg2-error" class="bg-red-50 text-red-600 text-sm p-3 rounded-lg text-center font-bold hidden"></div>
                 <button onclick="submitRegister(this)" class="w-full theme-pink text-white py-3.5 rounded-xl font-bold text-lg shadow-md mt-4">✅ ยืนยันสมัครสมาชิก</button>
             </div>
         </div>
@@ -162,14 +119,14 @@
                 <p id="prof-phone" class="text-pink-100 text-sm"><i class="fa-solid fa-phone mr-2"></i>08xxxxxxxx</p>
             </div>
 
-            <div id="box-join-waste" class="bg-green-50 border border-green-200 rounded-xl p-5 mb-6 text-center">
+            <div id="box-join-waste" class="bg-green-50 border border-green-200 rounded-xl p-5 mb-4 text-center">
                 <div class="text-3xl mb-2 text-green-500"><i class="fa-solid fa-recycle"></i></div>
                 <h3 class="font-bold text-green-800 text-lg mb-2">โครงการ Waste Money</h3>
                 <p class="text-sm text-green-700 mb-4 leading-relaxed">ร่วมจัดการขยะกับเรา รับทันทีส่วนลด 25% สำหรับซื้อสินค้าในร้าน Goodday Shop</p>
                 <button onclick="showPage('waste-reg')" class="bg-green-500 text-white px-6 py-2.5 rounded-full font-bold shadow-md hover:bg-green-600 transition">เข้าร่วมโครงการฟรี!</button>
             </div>
 
-            <div id="box-active-waste" class="bg-gradient-to-r from-green-400 to-green-500 rounded-xl p-4 mb-6 text-white flex items-center shadow-md hidden">
+            <div id="box-active-waste" class="bg-gradient-to-r from-green-400 to-green-500 rounded-xl p-4 mb-4 text-white flex items-center shadow-md hidden">
                 <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center text-2xl mr-4"><i class="fa-solid fa-leaf"></i></div>
                 <div>
                     <h3 class="font-bold text-lg">สมาชิก Waste Money</h3>
@@ -178,6 +135,12 @@
             </div>
 
             <div class="bg-white border rounded-xl shadow-sm overflow-hidden mb-6">
+                
+                <button onclick="openHealthRecords()" class="w-full flex justify-between items-center p-4 border-b hover:bg-gray-50 transition">
+                    <span class="font-bold text-gray-700"><i class="fa-solid fa-notes-medical w-6 text-center text-blue-500 mr-2"></i> สมุดพกสุขภาพ</span>
+                    <i class="fa-solid fa-chevron-right text-gray-400"></i>
+                </button>
+
                 <button onclick="showPage('edit-address')" class="w-full flex justify-between items-center p-4 border-b hover:bg-gray-50 transition">
                     <span class="font-bold text-gray-700"><i class="fa-solid fa-map-location-dot w-6 text-center text-pink-500 mr-2"></i> แก้ไขที่อยู่จัดส่ง</span>
                     <i class="fa-solid fa-chevron-right text-gray-400"></i>
@@ -185,6 +148,45 @@
             </div>
 
             <button onclick="doLogout()" class="w-full bg-red-50 text-red-600 py-3.5 rounded-xl font-bold border border-red-100 hover:bg-red-100 transition"><i class="fa-solid fa-arrow-right-from-bracket mr-2"></i> ออกจากระบบ</button>
+        </div>
+
+        <div id="page-health" class="page-section p-4 pt-6 bg-blue-50 min-h-screen">
+            <div class="flex items-center mb-6">
+                <button onclick="showPage('profile')" class="w-10 h-10 bg-white rounded-full text-gray-600 mr-3 shadow-sm"><i class="fa-solid fa-arrow-left"></i></button>
+                <h2 class="text-xl font-bold text-blue-800">สมุดพกสุขภาพ</h2>
+            </div>
+            
+            <p class="text-sm text-gray-600 mb-4 px-2">ข้อมูลนี้ใช้สำหรับเปรียบเทียบและติดตามสุขภาพของคุณในแต่ละรอบกิจกรรม</p>
+            
+            <div id="health-list" class="space-y-4">
+                <div class="text-center py-10 text-gray-500"><i class="fa-solid fa-spinner fa-spin text-2xl mb-2 text-blue-500"></i><br>กำลังดึงข้อมูลสุขภาพ...</div>
+            </div>
+        </div>
+
+        <div id="page-waste-reg" class="page-section p-6 pt-6 bg-green-50 min-h-screen">
+            <div class="flex items-center mb-6">
+                <button onclick="showPage('profile')" class="w-10 h-10 bg-white rounded-full text-gray-600 mr-3 shadow-sm"><i class="fa-solid fa-arrow-left"></i></button>
+                <h2 class="text-xl font-bold text-green-700">ยืนยันจุดรับขยะ</h2>
+            </div>
+            <div class="bg-white p-5 rounded-2xl shadow-sm mb-6 border border-green-100">
+                <p class="text-gray-600 text-sm mb-4 leading-relaxed">ตรวจสอบที่อยู่ด้านล่าง เพื่อใช้เป็น <strong class="text-green-600">จุดวางกระสอบขยะ</strong> (สามารถแก้ไขได้ที่นี่ จะไม่กระทบกับที่อยู่โปรไฟล์หลัก)</p>
+                <div class="space-y-3">
+                    <div class="grid grid-cols-2 gap-3">
+                        <div><label class="text-xs font-bold text-gray-500">บ้านเลขที่</label><input type="text" id="wm-house" class="form-input bg-gray-50"></div>
+                        <div><label class="text-xs font-bold text-gray-500">หมู่</label><input type="text" id="wm-moo" class="form-input bg-gray-50"></div>
+                    </div>
+                    <div><label class="text-xs font-bold text-gray-500">ถนน</label><input type="text" id="wm-road" class="form-input bg-gray-50"></div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div><label class="text-xs font-bold text-gray-500">ตำบล</label><input type="text" id="wm-subdist" class="form-input bg-gray-50"></div>
+                        <div><label class="text-xs font-bold text-gray-500">อำเภอ</label><input type="text" id="wm-dist" class="form-input bg-gray-50"></div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div><label class="text-xs font-bold text-gray-500">จังหวัด</label><input type="text" id="wm-prov" class="form-input bg-gray-50"></div>
+                        <div><label class="text-xs font-bold text-gray-500">รหัสไปรษณีย์</label><input type="text" id="wm-zip" class="form-input bg-gray-50"></div>
+                    </div>
+                </div>
+            </div>
+            <button onclick="confirmWasteMoney(this)" class="w-full bg-green-500 text-white py-3.5 rounded-xl font-bold text-lg shadow-md hover:bg-green-600 transition">ยืนยันเข้าร่วมโครงการ</button>
         </div>
 
         <div id="page-edit-address" class="page-section p-6 pt-6">
@@ -210,39 +212,11 @@
             </div>
         </div>
 
-        <div id="page-waste-reg" class="page-section p-6 pt-6 bg-green-50 min-h-screen">
-            <div class="flex items-center mb-6">
-                <button onclick="showPage('profile')" class="w-10 h-10 bg-white rounded-full text-gray-600 mr-3 shadow-sm"><i class="fa-solid fa-arrow-left"></i></button>
-                <h2 class="text-xl font-bold text-green-700">ยืนยันจุดรับขยะ</h2>
-            </div>
-            
-            <div class="bg-white p-5 rounded-2xl shadow-sm mb-6 border border-green-100">
-                <p class="text-gray-600 text-sm mb-4 leading-relaxed">กรุณาตรวจสอบที่อยู่ด้านล่าง เพื่อใช้เป็น <strong class="text-green-600">จุดวางกระสอบขยะ</strong> หากถูกต้องแล้วสามารถกดยืนยันได้เลย (หากไม่ใช่ สามารถแก้ไขได้ที่นี่ จะไม่กระทบกับที่อยู่โปรไฟล์หลัก)</p>
-                
-                <div class="space-y-3">
-                    <div class="grid grid-cols-2 gap-3">
-                        <div><label class="text-xs font-bold text-gray-500">บ้านเลขที่</label><input type="text" id="wm-house" class="form-input bg-gray-50"></div>
-                        <div><label class="text-xs font-bold text-gray-500">หมู่</label><input type="text" id="wm-moo" class="form-input bg-gray-50"></div>
-                    </div>
-                    <div><label class="text-xs font-bold text-gray-500">ถนน</label><input type="text" id="wm-road" class="form-input bg-gray-50"></div>
-                    <div class="grid grid-cols-2 gap-3">
-                        <div><label class="text-xs font-bold text-gray-500">ตำบล</label><input type="text" id="wm-subdist" class="form-input bg-gray-50"></div>
-                        <div><label class="text-xs font-bold text-gray-500">อำเภอ</label><input type="text" id="wm-dist" class="form-input bg-gray-50"></div>
-                    </div>
-                    <div class="grid grid-cols-2 gap-3">
-                        <div><label class="text-xs font-bold text-gray-500">จังหวัด</label><input type="text" id="wm-prov" class="form-input bg-gray-50"></div>
-                        <div><label class="text-xs font-bold text-gray-500">รหัสไปรษณีย์</label><input type="text" id="wm-zip" class="form-input bg-gray-50"></div>
-                    </div>
-                </div>
-            </div>
-            
-            <button onclick="confirmWasteMoney(this)" class="w-full bg-green-500 text-white py-3.5 rounded-xl font-bold text-lg shadow-md hover:bg-green-600 transition">ยืนยันเข้าร่วมโครงการ</button>
-        </div>
     </div>
 
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbwN8QmRIb5gVByL6nrZ_H_kYWiYwULaSQOBT5ahS0XBISwTONw80GZgiTRssPcUmIWQ/exec";
-        const LIFF_ID = "2009970638-dqNKJ4CJ"; // ถ้าไม่มี LIFF แยกให้ใช้ของ Booking ได้เลย
+        const LIFF_ID = "ใส่_LIFF_ID_ของโปรไฟล์ตรงนี้"; 
         
         let currentUser = null;
         let currentLineUid = "";
@@ -292,6 +266,7 @@
             window.scrollTo(0, 0);
         }
 
+        // ... (ระบบสมัครสมาชิก, ลงชื่อเข้าใช้, อัปเดตที่อยู่, Waste Money ยังคงใช้โค้ดเดิมทั้งหมด) ...
         function nextToReg2() {
             const err = document.getElementById('reg1-error');
             const prefix = document.getElementById('reg-prefix').value.trim();
@@ -318,27 +293,19 @@
             err.classList.add('hidden');
 
             const data = {
-                prefix: document.getElementById('reg-prefix').value.trim(),
-                name: document.getElementById('reg-name').value.trim(),
-                birthYear: document.getElementById('reg-birth').value.trim(),
-                age: document.getElementById('reg-age').value.trim(),
-                phone: document.getElementById('reg-phone').value.trim(),
-                lineId: document.getElementById('reg-lineid').value.trim(),
-                email: document.getElementById('reg-email').value.trim(),
-                password: pass,
-                lineUid: currentLineUid,
-                houseNo: document.getElementById('reg-house').value.trim(),
-                village: document.getElementById('reg-moo').value.trim(),
-                road: document.getElementById('reg-road').value.trim(),
-                subDistrict: document.getElementById('reg-subdist').value.trim(),
-                district: document.getElementById('reg-dist').value.trim(),
-                province: document.getElementById('reg-prov').value,
+                prefix: document.getElementById('reg-prefix').value.trim(), name: document.getElementById('reg-name').value.trim(),
+                birthYear: document.getElementById('reg-birth').value.trim(), age: document.getElementById('reg-age').value.trim(),
+                phone: document.getElementById('reg-phone').value.trim(), lineId: document.getElementById('reg-lineid').value.trim(),
+                email: document.getElementById('reg-email').value.trim(), password: pass, lineUid: currentLineUid,
+                houseNo: document.getElementById('reg-house').value.trim(), village: document.getElementById('reg-moo').value.trim(),
+                road: document.getElementById('reg-road').value.trim(), subDistrict: document.getElementById('reg-subdist').value.trim(),
+                district: document.getElementById('reg-dist').value.trim(), province: document.getElementById('reg-prov').value,
                 zipCode: document.getElementById('reg-zip').value.trim()
             };
 
             const res = await callAPI("registerUser", data);
             if(res.success) {
-                alert("สมัครสมาชิกสำเร็จ ยินดีต้อนรับครับ!");
+                alert("สมัครสมาชิกสำเร็จ ยินดีต้อนรับ!");
                 currentUser = res.user;
                 localStorage.setItem('gooddaySession', JSON.stringify(currentUser));
                 renderProfile();
@@ -380,7 +347,6 @@
                 document.getElementById('box-active-waste').classList.add('hidden');
             }
 
-            // เตรียมข้อมูลหน้าเปลี่ยนที่อยู่
             const a = currentUser.address;
             if(a) {
                 document.getElementById('edit-house').value = a.house; document.getElementById('edit-moo').value = a.moo;
@@ -388,7 +354,6 @@
                 document.getElementById('edit-dist').value = a.dist; document.getElementById('edit-prov').value = a.prov;
                 document.getElementById('edit-zip').value = a.zip;
                 
-                // เตรียมข้อมูลหน้า Waste Money (ดึงที่อยู่เดิมมาโชว์ให้แก้ได้)
                 document.getElementById('wm-house').value = a.house; document.getElementById('wm-moo').value = a.moo;
                 document.getElementById('wm-road').value = a.road; document.getElementById('wm-subdist').value = a.subdist;
                 document.getElementById('wm-dist').value = a.dist; document.getElementById('wm-prov').value = a.prov;
@@ -399,39 +364,34 @@
 
         async function saveAddress(btn) {
             btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> บันทึก...';
-            
             const newData = {
                 phone: currentUser.phone,
                 house: document.getElementById('edit-house').value, moo: document.getElementById('edit-moo').value,
                 road: document.getElementById('edit-road').value, subdist: document.getElementById('edit-subdist').value,
                 dist: document.getElementById('edit-dist').value, prov: document.getElementById('edit-prov').value, zip: document.getElementById('edit-zip').value
             };
-
             const res = await callAPI("updateProfileAddress", newData);
             if(res.success) {
                 currentUser.address = newData;
                 localStorage.setItem('gooddaySession', JSON.stringify(currentUser));
-                alert("อัปเดตที่อยู่เรียบร้อย");
-                showPage('profile');
+                alert("อัปเดตที่อยู่เรียบร้อย"); showPage('profile');
             } else { alert("ข้อผิดพลาด: " + res.message); }
             btn.disabled = false; btn.innerText = "บันทึกที่อยู่";
         }
 
         async function confirmWasteMoney(btn) {
             btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังส่งข้อมูล...';
-            
             const wmAddress = {
                 memberId: currentUser.memberId, name: currentUser.prefix + " " + currentUser.name, phone: currentUser.phone, lineUid: currentLineUid,
                 house: document.getElementById('wm-house').value, moo: document.getElementById('wm-moo').value,
                 road: document.getElementById('wm-road').value, subdist: document.getElementById('wm-subdist').value,
                 dist: document.getElementById('wm-dist').value, prov: document.getElementById('wm-prov').value, zip: document.getElementById('wm-zip').value
             };
-
             const res = await callAPI("joinWasteMoney", wmAddress);
             if(res.success) {
                 currentUser.wasteMoney = "ใช่";
                 localStorage.setItem('gooddaySession', JSON.stringify(currentUser));
-                alert("ยินดีต้อนรับเข้าสู่โครงการ! ระบบได้ส่งข้อความยืนยันไปที่ LINE แล้วครับ");
+                alert("ยินดีต้อนรับเข้าสู่โครงการ! ระบบได้ส่งข้อความยืนยันไปที่ LINE แล้ว");
                 renderProfile();
             } else {
                 alert("เกิดข้อผิดพลาด: " + res.message);
@@ -442,12 +402,126 @@
         async function doLogout() {
             if(!confirm("ต้องการออกจากระบบใช่หรือไม่?")) return;
             document.getElementById('loading-header').innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
-            if(currentUser && currentUser.phone) {
-                await callAPI("logoutUser", { phone: currentUser.phone });
-            }
+            if(currentUser && currentUser.phone) { await callAPI("logoutUser", { phone: currentUser.phone }); }
             localStorage.removeItem('gooddaySession'); 
-            currentUser = null;
-            location.reload();
+            currentUser = null; location.reload();
+        }
+
+        // ==========================================
+        // 🩺 ระบบการแสดงผลข้อมูลสุขภาพ (Logic แปลผลสี)
+        // ==========================================
+        async function openHealthRecords() {
+            showPage('health');
+            if(!currentUser) return;
+            
+            const res = await callAPI("getHealthRecords", { memberId: currentUser.memberId });
+            
+            if(!res || res.length === 0) {
+                document.getElementById('health-list').innerHTML = `
+                    <div class="text-center py-10 bg-white rounded-xl shadow-sm border border-blue-100">
+                        <div class="text-4xl text-gray-300 mb-3"><i class="fa-solid fa-notes-medical"></i></div>
+                        <p class="text-gray-500 font-medium">ยังไม่มีบันทึกข้อมูลสุขภาพของคุณ</p>
+                    </div>`;
+                return;
+            }
+
+            let html = res.map(r => {
+                
+                // 1. ความดันโลหิต (แยกเลขตัวหน้า/ตัวหลัง)
+                let bpColor = "bg-green-100 text-green-700";
+                let bpLabel = "ปกติ สุขภาพดี";
+                if(r.bp) {
+                    let parts = r.bp.split('/');
+                    if(parts.length === 2) {
+                        let sys = parseInt(parts[0]); let dia = parseInt(parts[1]);
+                        if(sys >= 140 || dia >= 90) { bpColor = "bg-red-100 text-red-700"; bpLabel = "อันตราย ควรพบแพทย์"; }
+                        else if(sys >= 120 || dia >= 80) { bpColor = "bg-yellow-100 text-yellow-700"; bpLabel = "มีความเสี่ยง ควรเฝ้าระวัง"; }
+                    }
+                }
+
+                // 2. คะแนนโรคหัวใจ
+                let cvColor = "bg-green-100 text-green-700"; let cvLabel = "มีความเสี่ยงน้อย";
+                if(r.cvRisk) {
+                    let cv = parseFloat(r.cvRisk);
+                    if(cv > 30) { cvColor = "bg-red-100 text-red-700"; cvLabel = "มีความเสี่ยงสูงมาก"; }
+                    else if(cv > 20) { cvColor = "bg-orange-100 text-orange-700"; cvLabel = "มีความเสี่ยงสูง"; }
+                    else if(cv > 10) { cvColor = "bg-yellow-100 text-yellow-700"; cvLabel = "มีความเสี่ยงปานกลาง"; }
+                }
+
+                // 3. ออกซิเจนในเลือด
+                let spo2Color = "bg-green-100 text-green-700"; let spo2Label = "ปกติ";
+                if(r.spo2) {
+                    let s = parseFloat(r.spo2);
+                    if(s < 92) { spo2Color = "bg-red-100 text-red-700"; spo2Label = "ออกซิเจนต่ำผิดปกติ"; }
+                    else if(s < 96) { spo2Color = "bg-yellow-100 text-yellow-700"; spo2Label = "ควรเฝ้าระวัง / ปรึกษาแพทย์"; }
+                }
+
+                // ซ่อนการตรวจพยาธิใบไม้ตับ ถ้าเป็นคนสัตหีบ
+                let isSattahip = currentUser.address && currentUser.address.dist.includes("สัตหีบ");
+                let liverHtml = "";
+                if(!isSattahip && r.liverFluke) {
+                    let lvColor = (r.liverFluke === "ตรวจพบ") ? "bg-red-100 text-red-700" : "bg-green-100 text-green-700";
+                    liverHtml = `
+                    <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                        <span class="text-gray-600 text-sm">การตรวจพยาธิใบไม้ตับ</span>
+                        <span class="${lvColor} text-xs font-bold px-2 py-1 rounded-md">${r.liverFluke}</span>
+                    </div>`;
+                }
+
+                return `
+                <div class="bg-white rounded-2xl shadow-sm border border-blue-100 overflow-hidden mb-4">
+                    <div class="bg-blue-50 px-4 py-3 border-b border-blue-100 flex justify-between items-center">
+                        <span class="font-bold text-blue-800"><i class="fa-regular fa-calendar-check mr-2"></i>ตรวจวันที่ ${r.date}</span>
+                    </div>
+                    <div class="p-4 space-y-1">
+                        
+                        <div class="grid grid-cols-3 gap-2 mb-3 bg-gray-50 p-3 rounded-xl border border-gray-100 text-center">
+                            <div><p class="text-[10px] text-gray-500 font-bold">น้ำหนัก</p><p class="text-sm font-bold text-gray-800">${r.weight||"-"} kg</p></div>
+                            <div class="border-l border-r border-gray-200"><p class="text-[10px] text-gray-500 font-bold">ส่วนสูง</p><p class="text-sm font-bold text-gray-800">${r.height||"-"} m</p></div>
+                            <div><p class="text-[10px] text-gray-500 font-bold">BMI</p><p class="text-sm font-bold text-gray-800">${r.bmi||"-"}</p></div>
+                        </div>
+
+                        <div class="py-2 border-b border-gray-100">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-gray-600 text-sm font-bold">ความดันโลหิต</span>
+                                <span class="text-gray-800 font-bold">${r.bp||"-"} mmHg</span>
+                            </div>
+                            <div class="${bpColor} text-[11px] font-bold px-2 py-1 rounded inline-block">${bpLabel}</div>
+                        </div>
+
+                        <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                            <span class="text-gray-600 text-sm">อัตราการเต้นหัวใจ</span>
+                            <span class="text-gray-800 font-bold">${r.hr||"-"} ครั้ง/นาที</span>
+                        </div>
+
+                        <div class="py-2 border-b border-gray-100">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-gray-600 text-sm font-bold">คะแนนความเสี่ยงโรคหัวใจ (10 ปี)</span>
+                                <span class="text-gray-800 font-bold">${r.cvRisk||"-"} %</span>
+                            </div>
+                            <div class="${cvColor} text-[11px] font-bold px-2 py-1 rounded inline-block">${cvLabel}</div>
+                            <p class="text-[10px] text-gray-400 mt-1 leading-tight">สำหรับการประเมินผู้ที่มีอายุ 35-70 ปี (Thai CV Risk Score)</p>
+                        </div>
+
+                        <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                            <span class="text-gray-600 text-sm">สมรรถภาพปอด (PEFR)</span>
+                            <span class="text-gray-800 font-bold">${r.pefr||"-"} L/min</span>
+                        </div>
+                        <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                            <span class="text-gray-600 text-sm">ออกซิเจนในเลือด (SpO2)</span>
+                            <div class="text-right">
+                                <span class="text-gray-800 font-bold">${r.spo2||"-"} %</span>
+                                <div class="${spo2Color} text-[10px] font-bold px-2 py-0.5 rounded mt-1">${spo2Label}</div>
+                            </div>
+                        </div>
+
+                        ${liverHtml}
+
+                    </div>
+                </div>`;
+            }).join('');
+            
+            document.getElementById('health-list').innerHTML = html;
         }
     </script>
 </body>
