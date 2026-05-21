@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Goodday Helpdesk</title>
+    <title>Goodday FAQ</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
@@ -30,6 +30,14 @@
 </head>
 <body class="antialiased text-slate-800 pb-24">
 
+    <div id="liff-loading" style="position:fixed; inset:0; background:#fff; z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px;">
+        <div class="w-14 h-14 bg-pink-100 rounded-full flex items-center justify-center">
+            <i class="fa-solid fa-headset text-2xl text-pink-500"></i>
+        </div>
+        <p class="text-gray-500 text-sm">กำลังโหลดข้อมูล...</p>
+        <i class="fa-solid fa-spinner fa-spin text-pink-400 text-xl"></i>
+    </div>
+
     <div class="max-w-md mx-auto bg-white min-h-screen shadow-2xl relative">
 
         <div class="theme-pink text-white p-4 sticky top-0 z-50 shadow-md flex justify-between items-center rounded-b-2xl">
@@ -54,15 +62,15 @@
                     <h3 class="text-base text-slate-800">วิสัยทัศน์โครงการ</h3>
                 </div>
                 <p class="text-sm text-slate-600 leading-relaxed font-medium">
-                    มุ่งมั่นพัฒนาคุณภาพชีวิตของคนในชุมชน ผ่านกระบวนการขับเคลื่อนงานสุขภาวะ ระบบการจัดการสิ่งแวดล้อม และพื้นที่การเรียนรู้ เพื่อส่งเสริมให้เกิดความร่วมมือที่ยั่งยืนในทุกมิติ
+                    ยังไม่มีคำอธิบาย...
                 </p>
             </div>
 
             <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
-                <h4 class="font-bold text-slate-800 mb-3 border-l-4 theme-border pl-2 text-sm">ช่องทางการติดต่อหน่วยงาน</h4>
+                <h4 class="font-bold text-slate-800 mb-3 border-l-4 theme-border pl-2 text-sm">ช่องทางการติดต่อ</h4>
                 <div class="flex items-center gap-3 text-sm text-slate-600">
                     <div class="w-9 h-9 rounded-xl bg-slate-50 text-slate-500 flex items-center justify-center text-base"><i class="fa-solid fa-envelope"></i></div>
-                    <span class="font-medium">goodgoodday.website@gmail.com</span>
+                    <span class="font-medium">goodday.lineoa@gmail.com</span>
                 </div>
             </div>
         </div>
@@ -146,17 +154,17 @@
             <div id="history-list" class="space-y-4"></div>
         </div>
 
-        <div class="fixed bottom-0 w-full max-w-md bg-white border-t flex justify-around py-2.5 text-[11px] font-bold text-slate-400 z-50 shadow-[0_-5px_15px_rgba(0,0,0,0.05)]">
-            <button onclick="showPage('about')" id="nav-about" class="nav-btn flex flex-col items-center w-1/4">
+        <div class="fixed bottom-0 w-full max-w-md bg-white border-t flex justify-around py-2.5 text-[11px] font-bold z-50 shadow-[0_-5px_15px_rgba(0,0,0,0.05)]">
+            <button onclick="showPage('about')" id="nav-about" class="nav-btn flex flex-col items-center theme-text w-1/4">
                 <i class="fa-solid fa-circle-info text-xl mb-1"></i> รู้จักเรา
             </button>
-            <button onclick="showPage('faq')" id="nav-faq" class="nav-btn flex flex-col items-center theme-text w-1/4">
+            <button onclick="showPage('faq')" id="nav-faq" class="nav-btn flex flex-col items-center text-slate-400 w-1/4">
                 <i class="fa-solid fa-circle-question text-xl mb-1"></i> คำถามพบบ่อย
             </button>
-            <button onclick="showPage('fondue')" id="nav-fondue" class="nav-btn flex flex-col items-center w-1/4">
+            <button onclick="showPage('fondue')" id="nav-fondue" class="nav-btn flex flex-col items-center text-slate-400 w-1/4">
                 <i class="fa-solid fa-comment-medical text-xl mb-1"></i> แจ้งปัญหา
             </button>
-            <button onclick="showPage('history')" id="nav-history" class="nav-btn flex flex-col items-center w-1/4">
+            <button onclick="showPage('history')" id="nav-history" class="nav-btn flex flex-col items-center text-slate-400 w-1/4">
                 <i class="fa-solid fa-clock-rotate-left text-xl mb-1"></i> ประวัติคำร้อง
             </button>
         </div>
@@ -166,19 +174,19 @@
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbwN8QmRIb5gVByL6nrZ_H_kYWiYwULaSQOBT5ahS0XBISwTONw80GZgiTRssPcUmIWQ/exec";
         const LIFF_ID = "2009970638-F4WlAAjX";
-      
+        
         let currentUser = null;
         let base64Image = null;
 
         document.addEventListener("DOMContentLoaded", function() {
+            showPage('about'); // เซ็ตหน้าแรกให้เป็น รู้จักเรา
             fetchFAQ();
             
-            // ตรวจสอบสถานะการเชื่อมต่อข้อมูลผ่าน LINE LIFF บัญชีกลาง
             liff.init({ liffId: LIFF_ID }).then(() => {
                 if (liff.isLoggedIn()) {
                     liff.getProfile().then(async profile => {
                         const res = await callAPI("autoLoginByUid", { uid: profile.userId });
-                        if(res && res.memberId) {
+                        if(res && res.success !== false && res.name) {
                             currentUser = res;
                             currentUser.lineUid = profile.userId;
                             document.getElementById('login-status').innerHTML = `<i class="fa-solid fa-circle-check text-green-400"></i> ${currentUser.name}`;
@@ -187,12 +195,24 @@
                             document.getElementById('login-status').innerHTML = `ผู้เยี่ยมชม`;
                             alert("กรุณาสมัครสมาชิกผ่านระบบโปรไฟล์ก่อนการแจ้งปัญหาเพื่อสิทธิประโยชน์ในการติดตามเรื่อง");
                         }
+                        hideLoader();
                     });
-                } else { liff.login(); }
+                } else { 
+                    liff.login(); 
+                }
             }).catch(err => {
                 document.getElementById('login-status').innerHTML = "⚠️ ปิดระบบล็อกอินซิงค์";
+                hideLoader();
             });
+
+            // ป้องกันโหลดค้าง ซ่อนอัตโนมัติภายใน 3 วินาที
+            setTimeout(hideLoader, 3000);
         });
+
+        function hideLoader() {
+            const loader = document.getElementById('liff-loading');
+            if (loader) loader.style.display = 'none';
+        }
 
         async function callAPI(action, data = {}) {
             try {
@@ -307,7 +327,7 @@
             if(finalCategory === "อื่นๆ") {
                 const customInput = document.getElementById('fondue-custom-cat').value.trim();
                 if(!customInput) { alert("กรุณาระบุพิมพ์ชื่อหมวดหมู่ที่พบปัญหาเพิ่มเติม"); return; }
-                finalCategory = customInput; // เปลี่ยนค่าเป็นตัวหนังสือที่กรอกแทนคำว่าอื่นๆ
+                finalCategory = customInput;
             }
 
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> ระบบกำลังส่งข้อมูลแจ้งเรื่อง...';
