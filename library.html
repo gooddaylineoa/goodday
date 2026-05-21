@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goodday Library</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Sarabun', sans-serif; background-color: #F3F4F6; }
+        .theme-pink { background-color: #d81b60; }
+        .theme-text { color: #d81b60; }
+        .page-section { display: none; animation: fadeIn 0.3s; }
+        .page-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .form-input { width: 100%; border: 1px solid #D1D5DB; border-radius: 0.75rem; padding: 0.75rem; font-family: 'Sarabun'; font-size: 1rem; }
+        .form-input:focus { outline: none; border-color: #d81b60; box-shadow: 0 0 0 1px #d81b60; }
+        
+        /* ปุ่มแชทลอย (Floating Action Button) */
+        .fab-chat { position: fixed; bottom: 80px; right: 20px; width: 56px; height: 56px; background-color: #06C755; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 100; transition: 0.3s; }
+        .fab-chat:hover { transform: scale(1.05); }
+    </style>
+</head>
+<body class="antialiased text-gray-800">
+
+    <div class="max-w-md mx-auto bg-white min-h-screen shadow-lg relative pb-24">
+
+        <div class="theme-pink text-white p-4 sticky top-0 z-50 shadow-md flex justify-between items-center">
+            <h1 class="text-lg font-bold tracking-wide"><i class="fa-solid fa-book-open-reader mr-2"></i>ห้องสมุดสานพลัง</h1>
+            <div id="login-status" class="text-sm font-medium bg-white bg-opacity-20 px-3 py-1 rounded-full">
+                <i class="fa-solid fa-spinner fa-spin"></i>
+            </div>
+        </div>
+
+        <button onclick="liff.closeWindow()" class="fab-chat" title="คุยกับบรรณารักษ์">
+            <i class="fa-brands fa-line"></i>
+        </button>
+
+        <div class="bg-pink-50 px-4 py-2 border-b border-pink-100 flex items-center justify-between">
+            <span class="text-sm font-bold text-pink-700"><i class="fa-solid fa-location-dot mr-1"></i> สาขา:</span>
+            <select id="global-branch" onchange="loadLibraryData()" class="bg-white border border-pink-200 text-sm font-bold text-pink-700 rounded-lg px-2 py-1 outline-none">
+                <option value="ห้องสมุดส่วนกลาง">ห้องสมุดชลบุรี</option>
+            </select>
+        </div>
+
+        <div id="page-home" class="page-section active p-4">
+            
+            <div class="bg-gradient-to-r from-pink-500 to-rose-500 rounded-2xl p-5 text-white shadow-md mb-6 relative overflow-hidden">
+                <div class="absolute right-[-10px] top-[-10px] opacity-20 text-8xl"><i class="fa-solid fa-book"></i></div>
+                <p class="text-pink-100 text-sm mb-1">บัตรสมาชิกห้องสมุด</p>
+                <h2 id="lib-member-id" class="text-2xl font-bold tracking-widest mb-2">MEM-00000</h2>
+                <h3 id="lib-member-name" class="text-lg font-semibold">-</h3>
+            </div>
+
+            <div class="flex justify-between items-center mb-3">
+                <h3 class="font-bold text-gray-800"><i class="fa-solid fa-bullhorn theme-text mr-2"></i>ข่าวประชาสัมพันธ์</h3>
+            </div>
+            <div id="news-container" class="space-y-3 mb-6">
+                <div class="text-center text-sm text-gray-400 py-4"><i class="fa-solid fa-spinner fa-spin"></i> กำลังโหลด...</div>
+            </div>
+
+            <h3 class="font-bold text-gray-800 mb-3"><i class="fa-solid fa-book-sparkles theme-text mr-2"></i>หนังสือเข้าใหม่</h3>
+            <div id="new-books-container" class="flex overflow-x-auto gap-3 pb-4 no-scrollbar">
+                </div>
+        </div>
+
+        <div id="page-booking" class="page-section p-4 pt-6">
+            
+            <h2 class="text-xl font-bold text-gray-800 mb-4"><i class="fa-solid fa-users-rectangle theme-text mr-2"></i>สถานะการใช้งานวันนี้</h2>
+            <div class="grid grid-cols-2 gap-3 mb-6">
+                <div class="bg-blue-50 border border-blue-100 rounded-xl p-4 text-center shadow-sm">
+                    <i class="fa-solid fa-users text-blue-500 text-3xl mb-2"></i>
+                    <p class="text-xs text-gray-600 font-bold">ใช้ Co-Working</p>
+                    <p class="text-2xl font-bold text-blue-700 mt-1"><span id="stat-coworking">0</span> <span class="text-sm font-medium">คน</span></p>
+                </div>
+                <div class="bg-purple-50 border border-purple-100 rounded-xl p-4 text-center shadow-sm">
+                    <i class="fa-solid fa-desktop text-purple-500 text-3xl mb-2"></i>
+                    <p class="text-xs text-gray-600 font-bold">ใช้คอมพิวเตอร์</p>
+                    <p class="text-2xl font-bold text-purple-700 mt-1"><span id="stat-pc">0</span> <span class="text-sm font-medium">เครื่อง</span></p>
+                </div>
+            </div>
+
+            <hr class="border-gray-200 mb-6">
+
+            <h2 class="text-xl font-bold text-gray-800 mb-4"><i class="fa-solid fa-chair theme-text mr-2"></i>จองพื้นที่เข้าใช้งาน</h2>
+            
+            <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-4 mb-6">
+                <p class="text-sm font-bold text-yellow-700 mb-2"><i class="fa-solid fa-circle-exclamation mr-1"></i> กฎและข้อตกลงในการจอง</p>
+                <ul class="text-xs text-yellow-800 space-y-1 ml-4 list-disc font-medium leading-relaxed">
+                    <li>ยังไม่มีคำอธิบาย...</li>
+                </ul>
+            </div>
+
+            <div class="space-y-4 mb-6 bg-white border border-gray-100 p-4 rounded-xl shadow-sm">
+                <div>
+                    <label class="form-label">ประเภทพื้นที่</label>
+                    <select id="book-type" class="form-input bg-gray-50 font-bold">
+                        <option value="Co-working">Co-working Space (อ่านหนังสือ/ทำงาน)</option>
+                        <option value="คอมพิวเตอร์">เครื่องคอมพิวเตอร์</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="form-label">วันและเวลาที่ต้องการเข้าใช้</label>
+                    <input type="datetime-local" id="book-datetime" class="form-input">
+                </div>
+                <button onclick="submitSpaceBooking(this)" class="w-full theme-pink text-white py-3.5 rounded-xl font-bold text-lg shadow-md hover:bg-pink-700 transition mt-2">ยืนยันการจอง</button>
+            </div>
+        </div>
+
+        <div id="page-service" class="page-section bg-gray-50 pb-20">
+            <div class="flex overflow-x-auto bg-white border-b sticky top-[95px] z-40 no-scrollbar text-sm font-bold text-gray-500 shadow-sm">
+                <button onclick="switchLibTab('search', this)" class="lib-tab active border-b-2 border-pink-600 theme-text px-4 py-3 whitespace-nowrap">ค้นหาหนังสือ</button>
+                <button onclick="switchLibTab('borrow', this)" class="lib-tab px-4 py-3 whitespace-nowrap">หนังสือของฉัน</button>
+                <button onclick="switchLibTab('recommend', this)" class="lib-tab px-4 py-3 whitespace-nowrap">หนังสือแนะนำ</button>
+                <button onclick="switchLibTab('donate', this)" class="lib-tab px-4 py-3 whitespace-nowrap">บริจาค/เสนอแนะ</button>
+            </div>
+            
+            <div id="tab-search" class="lib-content p-4 space-y-4">
+                <div class="flex gap-2">
+                    <input type="text" id="search-keyword" placeholder="พิมพ์ชื่อหนังสือเพื่อค้นหา..." class="form-input flex-1">
+                    <button onclick="searchBooksBtn(this)" class="bg-blue-500 text-white px-4 rounded-xl font-bold shadow-sm hover:bg-blue-600"><i class="fa-solid fa-magnifying-glass"></i></button>
+                </div>
+                <div id="search-results" class="space-y-3">
+                    <div class="text-center py-10 text-gray-400 font-medium">พิมพ์ชื่อหนังสือและกดค้นหาได้</div>
+                </div>
+            </div>
+
+            <div id="tab-borrow" class="lib-content p-4 space-y-3 hidden">
+                <div id="borrow-list" class="text-center py-10 text-sm text-gray-400 font-medium">กำลังโหลด...</div>
+            </div>
+
+            <div id="tab-recommend" class="lib-content p-4 space-y-4 hidden">
+                <div id="rec-books-container"></div>
+            </div>
+
+            <div id="tab-donate" class="lib-content p-4 hidden">
+                <div class="bg-white border border-gray-100 rounded-xl p-4 shadow-sm">
+                    <h3 class="font-bold text-gray-800 mb-3"><i class="fa-solid fa-hand-holding-heart theme-text mr-2"></i>แบบฟอร์มเสนอแนะ</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="form-label">ประเภทรายการ</label>
+                            <select id="req-type" class="form-input bg-gray-50 font-bold">
+                                <option value="เสนอซื้อ">อยากให้ห้องสมุดซื้อเล่มนี้</option>
+                                <option value="บริจาค">ต้องการบริจาคหนังสือเข้าห้องสมุด</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="form-label">รายละเอียด</label>
+                            <textarea id="req-detail" rows="4" class="form-input" placeholder="ระบุชื่อหนังสือ / ผู้แต่ง / หรือรายละเอียดสภาพหนังสือที่ต้องการบริจาค"></textarea>
+                        </div>
+                        <button onclick="submitRequest(this)" class="w-full bg-blue-500 text-white py-3.5 rounded-xl font-bold text-lg shadow-md hover:bg-blue-600 transition">ส่งข้อมูล</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="fixed bottom-0 w-full max-w-md bg-white border-t flex justify-around py-2 text-[10px] font-bold text-gray-400 z-50 shadow-[0_-4px_15px_rgba(0,0,0,0.03)]">
+            <button onclick="showPage('home')" id="nav-home" class="nav-btn flex flex-col items-center theme-text w-1/4 py-1">
+                <i class="fa-solid fa-house text-xl mb-1"></i> ประชาสัมพันธ์
+            </button>
+            <button onclick="showPage('booking')" id="nav-booking" class="nav-btn flex flex-col items-center w-1/4 py-1">
+                <i class="fa-solid fa-clock-rotate-left text-xl mb-1"></i> สถานะ/จอง
+            </button>
+            <button onclick="showPage('service')" id="nav-service" class="nav-btn flex flex-col items-center w-1/4 py-1">
+                <i class="fa-solid fa-book-bookmark text-xl mb-1"></i> ยืม-คืน
+            </button>
+            <button onclick="window.location.href='booking.html'" class="nav-btn flex flex-col items-center w-1/4 py-1">
+                <i class="fa-solid fa-calendar-check text-xl mb-1"></i> กิจกรรม
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = "https://script.google.com/macros/s/AKfycbwN8QmRIb5gVByL6nrZ_H_kYWiYwULaSQOBT5ahS0XBISwTONw80GZgiTRssPcUmIWQ/exec";
+        const LIFF_ID_LIB = "ใส่_LIFF_ID_ของห้องสมุดตรงนี้"; 
+
+        let currentUser = null;
+
+        async function callAPI(action, data = {}) {
+            try {
+                const response = await fetch(API_URL, {
+                    method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" },
+                    body: JSON.stringify({ action: action, data: data }), redirect: "follow"
+                });
+                return await response.json();
+            } catch (error) { return { success: false, message: "เชื่อมต่อเซิร์ฟเวอร์ไม่ได้" }; }
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const saved = localStorage.getItem('gooddaySession');
+            if(saved) {
+                currentUser = JSON.parse(saved);
+                updateProfileUI();
+            }
+
+            liff.init({ liffId: LIFF_ID_LIB }).then(() => {
+                if (liff.isLoggedIn()) {
+                    liff.getProfile().then(async profile => {
+                        const res = await callAPI("autoLoginByUid", { uid: profile.userId });
+                        if(res && res.memberId) {
+                            currentUser = res;
+                            localStorage.setItem('gooddaySession', JSON.stringify(currentUser));
+                            updateProfileUI();
+                            loadLibraryData();
+                            fetchBorrowData();
+                        } else {
+                            if(!currentUser) {
+                                alert("กรุณาสมัครสมาชิกที่ระบบโปรไฟล์ก่อนเข้าใช้งานห้องสมุดครับ");
+                                window.location.href = 'profile.html';
+                            }
+                        }
+                    });
+                } else { liff.login(); }
+            });
+
+            loadLibraryData();
+        });
+
+        function updateProfileUI() {
+            if(!currentUser) return;
+            document.getElementById('lib-member-id').innerText = currentUser.memberId;
+            document.getElementById('lib-member-name').innerText = currentUser.name;
+            document.getElementById('login-status').innerHTML = `<i class="fa-solid fa-user-check mr-1"></i> ${currentUser.name}`;
+        }
+
+        function showPage(pageId) {
+            document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
+            document.getElementById('page-' + pageId).classList.add('active');
+            window.scrollTo(0, 0);
+
+            document.querySelectorAll('.nav-btn').forEach(el => { el.classList.remove('theme-text'); el.classList.add('text-gray-400'); });
+            if(document.getElementById('nav-' + pageId)) {
+                document.getElementById('nav-' + pageId).classList.remove('text-gray-400');
+                document.getElementById('nav-' + pageId).classList.add('theme-text');
+            }
+        }
+
+        function switchLibTab(tabName, btn) {
+            document.querySelectorAll('.lib-tab').forEach(b => b.classList.remove('border-b-2', 'border-pink-600', 'theme-text'));
+            btn.classList.add('border-b-2', 'border-pink-600', 'theme-text');
+            
+            document.querySelectorAll('.lib-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById('tab-' + tabName).classList.remove('hidden');
+        }
+
+        // --- โหลดข้อมูลรวม (ประชาสัมพันธ์ + สถิติ) ---
+        async function loadLibraryData() {
+            const branch = document.getElementById('global-branch').value;
+            
+            // 1. ดึงสถิติของสาขานั้นๆ
+            const stats = await callAPI("getLibraryStatus", { branch: branch });
+            if(stats) {
+                document.getElementById('stat-coworking').innerText = stats.coworking || 0;
+                document.getElementById('stat-pc').innerText = stats.pc || 0;
+            }
+
+            // 2. ดึงข่าวและหนังสือ (ใช้ร่วมกัน)
+            const content = await callAPI("getLibraryContent");
+            if(content) {
+                document.getElementById('news-container').innerHTML = content.news.map(n => `
+                <div class="bg-white border border-gray-100 rounded-xl p-3 flex gap-3 shadow-sm">
+                    <img src="${n.image || 'https://via.placeholder.com/80'}" class="w-20 h-20 object-cover rounded-lg">
+                    <div>
+                        <h4 class="font-bold text-sm text-gray-800 line-clamp-2 leading-snug">${n.title}</h4>
+                        <p class="text-xs text-gray-500 mt-1 line-clamp-2">${n.detail}</p>
+                    </div>
+                </div>`).join('') || '<p class="text-center text-gray-400 text-sm py-2">ยังไม่มีข่าวประชาสัมพันธ์</p>';
+
+                document.getElementById('new-books-container').innerHTML = content.newBooks.map(b => `
+                <div class="min-w-[120px] bg-white border border-gray-100 rounded-xl p-2 shadow-sm">
+                    <img src="${b.image || 'https://via.placeholder.com/100'}" class="w-full h-32 object-cover rounded-lg mb-2">
+                    <h4 class="font-bold text-xs text-gray-800 line-clamp-2 leading-tight">${b.title}</h4>
+                </div>`).join('');
+
+                document.getElementById('rec-books-container').innerHTML = content.recBooks.map(b => `
+                <div class="bg-white border border-gray-100 rounded-xl p-3 flex gap-3 shadow-sm">
+                    <img src="${b.image || 'https://via.placeholder.com/100'}" class="w-24 h-32 object-cover rounded-lg shadow-sm">
+                    <div class="flex-1">
+                        <span class="text-[10px] bg-pink-100 text-pink-600 px-2 py-1 rounded font-bold">แนะนำ</span>
+                        <h4 class="font-bold text-sm text-gray-800 mt-1 mb-1 leading-snug">${b.title}</h4>
+                        <p class="text-xs text-gray-500 line-clamp-3 leading-relaxed">${b.detail}</p>
+                    </div>
+                </div>`).join('');
+            }
+        }
+
+        // --- ระบบจองพื้นที่ ---
+        async function submitSpaceBooking(btn) {
+            if(!currentUser) { alert("กรุณาเข้าสู่ระบบสมาชิก"); return; }
+            const type = document.getElementById('book-type').value;
+            const datetime = document.getElementById('book-datetime').value;
+            const branch = document.getElementById('global-branch').value;
+            
+            if(!datetime) { alert("กรุณาเลือกวันและเวลา"); return; }
+            
+            btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังบันทึก...';
+            
+            const res = await callAPI("bookLibrarySpace", {
+                memberId: currentUser.memberId, 
+                lineUid: currentUser.lineUid,
+                userName: currentUser.name,
+                branch: branch,
+                spaceType: type, 
+                bookDateTime: datetime.replace("T", " ")
+            });
+
+            btn.disabled = false; btn.innerText = "ยืนยันการจอง";
+            if(res.success) {
+                alert("จองพื้นที่สำเร็จ! รหัสการจองถูกส่งเข้า LINE แล้ว");
+                document.getElementById('book-datetime').value = "";
+                loadLibraryData(); // อัปเดตสถิติให้คนอื่นเห็น
+            } else { alert("เกิดข้อผิดพลาด: " + res.message); }
+        }
+
+        // --- ระบบค้นหาหนังสือ ---
+        async function searchBooksBtn(btn) {
+            const keyword = document.getElementById('search-keyword').value.trim();
+            const branch = document.getElementById('global-branch').value;
+            
+            const resultBox = document.getElementById('search-results');
+            resultBox.innerHTML = '<div class="text-center py-10 text-blue-500"><i class="fa-solid fa-spinner fa-spin text-2xl"></i></div>';
+            
+            const books = await callAPI("searchBooks", { branch: branch, keyword: keyword });
+            
+            if(!books || books.length === 0) {
+                resultBox.innerHTML = '<div class="text-center py-10 text-gray-400 font-medium">ไม่พบหนังสือที่ค้นหาในสาขานี้</div>';
+                return;
+            }
+
+            resultBox.innerHTML = books.map(b => {
+                let badge = b.status === "ว่าง" 
+                    ? '<span class="bg-green-100 text-green-700 text-[10px] font-bold px-2 py-1 rounded"><i class="fa-solid fa-check mr-1"></i> ว่าง</span>' 
+                    : '<span class="bg-red-100 text-red-600 text-[10px] font-bold px-2 py-1 rounded"><i class="fa-solid fa-times mr-1"></i> ถูกยืม</span>';
+                return `
+                <div class="bg-white border border-gray-100 rounded-xl p-3 shadow-sm flex justify-between items-center">
+                    <div>
+                        <h4 class="font-bold text-sm text-gray-800">${b.title}</h4>
+                        <p class="text-[11px] text-gray-500 mt-1"><i class="fa-solid fa-hashtag mr-1"></i> ${b.bookId} | หมวด: ${b.category}</p>
+                    </div>
+                    <div>${badge}</div>
+                </div>`;
+            }).join('');
+        }
+
+        // --- ระบบยืม-คืน ---
+        async function fetchBorrowData() {
+            if(!currentUser) return;
+            const books = await callAPI("getBorrowedBooks", { uid: currentUser.lineUid });
+            let html = (!books || books.length === 0) ? '<div class="text-center py-10 text-gray-400 font-medium">คุณไม่มีหนังสือที่กำลังยืม</div>' : books.map(b => {
+                let statusColor = b.status === "เลยกำหนด" ? "bg-red-100 text-red-600" : "bg-blue-100 text-blue-600";
+                return `
+                <div class="bg-white border border-gray-100 rounded-xl p-4 shadow-sm">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="font-bold text-sm text-gray-800 w-3/4">${b.title}</h3>
+                        <span class="text-[10px] px-2 py-1 rounded-md font-bold ${statusColor}">${b.status}</span>
+                    </div>
+                    <p class="text-[11px] text-gray-500 font-medium"><i class="fa-solid fa-arrow-right-from-bracket mr-1"></i> วันที่ยืม: ${b.borrowDate}</p>
+                    <p class="text-[11px] text-gray-500 font-medium mt-1"><i class="fa-solid fa-clock-rotate-left mr-1"></i> กำหนดคืน: <span class="font-bold text-gray-800">${b.dueDate}</span></p>
+                </div>`;
+            }).join('');
+            document.getElementById('borrow-list').innerHTML = html;
+        }
+
+        // --- ฟอร์มบริจาค ---
+        async function submitRequest(btn) {
+            if(!currentUser) { alert("กรุณาเข้าสู่ระบบสมาชิก"); return; }
+            const type = document.getElementById('req-type').value;
+            const detail = document.getElementById('req-detail').value;
+            if(!detail) { alert("กรุณากรอกข้อมูลก่อนส่ง"); return; }
+
+            btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังส่ง...';
+            
+            const res = await callAPI("submitLibraryRequest", {
+                memberId: currentUser.memberId, reqType: type, detail: detail
+            });
+
+            btn.disabled = false; btn.innerText = "ส่งข้อมูล";
+            if(res.success) {
+                alert("ส่งข้อมูลสำเร็จ ขอบคุณสำหรับข้อเสนอแนะ");
+                document.getElementById('req-detail').value = "";
+            } else { alert("เกิดข้อผิดพลาด: " + res.message); }
+        }
+    </script>
+</body>
+</html>
