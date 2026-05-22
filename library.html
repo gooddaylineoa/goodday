@@ -48,7 +48,7 @@
 
         <div class="bg-pink-50 px-4 py-2 border-b border-pink-100 flex items-center justify-between">
             <span class="text-sm font-bold text-pink-700"><i class="fa-solid fa-location-dot mr-1"></i> สาขา:</span>
-            <select id="global-branch" onchange="saveBranchAndLoad()" class="bg-white border border-pink-200 text-sm font-bold text-pink-700 rounded-lg px-2 py-1 outline-none">
+            <select id="global-branch" onchange="loadAllData()" class="bg-white border border-pink-200 text-sm font-bold text-pink-700 rounded-lg px-2 py-1 outline-none">
                 <option value="ทั้งหมด">ทั้งหมด (รวมทุกสาขา)</option>
                 <option value="สัตหีบ">ห้องสมุดประชาชน “เฉลิมราชกุมารี” สัตหีบ</option>
             </select>
@@ -242,12 +242,6 @@
             const loader = document.getElementById('liff-loading');
             if (loader) loader.style.display = 'none';
         }
-        
-        function saveBranchAndLoad() {
-            const branch = document.getElementById('global-branch').value;
-            localStorage.setItem('selectedBranch', branch);
-            loadAllData();
-        }
 
         function updateUI() {
             if(!currentUser) return;
@@ -296,6 +290,7 @@
 
         async function loadAllData() {
             const branch = document.getElementById('global-branch').value;
+            localStorage.setItem('selectedBranch', branch);
 
             const stats = await callAPI("getLibraryStatus", { branch: branch });
             if(stats) {
