@@ -256,17 +256,17 @@
                     btnHtml = `<button disabled class="w-full bg-gray-100 text-gray-400 py-2 rounded-xl text-xs font-bold cursor-not-allowed">เต็ม</button>`;
                 }
 
-                let detailsHtml = a.details ? `<div class="bg-gray-50 p-2.5 rounded-lg text-[11px] text-gray-600 leading-relaxed font-medium mt-2"><i class="fa-solid fa-circle-info theme-text mr-1"></i> ${a.details}</div>` : '';
+                let detailsHtml = a.details ? `<div class="bg-gray-50 p-2.5 rounded-lg text-xs text-gray-600 leading-relaxed font-medium mt-2"><i class="fa-solid fa-circle-info theme-text mr-1"></i> ${a.details}</div>` : '';
 
                 return `
                 <div class="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden mb-4">
-                    <img src="${a.image || 'https://via.placeholder.com/400'}" class="w-full h-36 object-cover ${isPast ? 'grayscale opacity-70' : ''}">
+                    <img src="${a.image || 'https://via.placeholder.com/400'}" class="w-full h-40 object-cover ${isPast ? 'grayscale opacity-70' : ''}">
                     <div class="p-4">
                         <div class="flex justify-between items-start mb-2">
-                            <h2 class="text-sm font-bold text-gray-800 leading-snug w-3/4">${a.name}</h2>
+                            <h2 class="text-base font-bold text-gray-800 leading-snug w-3/4">${a.name}</h2>
                             ${badgeHtml}
                         </div>
-                        <div class="text-[11px] text-gray-500 space-y-1.5 mb-3 font-medium">
+                        <div class="text-xs text-gray-500 space-y-1.5 mb-3 font-medium">
                             <p class="${isPast ? 'text-red-500 font-bold' : ''}"><i class="fa-regular fa-clock w-4 text-center mr-1"></i> ${a.datetime}</p>
                             <p><i class="fa-solid fa-location-dot w-4 text-center mr-1"></i> ${a.province || 'ทุกพื้นที่'}</p>
                             ${detailsHtml}
@@ -278,10 +278,15 @@
             document.getElementById('activity-list').innerHTML = html || '<div class="text-center py-10 text-gray-400 font-medium text-sm">ไม่พบกิจกรรมในพื้นที่ของคุณ</div>';
         }
 
+        // ✅ จุดที่แก้ไขเรื่อง UI หด
         function setFilter(name, btn) {
             currentCatFilter = name;
-            document.querySelectorAll('.cat-btn').forEach(b => { b.className = "cat-btn bg-white text-gray-600 border px-4 py-1.5 rounded-full text-xs font-medium whitespace-nowrap"; });
-            btn.className = "cat-btn theme-pink text-white px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap shadow-sm";
+            document.querySelectorAll('.cat-btn').forEach(b => { 
+                // บังคับให้เป็น text-sm เสมอ
+                b.className = "cat-btn bg-gray-50 text-gray-600 border px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap"; 
+            });
+            // บังคับให้ปุ่มที่ถูกเลือกเป็น text-sm เสมอ
+            btn.className = "cat-btn theme-pink text-white px-4 py-1.5 rounded-full text-sm font-bold whitespace-nowrap shadow-sm";
             renderActivityList();
         }
 
