@@ -16,10 +16,7 @@
         .page-section.active { display: block; animation: fadeIn 0.3s; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        .form-input {
-            width: 100%; border: 1px solid #D1D5DB; border-radius: 0.75rem; padding: 0.75rem;
-            font-family: 'Sarabun', sans-serif; font-size: 0.875rem; background-color: white; color: #374151; transition: all 0.2s;
-        }
+        .form-input { width: 100%; border: 1px solid #D1D5DB; border-radius: 0.75rem; padding: 0.75rem; font-family: 'Sarabun'; font-size: 0.875rem; background-color: white; color: #374151; transition: all 0.2s; }
         .form-input:focus { outline: none; border-color: #d81b60; box-shadow: 0 0 0 2px #fce4ec; }
         #liff-loading { position:fixed; inset:0; background:#fff; z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; }
     </style>
@@ -31,26 +28,45 @@
             <i class="fa-solid fa-store text-3xl text-pink-500"></i>
         </div>
         <p class="text-gray-500 font-medium text-sm">กำลังโหลดข้อมูลร้านค้า...</p>
-        <i class="fa-solid fa-spinner fa-spin text-pink-400 text-xl"></i>
+        <i class="fa-solid fa-spinner fa-spin text-pink-400 text-xl hidden"></i>
     </div>
 
     <div class="max-w-md mx-auto bg-white min-h-screen shadow-lg relative">
 
         <div class="theme-pink text-white p-4 sticky top-0 z-50 shadow-md flex justify-between items-center">
             <h1 class="text-lg font-semibold tracking-wide"><i class="fa-solid fa-store mr-2"></i>Goodday Shop</h1>
-            <div id="login-status" class="w-9 h-9 bg-white rounded-full flex items-center justify-center theme-text font-bold shadow-sm transition">
+            <div id="loading-header" class="w-8 h-8 bg-white rounded-full flex items-center justify-center theme-text font-bold shadow-sm transition">
                 <i class="fa-solid fa-spinner fa-spin"></i>
             </div>
         </div>
 
-        <div id="page-shop" class="page-section active p-4 pt-6">
-            <div id="product-list" class="grid grid-cols-2 gap-3">
-                <div class="text-center py-10 col-span-2 font-medium text-gray-400 text-sm">กำลังโหลดสินค้า...</div>
+        <div id="page-stores" class="page-section active p-4 pt-6 bg-gray-50 min-h-screen">
+            <div class="relative mb-6">
+                <input type="text" id="search-store" onkeyup="searchStores()" placeholder="ค้นหาร้านค้าที่ต้องการ..." class="form-input pl-10 shadow-sm border-gray-200">
+                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-gray-400"></i>
+            </div>
+            <h2 class="font-bold text-gray-800 mb-3 text-base border-l-4 border-pink-500 pl-2">ร้านค้าชุมชน</h2>
+            <div id="store-list" class="space-y-3 pb-10">
+                <div class="text-center py-10 text-gray-400 text-sm"><i class="fa-solid fa-spinner fa-spin text-2xl theme-text mb-2 block"></i>กำลังโหลดร้านค้า...</div>
             </div>
         </div>
 
-        <div id="page-cart" class="page-section p-4 pt-6">
-            <h2 class="text-xl font-bold text-gray-800 mb-4 text-center"><i class="fa-solid fa-cart-shopping theme-text mr-2"></i>ตะกร้าของคุณ</h2>
+        <div id="page-products" class="page-section p-4 pt-6 bg-gray-50 min-h-screen">
+            <div class="flex gap-2 mb-4">
+                <button id="btn-back-store" onclick="showPage('stores')" class="hidden w-11 h-11 bg-white rounded-xl flex items-center justify-center text-gray-600 shadow-sm border border-gray-200 shrink-0"><i class="fa-solid fa-arrow-left"></i></button>
+                <div class="relative flex-1">
+                    <input type="text" id="search-product" onkeyup="searchProducts()" placeholder="ค้นหาสินค้า..." class="form-input pl-10 shadow-sm border-gray-200">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-gray-400"></i>
+                </div>
+            </div>
+            <h2 id="store-title" class="font-bold text-gray-800 mb-4 text-base border-l-4 border-pink-500 pl-2">สินค้าทั้งหมด</h2>
+            <div id="product-list" class="grid grid-cols-2 gap-3 pb-10">
+                <div class="text-center py-10 col-span-2 text-gray-400 text-sm">กำลังโหลดสินค้า...</div>
+            </div>
+        </div>
+
+        <div id="page-cart" class="page-section p-4 pt-6 bg-gray-50 min-h-screen">
+            <h2 class="text-lg font-bold text-gray-800 mb-4 text-center"><i class="fa-solid fa-cart-shopping theme-text mr-2"></i>ตะกร้าของคุณ</h2>
             <div id="cart-list" class="space-y-3"></div>
             <div class="mt-6 bg-white p-4 rounded-xl shadow-sm border border-gray-100 hidden" id="cart-summary-box">
                 <div class="flex justify-between font-bold text-lg mb-4 text-gray-800">
@@ -73,10 +89,10 @@
             </div>
 
             <div id="box-coupon-container" class="bg-white border border-gray-100 rounded-xl p-4 shadow-sm mb-4 hidden">
-                <p class="font-bold text-gray-800 mb-2 text-sm"><i class="fa-solid fa-ticket theme-text mr-2"></i>สิทธิ์ส่วนลดโครงการ Waste Money</p>
+                <p class="font-bold text-gray-800 mb-2 text-sm"><i class="fa-solid fa-ticket theme-text mr-2"></i>สิทธิ์คูปอง Waste Money</p>
                 <div class="flex items-center justify-between bg-emerald-50 border border-emerald-100 p-3 rounded-xl">
                     <div>
-                        <p class="text-xs font-bold text-emerald-800">คุณมีคูปองสะสมคงเหลือ <span id="text-coupon-count" class="text-pink-600 text-sm">0</span> ใบ</p>
+                        <p class="text-xs font-bold text-emerald-800">สิทธิ์ส่วนลดคงเหลือ <span id="text-coupon-count" class="text-pink-600 text-sm">0</span> สิทธิ์</p>
                         <p class="text-[10px] text-gray-500 mt-0.5" id="text-coupon-value">* ใช้ลดทันที 0 บาทต่อออเดอร์</p>
                     </div>
                     <label class="relative inline-flex items-center cursor-pointer">
@@ -101,12 +117,10 @@
                             <input type="radio" name="addrType" value="new" onchange="toggleAddressMode()" class="accent-pink-500 w-4 h-4"> ที่อยู่ใหม่
                         </label>
                     </div>
-
                     <div id="box-addr-profile" class="p-3 bg-pink-50 border border-pink-100 rounded-lg">
                         <p class="text-xs font-bold text-pink-600 mb-1"><i class="fa-solid fa-location-dot mr-1"></i> จัดส่งไปที่:</p>
                         <p id="co-address-text" class="text-xs text-gray-700 leading-relaxed font-medium">-</p>
                     </div>
-
                     <div id="box-addr-new" class="hidden space-y-2 mt-2 bg-gray-50 p-3 rounded-lg border border-gray-200">
                         <p class="text-xs font-bold text-gray-600 mb-2">กรอกข้อมูลที่อยู่จัดส่งใหม่</p>
                         <div class="grid grid-cols-2 gap-2">
@@ -150,14 +164,17 @@
         </div>
 
         <div class="fixed bottom-0 w-full max-w-md bg-white border-t flex justify-around py-2.5 text-[11px] font-medium text-gray-400 z-50 shadow-[0_-4px_15px_rgba(0,0,0,0.03)]">
-            <button onclick="showPage('shop')" id="nav-shop" class="nav-btn flex flex-col items-center theme-text w-1/3 transition">
-                <i class="fa-solid fa-store text-xl mb-1.5"></i> ร้านค้า
+            <button onclick="showPage('stores')" id="nav-stores" class="nav-btn flex flex-col items-center theme-text w-1/4 transition">
+                <i class="fa-solid fa-shop text-xl mb-1.5"></i> ร้านค้า
             </button>
-            <button onclick="showPage('cart')" id="nav-cart" class="nav-btn flex flex-col items-center w-1/3 relative transition">
+            <button onclick="showPage('products')" id="nav-products" class="nav-btn flex flex-col items-center w-1/4 transition">
+                <i class="fa-solid fa-bag-shopping text-xl mb-1.5"></i> สินค้าทั้งหมด
+            </button>
+            <button onclick="showPage('cart')" id="nav-cart" class="nav-btn flex flex-col items-center w-1/4 relative transition">
                 <i class="fa-solid fa-cart-shopping text-xl mb-1.5"></i> ตะกร้า
-                <span id="cart-badge" class="absolute top-0 right-7 bg-red-500 text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center hidden">0</span>
+                <span id="cart-badge" class="absolute top-0 right-5 bg-red-500 text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center hidden">0</span>
             </button>
-            <button onclick="showPage('orders')" id="nav-orders" class="nav-btn flex flex-col items-center w-1/3 transition">
+            <button onclick="showPage('orders')" id="nav-orders" class="nav-btn flex flex-col items-center w-1/4 transition">
                 <i class="fa-solid fa-clipboard-list text-xl mb-1.5"></i> คำสั่งซื้อ
             </button>
         </div>
@@ -165,18 +182,19 @@
 
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbwN8QmRIb5gVByL6nrZ_H_kYWiYwULaSQOBT5ahS0XBISwTONw80GZgiTRssPcUmIWQ/exec";
-        const LIFF_ID_SHOP = "ใส่_LIFF_ID_ของระบบร้านค้าตรงนี้";
+        const LIFF_ID_SHOP = "2009970638-OZX0UstV";
 
         let currentUser = null;
+        let allStores = [];
         let allProducts = [];
         let myOrders = [];
         let shopCart = [];
         let cartSubtotal = 0;
         let currentTab = 'ที่ต้องชำระ';
-        let isCheckingLogin = true;
+        let currentViewingStore = null; 
         
-        let availableCouponsCount = 0; // สิทธิ์คูปองคงเหลือจริงที่ดึงจากหลังบ้าน
-        let singleCouponValue = 0; // มูลค่าคูปองต่อใบ
+        let availableCouponsCount = 0; 
+        let singleCouponValue = 0; 
 
         async function callAPI(action, data = {}) {
             try {
@@ -189,34 +207,31 @@
         }
 
         document.addEventListener("DOMContentLoaded", function() {
-            fetchProducts();
             const saved = localStorage.getItem('gooddaySession');
-            if (saved) {
-                currentUser = JSON.parse(saved);
-                isCheckingLogin = false;
-                updateHeader();
-                fetchOrders();
-                syncWasteCoupons();
-            }
+            if (saved) currentUser = JSON.parse(saved);
 
             liff.init({ liffId: LIFF_ID_SHOP }).then(() => {
                 if (liff.isLoggedIn()) {
                     liff.getProfile().then(async profile => {
                         const res = await callAPI("autoLoginByUid", { uid: profile.userId });
-                        isCheckingLogin = false;
                         if (res && res.memberId) {
                             currentUser = res;
                             localStorage.setItem('gooddaySession', JSON.stringify(currentUser));
-                            updateHeader();
+                            updateHeaderUser();
                             fetchOrders();
                             syncWasteCoupons();
-                        } else if (!currentUser) {
-                            document.getElementById('login-status').innerHTML = `<i class="fa-solid fa-user-xmark"></i>`;
+                        } else {
+                            document.getElementById('loading-header').innerHTML = `<i class="fa-solid fa-user-xmark"></i>`;
+                            alert("กรุณาสมัครสมาชิกที่ระบบสมาชิกก่อนใช้งานร้านค้า");
                         }
-                        hideLoader();
                     });
                 } else { liff.login(); }
-            }).catch(err => { isCheckingLogin = false; hideLoader(); });
+            }).catch(err => { 
+                document.getElementById('loading-header').innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i>`;
+            });
+
+            updateHeaderUser();
+            fetchShopData();
             setTimeout(hideLoader, 3000);
         });
 
@@ -225,11 +240,18 @@
             if (loader) loader.style.display = 'none';
         }
 
-        function updateHeader() {
-            if(currentUser) document.getElementById('login-status').innerHTML = `<i class="fa-solid fa-user"></i>`;
+        function updateHeaderUser() {
+            const header = document.getElementById('loading-header');
+            if(currentUser) {
+                header.innerHTML = `<i class="fa-solid fa-circle-check mr-1 text-green-300"></i> <span class="truncate max-w-[100px] inline-block align-bottom">${currentUser.name}</span>`;
+                header.className = "text-xs font-bold bg-white bg-opacity-20 px-3 py-1.5 rounded-full text-white transition";
+            } else {
+                header.innerHTML = `<i class="fa-solid fa-user"></i>`;
+                header.className = "w-8 h-8 bg-white rounded-full flex items-center justify-center theme-text font-bold shadow-sm transition";
+            }
         }
 
-        // ฟังชันก์ดึงข้อมูลจำนวนสิทธิ์คูปองแบบ Realtime คำนวณจากยอดขยะหักออเดอร์
+        // ดึงสิทธิ์คูปองขยะแบบอัตโนมัติ (ไม่ใช้โค้ด)
         async function syncWasteCoupons() {
             if (!currentUser || currentUser.wasteMoney !== "ใช่") return;
             const res = await callAPI("getWasteRecords", { memberId: currentUser.memberId, phone: currentUser.phone });
@@ -251,41 +273,104 @@
             document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
             document.getElementById('page-' + pageId).classList.add('active');
             window.scrollTo(0, 0);
+            
             document.querySelectorAll('.nav-btn').forEach(el => { el.classList.remove('theme-text', 'font-medium'); el.classList.add('text-gray-400'); });
             if (document.getElementById('nav-' + pageId)) {
                 document.getElementById('nav-' + pageId).classList.remove('text-gray-400');
                 document.getElementById('nav-' + pageId).classList.add('theme-text', 'font-medium');
             }
+            
             if (pageId === 'orders') fetchOrders();
             if (pageId === 'cart') renderCart();
-        }
-
-        async function fetchProducts() {
-            const res = await callAPI("getProducts");
-            if (Array.isArray(res)) {
-                allProducts = res;
-                let html = res.map(p => `
-                <div class="bg-white border rounded-xl shadow-sm overflow-hidden flex flex-col justify-between border-gray-100">
-                    <img src="${p.image || 'https://via.placeholder.com/150'}" class="w-full h-32 object-cover">
-                    <div class="p-3">
-                        <h3 class="text-sm font-bold text-gray-800 leading-snug mb-1 line-clamp-2">${p.name}</h3>
-                        <p class="text-sm font-bold theme-text mb-3">฿${p.price}</p>
-                        <button onclick="addToCart('${p.id}')" class="w-full border border-pink-500 text-pink-600 bg-pink-50 py-1.5 rounded-lg text-xs font-bold hover:bg-pink-500 hover:text-white transition"><i class="fa-solid fa-cart-plus mr-1"></i> หยิบใส่ตะกร้า</button>
-                    </div>
-                </div>`).join('');
-                document.getElementById('product-list').innerHTML = html || '<div class="text-center col-span-2 py-10 text-gray-400 font-medium text-sm">ยังไม่มีสินค้า</div>';
+            if (pageId === 'products' && currentViewingStore) {
+                // ถ้ากดเมนู "สินค้าทั้งหมด" ให้ล้างฟิลเตอร์ร้านค้า
+                currentViewingStore = null;
+                document.getElementById('btn-back-store').classList.add('hidden');
+                document.getElementById('store-title').innerText = "สินค้าทั้งหมด";
+                document.getElementById('search-product').value = "";
+                renderProducts();
             }
         }
 
+        async function fetchShopData() {
+            const res = await callAPI("getShopData");
+            if (res && res.success) {
+                allStores = res.stores;
+                allProducts = res.products;
+                renderStores();
+                renderProducts();
+                hideLoader();
+            }
+        }
+
+        // --- ระบบหน้าร้านค้า (Stores) ---
+        function renderStores(search = '') {
+            let filtered = allStores.filter(s => s.name.toLowerCase().includes(search.toLowerCase()));
+            let html = filtered.map(s => `
+                <div onclick="viewStore('${s.name}')" class="bg-white border border-gray-100 rounded-xl p-4 shadow-sm flex items-center gap-4 cursor-pointer hover:bg-gray-50 transition">
+                    <img src="${s.image}" class="w-14 h-14 rounded-full object-cover border border-gray-200 shadow-sm shrink-0">
+                    <div class="flex-1 overflow-hidden">
+                        <h3 class="font-bold text-gray-800 text-sm truncate">${s.name}</h3>
+                        <p class="text-xs text-gray-500 mt-1 line-clamp-2">${s.desc}</p>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-gray-300"></i>
+                </div>
+            `).join('');
+            document.getElementById('store-list').innerHTML = html || '<div class="text-center py-10 text-gray-400 text-sm">ไม่พบร้านค้า</div>';
+        }
+
+        function searchStores() {
+            const keyword = document.getElementById('search-store').value;
+            renderStores(keyword);
+        }
+
+        function viewStore(storeName) {
+            currentViewingStore = storeName;
+            document.getElementById('search-product').value = '';
+            document.getElementById('btn-back-store').classList.remove('hidden');
+            document.getElementById('store-title').innerText = `สินค้าจากร้าน: ${storeName}`;
+            showPage('products');
+            renderProducts();
+        }
+
+        // --- ระบบหน้าสินค้า (Products) ---
+        function renderProducts(search = '') {
+            let list = allProducts;
+            if (currentViewingStore) list = list.filter(p => p.storeName === currentViewingStore);
+            if (search) list = list.filter(p => p.name.toLowerCase().includes(search.toLowerCase()));
+
+            let html = list.map(p => `
+            <div class="bg-white border rounded-xl shadow-sm overflow-hidden flex flex-col justify-between border-gray-100">
+                <img src="${p.image}" class="w-full h-32 object-cover">
+                <div class="p-3">
+                    <span class="text-[9px] bg-gray-100 text-gray-500 px-2 py-0.5 rounded font-bold mb-1 inline-block truncate max-w-full">${p.storeName}</span>
+                    <h3 class="text-sm font-bold text-gray-800 leading-snug mb-1 line-clamp-2">${p.name}</h3>
+                    <p class="text-sm font-bold theme-text mb-3">฿${p.price}</p>
+                    <button onclick="addToCart('${p.id}')" class="w-full border border-pink-500 text-pink-600 bg-pink-50 py-2 rounded-lg text-xs font-bold hover:bg-pink-500 hover:text-white transition"><i class="fa-solid fa-cart-plus mr-1"></i> หยิบใส่ตะกร้า</button>
+                </div>
+            </div>`).join('');
+            document.getElementById('product-list').innerHTML = html || '<div class="text-center col-span-2 py-10 text-gray-400 font-medium text-sm">ไม่พบสินค้า</div>';
+        }
+
+        function searchProducts() {
+            const keyword = document.getElementById('search-product').value;
+            renderProducts(keyword);
+        }
+
+        // --- ระบบตะกร้า ---
         function addToCart(id) {
-            if (isCheckingLogin) { alert("รอสักครู่ ระบบกำลังโหลดข้อมูล..."); return; }
-            if (!currentUser) { alert("กรุณาสมัครสมาชิกที่ระบบสมาชิกก่อนครับ"); return; }
+            if (!currentUser) { alert("กรุณาสมัครสมาชิก"); return; }
             const product = allProducts.find(p => p.id === id);
             if (!product) return;
             const existing = shopCart.find(item => item.id === id);
             if (existing) existing.qty += 1;
             else shopCart.push({ ...product, qty: 1 });
             updateCartBadge();
+            let toast = document.createElement("div");
+            toast.className = "fixed top-20 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-4 py-2 rounded-full text-xs z-50 font-medium shadow-md";
+            toast.innerText = `เพิ่มลงตะกร้าแล้ว`;
+            document.body.appendChild(toast);
+            setTimeout(() => { toast.remove(); }, 1500);
         }
 
         function updateCartBadge() {
@@ -313,7 +398,7 @@
                     <div class="text-center py-16 flex flex-col items-center">
                         <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center text-gray-300 text-3xl mb-3"><i class="fa-solid fa-basket-shopping"></i></div>
                         <p class="text-gray-400 font-medium mb-4 text-sm">ตะกร้าของคุณว่างเปล่า</p>
-                        <button onclick="showPage('shop')" class="bg-pink-50 text-pink-600 px-6 py-2 rounded-full text-sm font-bold border border-pink-100 hover:bg-pink-100 transition">ไปเลือกซื้อสินค้า</button>
+                        <button onclick="showPage('stores')" class="bg-pink-50 text-pink-600 px-6 py-2 rounded-full text-sm font-bold border border-pink-100 hover:bg-pink-100 transition">ไปเลือกซื้อสินค้า</button>
                     </div>`;
                 summaryBox.classList.add('hidden');
                 return;
@@ -324,8 +409,9 @@
                 total += item.price * item.qty;
                 return `
                 <div class="bg-white border border-gray-100 rounded-xl p-3 shadow-sm flex gap-3 items-center">
-                    <img src="${item.image || 'https://via.placeholder.com/150'}" class="w-16 h-16 object-cover rounded-lg border border-gray-100">
+                    <img src="${item.image}" class="w-16 h-16 object-cover rounded-lg border border-gray-100">
                     <div class="flex-1">
+                        <p class="text-[9px] text-gray-400 font-bold truncate w-full">${item.storeName}</p>
                         <h3 class="text-sm font-bold text-gray-800 line-clamp-1">${item.name}</h3>
                         <p class="text-xs theme-text font-bold mt-1">฿${item.price}</p>
                     </div>
@@ -356,7 +442,7 @@
             const fullAdr = `${a.house||''} ม.${a.moo||''} ถ.${a.road||''} ต.${a.subdist||''} อ.${a.dist||''} จ.${a.prov||''} ${a.zip||''}`;
             document.getElementById('co-address-text').innerText = (a.house && a.prov) ? fullAdr : "⚠️ ข้อมูลที่อยู่ไม่ครบถ้วน กรุณาอัปเดต";
 
-            document.getElementById('checkbox-use-coupon').checked = false; // เคลียร์เช็คบ็อกซ์คูปองทุกครั้งที่เข้าหน้าสรุปบิลใหม่
+            document.getElementById('checkbox-use-coupon').checked = false; 
             syncWasteCoupons();
             updateTotal();
             showPage('checkout');
@@ -379,7 +465,7 @@
             
             let discount = 0;
             if(useCouponCheckbox && availableCouponsCount > 0) {
-                discount = singleCouponValue; // หักลบส่วนลดคูปอง 1 ใบตามเงื่อนไขที่กำหนด
+                discount = singleCouponValue; 
                 document.getElementById('co-discount-row').classList.remove('hidden');
                 document.getElementById('co-discount').innerText = '-฿' + discount;
             } else {
@@ -411,7 +497,7 @@
             if (delType === 'รับที่บ้าน') {
                 if (addrMode === 'profile') {
                     if (!currentUser.address || !currentUser.address.house || !currentUser.address.prov) {
-                        alert("ข้อมูลที่อยู่โปรไฟล์ไม่สมบูรณ์ กรุณาเลือก 'ที่อยู่ใหม่' หรือไปแก้ไขที่โปรไฟล์"); return;
+                        alert("ข้อมูลที่อยู่ไม่สมบูรณ์ กรุณาเลือก 'ที่อยู่ใหม่' หรือไปแก้ไขที่ระบบสมาชิก"); return;
                     }
                     finalAddress = currentUser.address;
                 } else {
@@ -439,14 +525,14 @@
                 totalPrice: finalPrice,
                 deliveryType: delType,
                 address: finalAddress,
-                useWasteCoupon: useWasteCoupon // ส่งค่า Boolean ไปให้หลังบ้านบันทึกแต้มหักคูปองอัตโนมัติ
+                useWasteCoupon: useWasteCoupon
             };
 
             const res = await callAPI("placeOrder", orderData);
             btn.disabled = false; btn.innerText = 'ยืนยันคำสั่งซื้อ';
             
             if (res.success) {
-                alert("สั่งซื้อสำเร็จ! โปรดแนบสลิปโอนเงินเพื่อยืนยันคำสั่งซื้อครับ");
+                alert("สั่งซื้อสำเร็จ! โปรดแนบสลิปโอนเงินเพื่อยืนยันคำสั่งซื้อ");
                 shopCart = []; updateCartBadge(); fetchOrders(); showPage('orders');
             } else { alert("ข้อผิดพลาดระบบ: " + res.message); }
         }
