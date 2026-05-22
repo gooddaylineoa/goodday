@@ -15,33 +15,33 @@
         .page-section { display: none; }
         .page-section.active { display: block; animation: fadeIn 0.3s; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .form-input { width: 100%; border: 1px solid #D1D5DB; border-radius: 0.75rem; padding: 0.75rem; font-family: 'Sarabun'; }
+        .form-input { width: 100%; border: 1px solid #D1D5DB; border-radius: 0.75rem; padding: 0.75rem; font-family: 'Sarabun'; color: #374151; font-size: 0.875rem; transition: all 0.2s;}
+        .form-input:focus { outline: none; border-color: #d81b60; box-shadow: 0 0 0 2px #fce4ec; }
         
-        /* สไตล์ปฏิทินกิจกรรม */
         .cal-day { aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 50%; font-size: 14px; cursor: pointer; position: relative; transition: 0.2s; }
         .cal-today { background-color: #d81b60 !important; color: white !important; font-weight: bold; }
         .cal-selected { box-shadow: 0 0 0 2px #d81b60 inset; color: #d81b60; font-weight: bold; }
         .event-dot { width: 4px; height: 4px; border-radius: 50%; background-color: #d81b60; position: absolute; bottom: 4px; }
         
-        /* สไตล์หน้าจอโหลด */
         #liff-loading { position:fixed; inset:0; background:#fff; z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
-<body class="antialiased text-gray-800">
+<body class="antialiased text-gray-800 pb-24">
 
     <div id="liff-loading">
         <div class="w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center mb-2">
             <i class="fa-solid fa-book-open-reader text-3xl text-pink-500"></i>
         </div>
         <p class="text-gray-500 font-medium text-sm">กำลังโหลดข้อมูลห้องสมุด...</p>
-        <i class="fa-solid fa-spinner fa-spin text-pink-400 text-xl"></i>
+        <i class="fa-solid fa-spinner fa-spin text-pink-400 text-xl hidden"></i>
     </div>
 
-    <div class="max-w-md mx-auto bg-white min-h-screen shadow-lg relative pb-24">
+    <div class="max-w-md mx-auto bg-white min-h-screen shadow-lg relative">
 
         <div class="theme-pink text-white p-4 sticky top-0 z-50 shadow-md flex justify-between items-center">
             <h1 class="text-lg font-semibold tracking-wide"><i class="fa-solid fa-book-open-reader mr-2"></i>ห้องสมุดสานพลัง</h1>
-            <div id="login-status" class="w-9 h-9 bg-white rounded-full flex items-center justify-center theme-text font-bold shadow-sm cursor-pointer hover:bg-pink-50 transition">
+            <div id="login-status" class="w-9 h-9 bg-white rounded-full flex items-center justify-center theme-text font-bold shadow-sm transition">
                 <i class="fa-solid fa-spinner fa-spin"></i>
             </div>
         </div>
@@ -49,49 +49,70 @@
         <div class="bg-pink-50 px-4 py-2 border-b border-pink-100 flex items-center justify-between">
             <span class="text-sm font-bold text-pink-700"><i class="fa-solid fa-location-dot mr-1"></i> สาขา:</span>
             <select id="global-branch" onchange="loadAllData()" class="bg-white border border-pink-200 text-sm font-bold text-pink-700 rounded-lg px-2 py-1 outline-none">
-                <option value="ห้องสมุดสัตหีบ">ห้องสมุดประชาชน “เฉลิมราชกุมารี” อำเภอสัตหีบ</option>
+                <option value="ทั้งหมด">ทั้งหมด (รวมทุกสาขา)</option>
+                <option value="สัตหีบ">ห้องสมุดประชาชน “เฉลิมราชกุมารี” สัตหีบ</option>
             </select>
         </div>
 
-        <div id="page-home" class="page-section active p-4">
-            <div class="bg-gradient-to-r from-pink-500 to-rose-500 rounded-2xl p-5 text-white shadow-sm mb-6 relative overflow-hidden">
+        <div id="page-home" class="page-section active p-4 pt-6 bg-gray-50 min-h-screen">
+            <div class="bg-gradient-to-r from-pink-500 to-rose-500 rounded-xl p-5 text-white shadow-sm mb-6 relative overflow-hidden">
                 <div class="absolute right-[-10px] top-[-10px] opacity-20 text-8xl"><i class="fa-solid fa-address-card"></i></div>
-                <p class="text-pink-100 text-xs mb-1">บัตรสมาชิกห้องสมุดดิจิทัล</p>
+                <div class="flex justify-between items-start mb-4">
+                    <span class="text-[10px] font-bold uppercase tracking-widest bg-white/20 px-3 py-1.5 rounded-full shadow-sm backdrop-blur-md">Digital Library Card</span>
+                </div>
+                <p class="text-pink-100 text-xs mb-1">Member ID</p>
                 <h2 id="lib-member-id" class="text-2xl font-bold tracking-widest mb-2">MEM-00000</h2>
                 <h3 id="lib-member-name" class="text-base font-semibold">-</h3>
             </div>
-            <h3 class="font-bold text-gray-800 text-base mb-3"><i class="fa-solid fa-bullhorn theme-text mr-2"></i>ข่าวสารล่าสุด</h3>
+            
+            <h3 class="font-bold text-gray-800 text-sm mb-3 border-l-4 border-pink-500 pl-2">ข่าวสารล่าสุด</h3>
             <div id="news-container" class="space-y-3 mb-6"></div>
-            <h3 class="font-bold text-gray-800 text-base mb-3"><i class="fa-solid fa-book-sparkles theme-text mr-2"></i>หนังสือใหม่</h3>
+            
+            <h3 class="font-bold text-gray-800 text-sm mb-3 border-l-4 border-pink-500 pl-2">หนังสือใหม่</h3>
             <div id="new-books-container" class="flex overflow-x-auto gap-3 pb-4 no-scrollbar"></div>
         </div>
 
-        <div id="page-booking" class="page-section p-4 pt-6">
-            <h2 class="text-xl font-bold text-gray-800 mb-4 text-center">ความหนาแน่นปัจจุบัน</h2>
-            <div class="grid grid-cols-2 gap-3 mb-6">
-                <div class="bg-blue-50 border border-blue-100 rounded-xl p-4 text-center">
-                    <p class="text-xs text-blue-600 font-bold mb-1">Co-Working</p>
-                    <p class="text-2xl font-bold text-blue-700"><span id="stat-coworking">0</span> <span class="text-sm font-medium">คน</span></p>
+        <div id="page-booking" class="page-section bg-gray-50 min-h-screen">
+            <div class="flex overflow-x-auto bg-white border-b sticky top-[108px] z-40 no-scrollbar text-sm font-bold text-gray-400">
+                <button onclick="switchSpaceTab('current', this)" class="space-tab active border-b-2 border-pink-600 theme-text px-4 py-3 whitespace-nowrap w-1/2">สถานะพื้นที่</button>
+                <button onclick="switchSpaceTab('history', this)" class="space-tab px-4 py-3 whitespace-nowrap w-1/2">ประวัติการใช้งาน</button>
+            </div>
+
+            <div id="tab-space-current" class="space-content p-4 pt-6">
+                <h2 class="text-lg font-bold text-gray-800 mb-4 text-center">ความหนาแน่นปัจจุบัน</h2>
+                <div class="grid grid-cols-2 gap-3 mb-6">
+                    <div class="bg-blue-50 border border-blue-100 rounded-xl p-4 text-center">
+                        <p class="text-xs text-blue-600 font-bold mb-1">Co-Working</p>
+                        <p class="text-2xl font-black text-blue-700"><span id="stat-coworking">0</span> <span class="text-xs font-medium">คน</span></p>
+                    </div>
+                    <div class="bg-purple-50 border border-purple-100 rounded-xl p-4 text-center">
+                        <p class="text-xs text-purple-600 font-bold mb-1">คอมพิวเตอร์</p>
+                        <p class="text-2xl font-black text-purple-700"><span id="stat-pc">0</span> <span class="text-xs font-medium">คน</span></p>
+                    </div>
                 </div>
-                <div class="bg-purple-50 border border-purple-100 rounded-xl p-4 text-center">
-                    <p class="text-xs text-purple-600 font-bold mb-1">คอมพิวเตอร์</p>
-                    <p class="text-2xl font-bold text-purple-700"><span id="stat-pc">0</span> <span class="text-sm font-medium">คน</span></p>
+                
+                <div class="bg-white border border-gray-100 p-4 rounded-xl shadow-sm space-y-4">
+                    <h3 class="font-bold text-sm text-gray-800 border-b border-gray-100 pb-2">จองเข้าใช้บริการพื้นที่</h3>
+                    <div>
+                        <label class="text-xs font-bold text-gray-500 mb-1 block">เลือกพื้นที่</label>
+                        <select id="book-type" class="form-input bg-gray-50 font-bold text-gray-700">
+                            <option value="Co-working">Co-working Space</option>
+                            <option value="คอมพิวเตอร์">เครื่องคอมพิวเตอร์</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold text-gray-500 mb-1 block">วัน-เวลาที่ต้องการใช้งาน</label>
+                        <input type="datetime-local" id="book-datetime" class="form-input text-gray-700 font-medium">
+                    </div>
+                    <button onclick="submitSpaceBooking(this)" class="w-full theme-pink text-white py-3.5 rounded-xl font-semibold shadow-md hover:bg-pink-700 transition text-sm">ยืนยันการจอง</button>
                 </div>
             </div>
-            <div class="bg-white border border-gray-100 p-5 rounded-xl shadow-sm space-y-4">
-                <h3 class="font-bold text-base text-gray-800 border-b pb-2">จองเข้าใช้บริการ</h3>
-                <div>
-                    <label class="text-xs font-bold text-gray-400 ml-1">เลือกพื้นที่</label>
-                    <select id="book-type" class="form-input bg-gray-50 text-sm font-medium mt-1">
-                        <option value="Co-working">Co-working Space</option>
-                        <option value="คอมพิวเตอร์">เครื่องคอมพิวเตอร์</option>
-                    </select>
+
+            <div id="tab-space-history" class="space-content p-4 pt-6 hidden">
+                <h2 class="text-lg font-bold text-gray-800 mb-4 text-center">ประวัติการจอง & Check-out</h2>
+                <div id="space-history-list" class="space-y-3 pb-10">
+                    <div class="text-center py-10 text-gray-400 text-sm">กำลังโหลดประวัติ...</div>
                 </div>
-                <div>
-                    <label class="text-xs font-bold text-gray-400 ml-1">วัน-เวลา</label>
-                    <input type="datetime-local" id="book-datetime" class="form-input text-sm font-medium mt-1">
-                </div>
-                <button onclick="submitSpaceBooking(this)" class="w-full theme-pink text-white py-3.5 rounded-xl font-semibold shadow-md hover:bg-pink-700 transition">ยืนยันการจอง</button>
             </div>
         </div>
 
@@ -101,21 +122,24 @@
                 <button onclick="switchLibTab('borrow', this)" class="lib-tab px-4 py-3 whitespace-nowrap w-1/3">หนังสือฉัน</button>
                 <button onclick="switchLibTab('donate', this)" class="lib-tab px-4 py-3 whitespace-nowrap w-1/3">เสนอแนะ</button>
             </div>
-            <div id="tab-search" class="lib-content p-4 space-y-4">
+            
+            <div id="tab-search" class="lib-content p-4 pt-6 space-y-4">
                 <div class="flex gap-2">
-                    <input type="text" id="search-keyword" placeholder="ค้นหาชื่อหนังสือ..." class="form-input flex-1 text-sm">
-                    <button onclick="searchBooksBtn(this)" class="bg-pink-500 text-white px-4 rounded-xl shadow-md"><i class="fa-solid fa-magnifying-glass"></i></button>
+                    <input type="text" id="search-keyword" placeholder="ค้นหาชื่อหนังสือ..." class="form-input flex-1">
+                    <button onclick="searchBooksBtn(this)" class="bg-pink-500 text-white px-4 rounded-xl shadow-sm hover:bg-pink-600"><i class="fa-solid fa-magnifying-glass"></i></button>
                 </div>
-                <div id="search-results" class="space-y-3"></div>
+                <div id="search-results" class="space-y-3 pb-10"></div>
             </div>
-            <div id="tab-borrow" class="lib-content p-4 hidden">
-                <div id="borrow-list" class="space-y-3"></div>
+            
+            <div id="tab-borrow" class="lib-content p-4 pt-6 hidden">
+                <div id="borrow-list" class="space-y-3 pb-10"><p class="text-center text-gray-400 text-sm py-10">ไม่พบรายการยืมหนังสือ</p></div>
             </div>
-            <div id="tab-donate" class="lib-content p-4 hidden">
+            
+            <div id="tab-donate" class="lib-content p-4 pt-6 hidden">
                 <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm space-y-4">
-                    <select id="req-type" class="form-input bg-gray-50 text-sm font-medium"><option value="เสนอซื้อ">เสนอให้ซื้อเข้า</option><option value="บริจาค">ต้องการบริจาค</option></select>
-                    <textarea id="req-detail" rows="4" class="form-input text-sm" placeholder="ระบุชื่อหนังสือและรายละเอียด..."></textarea>
-                    <button onclick="submitRequest(this)" class="w-full theme-pink text-white py-3 rounded-xl font-bold">ส่งข้อมูล</button>
+                    <select id="req-type" class="form-input bg-gray-50 text-gray-700 font-bold"><option value="เสนอซื้อ">เสนอให้ซื้อเข้า</option><option value="บริจาค">ต้องการบริจาค</option></select>
+                    <textarea id="req-detail" rows="4" class="form-input" placeholder="ระบุชื่อหนังสือและรายละเอียด..."></textarea>
+                    <button onclick="submitRequest(this)" class="w-full theme-pink text-white py-3.5 rounded-xl font-semibold shadow-md text-sm">ส่งข้อมูล</button>
                 </div>
             </div>
         </div>
@@ -123,7 +147,7 @@
         <div id="page-events" class="page-section bg-gray-50 min-h-screen">
             <div class="flex overflow-x-auto bg-white border-b sticky top-[108px] z-40 no-scrollbar text-sm font-bold text-gray-400">
                 <button onclick="switchEventTab('calendar', this)" class="evt-tab active border-b-2 border-pink-600 theme-text px-4 py-3 whitespace-nowrap w-1/2">ปฏิทินกิจกรรม</button>
-                <button onclick="switchEventTab('history', this)" class="evt-tab px-4 py-3 whitespace-nowrap w-1/2">ประวัติการจอง</button>
+                <button onclick="switchEventTab('history', this)" class="evt-tab px-4 py-3 whitespace-nowrap w-1/2">กิจกรรมของฉัน</button>
             </div>
             
             <div id="tab-evt-calendar" class="evt-content p-4 pt-6">
@@ -143,7 +167,7 @@
                 </div>
             </div>
 
-            <div id="tab-evt-history" class="evt-content p-4 hidden">
+            <div id="tab-evt-history" class="evt-content p-4 pt-6 hidden">
                 <div id="event-history-list" class="space-y-3 pb-10">
                     <p class="text-center text-gray-400 text-sm py-10">กำลังโหลดประวัติ...</p>
                 </div>
@@ -151,16 +175,16 @@
         </div>
 
         <div class="fixed bottom-0 w-full max-w-md bg-white border-t flex justify-around py-2.5 text-[11px] font-medium text-gray-400 z-50 shadow-[0_-4px_15px_rgba(0,0,0,0.03)]">
-            <button onclick="showPage('home')" id="nav-home" class="nav-btn flex flex-col items-center theme-text w-1/4">
+            <button onclick="showPage('home')" id="nav-home" class="nav-btn flex flex-col items-center theme-text w-1/4 transition">
                 <i class="fa-solid fa-house-chimney text-xl mb-1.5"></i> ประชาสัมพันธ์
             </button>
-            <button onclick="showPage('booking')" id="nav-booking" class="nav-btn flex flex-col items-center w-1/4">
+            <button onclick="showPage('booking')" id="nav-booking" class="nav-btn flex flex-col items-center w-1/4 transition">
                 <i class="fa-solid fa-chair text-xl mb-1.5"></i> สถานะ/จอง
             </button>
-            <button onclick="showPage('service')" id="nav-service" class="nav-btn flex flex-col items-center w-1/4">
+            <button onclick="showPage('service')" id="nav-service" class="nav-btn flex flex-col items-center w-1/4 transition">
                 <i class="fa-solid fa-book-bookmark text-xl mb-1.5"></i> ยืม-คืน
             </button>
-            <button onclick="showPage('events')" id="nav-events" class="nav-btn flex flex-col items-center w-1/4">
+            <button onclick="showPage('events')" id="nav-events" class="nav-btn flex flex-col items-center w-1/4 transition">
                 <i class="fa-solid fa-calendar-check text-xl mb-1.5"></i> กิจกรรม
             </button>
         </div>
@@ -168,11 +192,10 @@
 
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbwN8QmRIb5gVByL6nrZ_H_kYWiYwULaSQOBT5ahS0XBISwTONw80GZgiTRssPcUmIWQ/exec";
-        const LIFF_ID = "2009970638-GrD1aOi9";
+        const LIFF_ID = "ใส่_LIFF_ID_ของห้องสมุด";
         
         let currentUser = null;
         let libActivities = [];
-        let eventHistory = []; // เก็บประวัติกิจกรรม
         let currDate = new Date();
         const monthThai = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
 
@@ -188,6 +211,7 @@
 
         document.addEventListener("DOMContentLoaded", function() {
             showPage('home');
+            
             liff.init({ liffId: LIFF_ID }).then(() => {
                 if (liff.isLoggedIn()) {
                     liff.getProfile().then(async profile => {
@@ -198,12 +222,14 @@
                             loadAllData();
                         } else {
                             document.getElementById('login-status').innerHTML = `<i class="fa-solid fa-user-xmark"></i>`;
+                            alert("กรุณาสมัครสมาชิกผ่านระบบสมาชิกก่อนการใช้งาน");
                         }
                         hideLoader();
                     });
                 } else liff.login();
             }).catch(err => {
                 hideLoader();
+                document.getElementById('login-status').innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i>`;
             });
 
             setTimeout(hideLoader, 3000);
@@ -214,17 +240,34 @@
             if (loader) loader.style.display = 'none';
         }
 
+        function updateUI() {
+            if(!currentUser) return;
+            document.getElementById('lib-member-id').innerText = currentUser.memberId;
+            document.getElementById('lib-member-name').innerText = currentUser.name;
+            const header = document.getElementById('login-status');
+            header.innerHTML = `<i class="fa-solid fa-circle-check mr-1 text-green-300"></i> <span class="truncate max-w-[100px] inline-block align-bottom">${currentUser.name}</span>`;
+            header.className = "text-xs font-bold bg-white bg-opacity-20 px-3 py-1.5 rounded-full text-white transition";
+        }
+
         function showPage(pageId) {
             document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
             document.getElementById('page-' + pageId).classList.add('active');
-            document.querySelectorAll('.nav-btn').forEach(el => { el.classList.remove('theme-text'); el.classList.add('text-gray-400'); });
-            document.getElementById('nav-' + pageId).classList.replace('text-gray-400', 'theme-text');
             window.scrollTo(0, 0);
-            if(pageId === 'events') {
-                renderCalendar();
-                // ถ้าเปิดมาหน้ากิจกรรมแล้วประวัติว่าง ให้ดึงประวัติ
-                if (eventHistory.length === 0 && currentUser) loadEventHistory();
-            }
+            
+            document.querySelectorAll('.nav-btn').forEach(el => { el.classList.remove('theme-text', 'font-medium'); el.classList.add('text-gray-400'); });
+            const targetNav = document.getElementById('nav-' + pageId);
+            if(targetNav) { targetNav.classList.remove('text-gray-400'); targetNav.classList.add('theme-text', 'font-medium'); }
+            
+            if(pageId === 'events') renderCalendar();
+            if(pageId === 'booking') { document.getElementById('global-branch').value = "ทั้งหมด"; loadAllData(); }
+        }
+
+        function switchSpaceTab(tabName, btn) {
+            document.querySelectorAll('.space-tab').forEach(b => b.classList.remove('border-b-2', 'border-pink-600', 'theme-text'));
+            btn.classList.add('border-b-2', 'border-pink-600', 'theme-text');
+            document.querySelectorAll('.space-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById('tab-space-' + tabName).classList.remove('hidden');
+            if(tabName === 'history') loadSpaceHistory();
         }
 
         function switchLibTab(tabName, btn) {
@@ -234,23 +277,12 @@
             document.getElementById('tab-' + tabName).classList.remove('hidden');
         }
 
-        // ระบบสลับแท็บกิจกรรม
         function switchEventTab(tabName, btn) {
             document.querySelectorAll('.evt-tab').forEach(b => b.classList.remove('border-b-2', 'border-pink-600', 'theme-text'));
             btn.classList.add('border-b-2', 'border-pink-600', 'theme-text');
             document.querySelectorAll('.evt-content').forEach(el => el.classList.add('hidden'));
             document.getElementById('tab-evt-' + tabName).classList.remove('hidden');
-            
-            if (tabName === 'history' && currentUser) {
-                loadEventHistory();
-            }
-        }
-
-        function updateUI() {
-            if(!currentUser) return;
-            document.getElementById('lib-member-id').innerText = currentUser.memberId;
-            document.getElementById('lib-member-name').innerText = currentUser.name;
-            document.getElementById('login-status').innerHTML = `<i class="fa-solid fa-user"></i>`;
+            if (tabName === 'history') loadEventHistory();
         }
 
         async function loadAllData() {
@@ -260,15 +292,16 @@
                 document.getElementById('stat-coworking').innerText = stats.coworking;
                 document.getElementById('stat-pc').innerText = stats.pc;
             }
+            
             const content = await callAPI("getLibraryContent");
             if(content) {
                 document.getElementById('news-container').innerHTML = content.news.map(n => `
                     <div class="bg-white border border-gray-100 rounded-xl p-3 flex gap-3 shadow-sm">
                         <img src="${n.image}" class="w-16 h-16 object-cover rounded-lg">
-                        <div><h4 class="font-bold text-sm text-gray-800 line-clamp-1">${n.title}</h4><p class="text-[11px] text-gray-500 line-clamp-2 mt-1">${n.detail}</p></div>
+                        <div><h4 class="font-bold text-sm text-gray-800 line-clamp-1">${n.title}</h4><p class="text-[11px] text-gray-500 line-clamp-2 mt-1 font-medium">${n.detail}</p></div>
                     </div>`).join('');
                 document.getElementById('new-books-container').innerHTML = content.newBooks.map(b => `
-                    <div class="min-w-[110px] bg-white border border-gray-100 rounded-xl p-2"><img src="${b.image}" class="w-full h-32 object-cover rounded-lg mb-2"><h4 class="font-bold text-xs text-gray-800 line-clamp-2">${b.title}</h4></div>
+                    <div class="min-w-[110px] bg-white border border-gray-100 rounded-xl p-2 shadow-sm"><img src="${b.image}" class="w-full h-32 object-cover rounded-lg mb-2"><h4 class="font-bold text-xs text-gray-800 line-clamp-2 leading-snug">${b.title}</h4></div>
                 `).join('');
             }
             const evts = await callAPI("getLibActivities", { branch: branch });
@@ -276,16 +309,110 @@
             if(document.getElementById('page-events').classList.contains('active')) renderCalendar();
         }
 
+        async function submitSpaceBooking(btn) {
+            const dt = document.getElementById('book-datetime').value;
+            const branch = document.getElementById('global-branch').value;
+            if(branch === "ทั้งหมด") return alert("กรุณาเลือกสาขาที่ต้องการจองให้ชัดเจน");
+            if(!dt) return alert("กรุณาเลือกเวลา");
+            
+            btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังดำเนินการ...';
+            const res = await callAPI("bookLibrarySpace", {
+                memberId: currentUser.memberId, lineUid: currentUser.lineUid, userName: currentUser.name,
+                branch: branch, spaceType: document.getElementById('book-type').value,
+                bookDateTime: dt.replace("T", " ")
+            });
+            if(res && res.success) { 
+                alert("จองพื้นที่สำเร็จ! กรุณาโชว์รหัสในหน้าประวัติให้เจ้าหน้าที่"); 
+                document.getElementById('book-datetime').value = "";
+                loadAllData(); 
+            } else { alert("เกิดข้อผิดพลาด"); }
+            btn.disabled = false; btn.innerText = "ยืนยันการจอง";
+        }
+
+        // โหลดประวัติและ Check-out
+        async function loadSpaceHistory() {
+            if(!currentUser) return;
+            document.getElementById('space-history-list').innerHTML = '<div class="text-center py-10 text-gray-400 text-sm"><i class="fa-solid fa-spinner fa-spin text-2xl theme-text mb-2 block"></i>กำลังโหลด...</div>';
+            
+            const history = await callAPI("getMyLibBookings", { uid: currentUser.lineUid });
+            if(!history || history.length === 0) {
+                document.getElementById('space-history-list').innerHTML = '<div class="text-center py-10 text-gray-400 text-sm border border-gray-100 bg-white rounded-xl">ไม่พบประวัติการใช้งาน</div>';
+                return;
+            }
+
+            document.getElementById('space-history-list').innerHTML = history.filter(h => !h.type.includes("กิจกรรม")).map(h => {
+                let isCancelable = h.status === "รอใช้งาน";
+                let statusClass = isCancelable ? "text-orange-500 bg-orange-50 border-orange-100" : "text-gray-500 bg-gray-50 border-gray-200";
+                
+                return `
+                <div class="bg-white border border-gray-100 rounded-xl p-4 shadow-sm mb-3">
+                    <div class="flex justify-between items-start border-b pb-2 mb-2">
+                        <div>
+                            <span class="text-[10px] font-bold text-pink-600 bg-pink-50 px-2 py-1 rounded">${h.type}</span>
+                            <p class="text-xs text-gray-500 mt-2 font-bold">${h.branch}</p>
+                        </div>
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded border ${statusClass}">${h.status}</span>
+                    </div>
+                    <p class="text-[11px] text-gray-500 font-medium mb-1"><i class="fa-solid fa-hashtag w-4 text-center mr-0.5"></i> ${h.id}</p>
+                    <p class="text-[11px] text-gray-500 font-medium"><i class="fa-regular fa-clock w-4 text-center mr-0.5"></i> ${h.datetime}</p>
+                    ${isCancelable ? `<button onclick="cancelLibBooking('${h.id}')" class="w-full text-red-500 text-xs font-bold border border-red-100 py-2.5 rounded-lg hover:bg-red-50 transition mt-3"><i class="fa-solid fa-person-walking-arrow-right mr-1"></i> Check-out / ยกเลิก</button>` : ''}
+                </div>`;
+            }).join('');
+        }
+
+        async function cancelLibBooking(id) {
+            if(!confirm("ยืนยัน Check-out ออกจากพื้นที่หรือยกเลิกการจองนี้?")) return;
+            const res = await callAPI("cancelLibBooking", { id: id, uid: currentUser.lineUid });
+            if(res.success) {
+                alert("ดำเนินการยกเลิกเรียบร้อย (พื้นที่ว่างเพิ่มขึ้นแล้ว)");
+                loadAllData(); // ให้โหลดตัวเลขความหนาแน่นใหม่
+                loadSpaceHistory(); // รีเฟรชประวัติ
+                if(document.getElementById('tab-evt-history').classList.contains('hidden') === false) loadEventHistory();
+            } else {
+                alert(res.message);
+            }
+        }
+
+        // ค้นหาคลังหนังสือ
+        async function searchBooksBtn(btn) {
+            const kw = document.getElementById('search-keyword').value.trim();
+            const branch = document.getElementById('global-branch').value;
+            
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+            const results = await callAPI("searchBooks", { branch: branch, keyword: kw });
+            btn.innerHTML = '<i class="fa-solid fa-magnifying-glass"></i>';
+            
+            if(!results || results.length === 0) {
+                document.getElementById('search-results').innerHTML = '<p class="text-center text-sm text-gray-400 py-6">ไม่พบหนังสือที่ค้นหาในสาขานี้</p>';
+                return;
+            }
+            
+            document.getElementById('search-results').innerHTML = results.map(b => {
+                let st = b.status === "ว่าง" ? "text-green-600 bg-green-50 border-green-100" : "text-red-500 bg-red-50 border-red-100";
+                return `
+                <div class="bg-white border border-gray-100 p-3 rounded-xl shadow-sm flex justify-between items-center">
+                    <div>
+                        <h4 class="font-bold text-sm text-gray-800 line-clamp-1">${b.title}</h4>
+                        <p class="text-[10px] text-gray-400 mt-1 font-medium">${b.category}</p>
+                    </div>
+                    <span class="text-[10px] font-bold px-2 py-0.5 rounded border ${st}">${b.status}</span>
+                </div>`;
+            }).join('');
+        }
+
+        // ปฏิทินและกิจกรรม
         function renderCalendar() {
             const m = currDate.getMonth(); const y = currDate.getFullYear();
             document.getElementById('cal-month-year').innerText = `${monthThai[m]} ${y}`;
             const first = new Date(y, m, 1).getDay(); const days = new Date(y, m + 1, 0).getDate();
             let grid = ''; for(let i=0; i<first; i++) grid += '<div></div>';
+            
             for(let day=1; day<=days; day++){
                 const dStr = `${y}-${String(m+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
-                const hasEvent = libActivities.some(a => a.date === dStr);
+                const acts = libActivities.filter(a => a.date === dStr);
                 const isToday = (dStr === new Date().toISOString().split('T')[0]);
-                grid += `<div onclick="selectDate('${dStr}',${day})" class="cal-day ${isToday?'cal-today':''} text-gray-700">${day}${hasEvent?'<div class="event-dot"></div>':''}</div>`;
+                let dot = acts.length > 0 ? '<div class="event-dot"></div>' : '';
+                grid += `<div onclick="selectDate('${dStr}',${day})" class="cal-day ${isToday?'cal-today':''} text-gray-700">${day}${dot}</div>`;
             }
             document.getElementById('calendar-grid').innerHTML = grid;
         }
@@ -295,60 +422,66 @@
         function selectDate(dStr, day) {
             document.querySelectorAll('.cal-day').forEach(el => el.classList.remove('cal-selected'));
             event.currentTarget.classList.add('cal-selected');
+            
             const acts = libActivities.filter(a => a.date === dStr);
             const box = document.getElementById('selected-date-events');
-            if(acts.length === 0) { box.innerHTML = `<p class="text-center text-gray-400 py-6 text-sm">ไม่มีกิจกรรมในวันนี้</p>`; return; }
+            if(acts.length === 0) { box.innerHTML = `<p class="text-center text-gray-400 py-6 text-sm font-medium border border-gray-100 bg-white rounded-xl">ไม่มีกิจกรรมในวันนี้</p>`; return; }
+            
             box.innerHTML = acts.map(a => `
                 <div class="bg-white border border-gray-100 rounded-xl p-4 shadow-sm flex flex-col gap-3">
-                    <div class="flex justify-between items-start">
+                    <div class="flex justify-between items-start border-b border-gray-50 pb-2">
                         <div class="w-2/3"><span class="text-[10px] font-bold ${a.type==='องค์กรภาคี'?'text-blue-500':'text-pink-500'} mb-1 block">${a.type}</span><h4 class="font-bold text-gray-800 text-sm">${a.name}</h4></div>
-                        <span class="text-[10px] bg-pink-50 text-pink-600 px-2 py-1 rounded font-bold">ว่าง ${a.remaining}</span>
+                        <span class="text-[10px] bg-pink-50 text-pink-600 px-2 py-1 rounded font-bold border border-pink-100">ว่าง ${a.remaining}</span>
                     </div>
-                    <p class="text-xs text-gray-500"><i class="fa-regular fa-clock mr-1"></i> ${a.time}</p>
-                    <button onclick="registerEvent('${a.name}', '${dStr}')" class="w-full theme-pink text-white py-2 rounded-lg font-bold text-sm shadow-sm hover:bg-pink-700">ลงทะเบียนเข้าร่วม</button>
+                    <p class="text-xs text-gray-500 font-medium"><i class="fa-regular fa-clock mr-1 text-gray-300 w-4 text-center"></i> ${a.time}</p>
+                    <button onclick="registerEvent('${a.name}', '${dStr}')" class="w-full theme-pink text-white py-2.5 rounded-xl font-semibold text-sm shadow-md hover:bg-pink-700 transition">ลงทะเบียนเข้าร่วม</button>
                 </div>
             `).join('');
         }
 
         async function registerEvent(name, date) {
+            const branch = document.getElementById('global-branch').value;
+            if(branch === "ทั้งหมด") return alert("กรุณาเลือกสาขาที่ต้องการเข้าร่วมให้ชัดเจน");
             if(!confirm(`ยืนยันการลงทะเบียนกิจกรรม ${name}?`)) return;
+            
             const res = await callAPI("registerLibActivity", {
                 memberId: currentUser.memberId, userName: currentUser.name, lineUid: currentUser.lineUid,
-                branch: document.getElementById('global-branch').value, activityName: name, activityDate: date
+                branch: branch, activityName: name, activityDate: date
             });
             if(res && res.success) { 
-                alert("ลงทะเบียนสำเร็จ! ตรวจสอบประวัติได้ในเมนูประวัติการจอง"); 
+                alert("ลงทะเบียนสำเร็จ! สามารถกดยกเลิกสิทธิ์ได้ในเมนูประวัติกิจกรรม"); 
                 loadAllData();
-                loadEventHistory(); 
-            }
-            else alert("เกิดข้อผิดพลาด: " + res.message);
+            } else alert("เกิดข้อผิดพลาด: " + res.message);
         }
 
-        async function submitSpaceBooking(btn) {
-            const dt = document.getElementById('book-datetime').value;
-            if(!dt) return alert("กรุณาเลือกเวลา");
-            btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
-            const res = await callAPI("bookLibrarySpace", {
-                memberId: currentUser.memberId, lineUid: currentUser.lineUid, userName: currentUser.name,
-                branch: document.getElementById('global-branch').value, spaceType: document.getElementById('book-type').value,
-                bookDateTime: dt.replace("T", " ")
-            });
-            if(res && res.success) { alert("จองสำเร็จ!"); loadAllData(); }
-            btn.disabled = false; btn.innerText = "ยืนยันการจอง";
-        }
-
-        // ดึงประวัติกิจกรรมของฉัน
         async function loadEventHistory() {
-            document.getElementById('event-history-list').innerHTML = '<div class="text-center text-gray-400 text-sm py-10"><i class="fa-solid fa-spinner fa-spin text-2xl theme-text mb-2 block"></i>กำลังโหลดประวัติ...</div>';
+            if(!currentUser) return;
+            document.getElementById('event-history-list').innerHTML = '<div class="text-center py-10 text-gray-400 text-sm"><i class="fa-solid fa-spinner fa-spin text-2xl theme-text mb-2 block"></i>กำลังโหลด...</div>';
             
-            const res = await callAPI("getMyReports", { uid: currentUser.lineUid }); // เปลี่ยนเป็น API ประวัติห้องสมุดตามจริง ถ้ามี
-            
-            document.getElementById('event-history-list').innerHTML = `
-                <div class="text-center text-gray-400 text-sm py-10 bg-white border border-gray-100 rounded-xl shadow-sm">
-                    <i class="fa-solid fa-calendar-xmark text-4xl text-gray-200 mb-3 block"></i>
-                    ยังไม่มีประวัติการจองกิจกรรม
-                </div>
-            `;
+            const history = await callAPI("getMyLibBookings", { uid: currentUser.lineUid });
+            if(!history || history.length === 0) {
+                document.getElementById('event-history-list').innerHTML = '<div class="text-center py-10 text-gray-400 text-sm border border-gray-100 bg-white rounded-xl">ไม่พบประวัติการร่วมกิจกรรม</div>';
+                return;
+            }
+
+            document.getElementById('event-history-list').innerHTML = history.filter(h => String(h.type).includes("กิจกรรม")).map(h => {
+                let isCancelable = h.status === "รอใช้งาน";
+                let statusClass = isCancelable ? "text-orange-500 bg-orange-50 border-orange-100" : "text-gray-500 bg-gray-50 border-gray-200";
+                
+                return `
+                <div class="bg-white border border-gray-100 rounded-xl p-4 shadow-sm mb-3">
+                    <div class="flex justify-between items-start border-b pb-2 mb-2">
+                        <div>
+                            <span class="text-[10px] font-bold text-pink-600 bg-pink-50 px-2 py-1 rounded">กิจกรรม</span>
+                            <p class="text-sm text-gray-800 mt-1 font-bold leading-snug">${String(h.type).replace('กิจกรรม: ', '')}</p>
+                        </div>
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded border ${statusClass}">${h.status}</span>
+                    </div>
+                    <p class="text-[11px] text-gray-500 font-medium mb-1"><i class="fa-solid fa-location-dot w-4 text-center mr-0.5"></i> สาขา: ${h.branch}</p>
+                    <p class="text-[11px] text-gray-500 font-medium"><i class="fa-regular fa-clock w-4 text-center mr-0.5"></i> ${h.datetime}</p>
+                    ${isCancelable ? `<button onclick="cancelLibBooking('${h.id}')" class="w-full text-red-500 text-xs font-bold border border-red-100 py-2.5 rounded-lg hover:bg-red-50 transition mt-3"><i class="fa-solid fa-xmark mr-1"></i> ยกเลิกเข้าร่วมกิจกรรม</button>` : ''}
+                </div>`;
+            }).join('');
         }
     </script>
 </body>
