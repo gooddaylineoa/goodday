@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goodday Broadcast</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Sarabun', sans-serif; background-color: #F3F4F6; }
+        .theme-pink { background-color: #d81b60; }
+        .theme-text { color: #d81b60; }
+        .form-input { 
+            width: 100%; border: 1px solid #D1D5DB; border-radius: 0.75rem; padding: 0.75rem; 
+            font-size: 0.875rem; transition: all 0.2s; background-color: white; color: #374151; font-family: 'Sarabun';
+        }
+        .form-input:focus { outline: none; border-color: #d81b60; box-shadow: 0 0 0 2px #fce4ec; }
+    </style>
+</head>
+<body class="antialiased text-gray-800 pb-10">
+
+    <div class="max-w-md mx-auto bg-white min-h-screen shadow-lg relative">
+
+        <div class="theme-pink text-white p-4 sticky top-0 z-50 shadow-md flex justify-between items-center">
+            <h1 class="text-lg font-semibold tracking-wide"><i class="fa-solid fa-bullhorn mr-2"></i>ระบบแจ้งเตือน (Admin)</h1>
+            <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center theme-text font-bold shadow-sm">
+                <i class="fa-solid fa-user-shield"></i>
+            </div>
+        </div>
+
+        <div class="p-5 pt-8">
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-pink-50 text-pink-500 rounded-full flex items-center justify-center text-3xl mx-auto mb-3 shadow-inner"><i class="fa-solid fa-tower-broadcast"></i></div>
+                <h2 class="text-xl font-bold text-gray-800">กระจายข่าวสารชุมชน</h2>
+                <p class="text-xs text-gray-500 mt-1 font-medium">ส่งข้อความแจ้งเตือนผ่าน LINE ทันที</p>
+            </div>
+
+            <div class="bg-gray-50 border border-gray-200 p-5 rounded-xl shadow-sm mb-6">
+                
+                <div class="mb-4">
+                    <label class="block text-xs font-bold text-gray-500 mb-1.5"><i class="fa-solid fa-key theme-text mr-1"></i> รหัส PIN แอดมิน *</label>
+                    <input type="password" id="admin-pin" class="form-input font-bold tracking-widest text-center text-lg" placeholder="******" maxlength="6">
+                </div>
+
+                <hr class="my-4 border-gray-200 border-dashed">
+
+                <div class="mb-4">
+                    <label class="block text-xs font-bold text-gray-500 mb-1.5"><i class="fa-solid fa-location-crosshairs theme-text mr-1"></i> เลือกกลุ่มเป้าหมาย (จังหวัด)</label>
+                    <select id="target-province" class="form-input font-bold text-gray-700 bg-white">
+                        <option value="ทั้งหมด">🌍 ส่งให้ทุกคน (ทุกจังหวัด)</option>
+                        <option value="กรุงเทพมหานคร">กรุงเทพมหานคร</option>
+                        <option value="ชลบุรี">ชลบุรี</option>
+                        <option value="ระยอง">ระยอง</option>
+                        <option disabled>----------------------</option>
+                        <option value="กระบี่">กระบี่</option>
+                        <option value="กาญจนบุรี">กาญจนบุรี</option>
+                        <option value="เชียงใหม่">เชียงใหม่</option>
+                        <option value="นครปฐม">นครปฐม</option>
+                        <option value="ปทุมธานี">ปทุมธานี</option>
+                        <option value="ภูเก็ต">ภูเก็ต</option>
+                    </select>
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-xs font-bold text-gray-500 mb-1.5"><i class="fa-solid fa-message theme-text mr-1"></i> ข้อความที่ต้องการส่ง</label>
+                    <textarea id="broadcast-message" rows="5" class="form-input bg-white" placeholder="พิมพ์ข้อความที่ต้องการแจ้งเตือน..."></textarea>
+                    <p class="text-[10px] text-gray-400 mt-1.5 font-medium">* ข้อความจะถูกส่งทันทีที่กดยืนยัน สามารถใช้อีโมจิได้ 🚀</p>
+                </div>
+
+                <div id="alert-box" class="hidden text-center text-sm font-bold p-3 rounded-lg mb-4 border"></div>
+
+                <button onclick="sendBroadcast(this)" class="w-full theme-pink text-white py-3.5 rounded-xl font-semibold text-sm shadow-md hover:bg-pink-700 transition"><i class="fa-regular fa-paper-plane mr-1"></i> ยืนยันการส่งข้อความ</button>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // 🚨 นำลิงก์ API_URL จาก Google Apps Script (ไฟล์ Users) มาวางตรงนี้
+        const API_URL = "https://script.google.com/macros/s/AKfycbwN8QmRIb5gVByL6nrZ_H_kYWiYwULaSQOBT5ahS0XBISwTONw80GZgiTRssPcUmIWQ/exec";
+
+        async function sendBroadcast(btn) {
+            const pin = document.getElementById('admin-pin').value.trim();
+            const prov = document.getElementById('target-province').value;
+            const msg = document.getElementById('broadcast-message').value.trim();
+            const alertBox = document.getElementById('alert-box');
+
+            if (!pin) {
+                showAlert("กรุณากรอกรหัส PIN แอดมิน", "error");
+                document.getElementById('admin-pin').focus();
+                return;
+            }
+            if (!msg) {
+                showAlert("กรุณาพิมพ์ข้อความก่อนส่งครับ", "error");
+                document.getElementById('broadcast-message').focus();
+                return;
+            }
+
+            if (!confirm(`ยืนยันการส่งข้อความหาชาว "${prov}" ใช่หรือไม่?\n(โปรดตรวจสอบข้อความให้ถี่ถ้วนก่อนกดยืนยัน)`)) return;
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> ระบบกำลังยิงข้อความ...';
+            alertBox.classList.add('hidden');
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "text/plain;charset=utf-8" },
+                    body: JSON.stringify({ 
+                        action: "broadcastMessage", 
+                        data: {
+                            adminPin: pin,
+                            province: prov,
+                            message: msg
+                        }
+                    }),
+                    redirect: "follow"
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showAlert(result.message, "success");
+                    document.getElementById('broadcast-message').value = ""; // เคลียร์ข้อความป้องกันส่งซ้ำ
+                } else {
+                    showAlert(result.message, "error");
+                }
+            } catch (error) {
+                showAlert("ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้: " + error.toString(), "error");
+            }
+
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fa-regular fa-paper-plane mr-1"></i> ยืนยันการส่งข้อความ';
+        }
+
+        function showAlert(text, type) {
+            const box = document.getElementById('alert-box');
+            box.innerText = text;
+            box.classList.remove('hidden', 'bg-red-50', 'text-red-600', 'border-red-200', 'bg-green-50', 'text-green-600', 'border-green-200');
+            
+            if (type === "error") {
+                box.classList.add('bg-red-50', 'text-red-600', 'border-red-200');
+            } else {
+                box.classList.add('bg-green-50', 'text-green-600', 'border-green-200');
+            }
+        }
+    </script>
+</body>
+</html>
