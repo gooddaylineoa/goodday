@@ -210,6 +210,9 @@
         }
 
         document.addEventListener("DOMContentLoaded", function() {
+            const savedBranch = localStorage.getItem('selectedBranch');
+            if (savedBranch) document.getElementById('global-branch').value = savedBranch;
+
             showPage('home');
             
             liff.init({ liffId: LIFF_ID }).then(() => {
@@ -259,7 +262,7 @@
             if(targetNav) { targetNav.classList.remove('text-gray-400'); targetNav.classList.add('theme-text', 'font-medium'); }
             
             if(pageId === 'events') renderCalendar();
-            if(pageId === 'booking') { document.getElementById('global-branch').value = "ทั้งหมด"; loadAllData(); }
+            if(pageId === 'booking') { loadAllData(); }
         }
 
         function switchSpaceTab(tabName, btn) {
@@ -287,6 +290,7 @@
 
         async function loadAllData() {
             const branch = document.getElementById('global-branch').value;
+            localStorage.setItem('selectedBranch', branch);
             const stats = await callAPI("getLibraryStatus", { branch: branch });
             if(stats) {
                 document.getElementById('stat-coworking').innerText = stats.coworking;
