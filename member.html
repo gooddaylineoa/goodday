@@ -227,7 +227,7 @@
                         <p class="text-xl font-black text-emerald-600"><span id="wm-total-amount">0.00</span> <span class="text-xs font-medium text-gray-500">บาท</span></p>
                     </div>
                     <div class="border-l border-gray-100">
-                        <p class="text-[10px] text-gray-400 font-bold uppercase">สิทธิ์ส่วนลดที่ได้รับ</p>
+                        <p class="text-[10px] text-gray-400 font-bold uppercase">สิทธิ์ส่วนลดคงเหลือ</p>
                         <p class="text-xl font-black text-pink-600"><span id="wm-total-points">0</span> <span class="text-xs font-medium text-gray-500">สิทธิ์</span></p>
                     </div>
                 </div>
@@ -551,18 +551,18 @@
             showPage('waste-logbook');
             document.getElementById('waste-history-list').innerHTML = '<div class="text-center py-10 text-gray-400"><i class="fa-solid fa-spinner fa-spin text-xl text-emerald-500 mb-2 block"></i>กำลังโหลดสมุดบันทึก...</div>';
             
-            const res = await callAPI("getWasteRecords", { memberId: currentUser.memberId });
+            // ✅ เพิ่มการส่ง phone เข้าไปด้วย เพื่อให้หลังบ้านเช็กประวัติว่าใช้คูปองไปหรือยัง
+            const res = await callAPI("getWasteRecords", { memberId: currentUser.memberId, phone: currentUser.phone });
             
             if(res && res.success) {
-                // อัปเดตตัวเลขการ์ดบน
                 document.getElementById('wm-total-amount').innerText = res.totalAmount.toFixed(2);
-                document.getElementById('wm-total-points').innerText = res.totalPoints;
                 
-                // อัปเดต Progress Bar
+                // ✅ เปลี่ยนมารับค่า availableCoupons (สิทธิ์ที่ยังไม่ถูกใช้)
+                document.getElementById('wm-total-points').innerText = res.availableCoupons;
+                
                 document.getElementById('wm-progress-text').innerText = `${res.remainingForNext.toFixed(0)} / 100 บาท`;
                 document.getElementById('wm-progress-bar').style.width = `${res.remainingForNext}%`;
                 
-                // เรนเดอร์รายการประวัติ
                 const listObj = document.getElementById('waste-history-list');
                 if(!res.logs || res.logs.length === 0) {
                     listObj.innerHTML = '<div class="text-center py-12 bg-white rounded-xl text-gray-400 text-sm border"><i class="fa-solid fa-receipt text-3xl text-gray-200 mb-2 block"></i>ยังไม่มีประวัติการขายขยะ</div>';
@@ -570,7 +570,7 @@
                 }
                 
                 listObj.innerHTML = res.logs.map(l => `
-                    <div class="bg-white border border-gray-100 rounded-xl p-3 shadow-sm flex justify-between items-center text-sm">
+                    <div class="bg-white border border-gray-100 rounded-xl p-3 shadow-sm flex justify-between items-center text-sm mb-2">
                         <div>
                             <p class="font-bold text-gray-800"><i class="fa-solid fa-recycle text-emerald-500 mr-1"></i> ส่งขยะร่วมโครงการ</p>
                             <p class="text-[10px] text-gray-400 mt-1"><i class="fa-regular fa-clock mr-0.5"></i> ${l.date}</p>
