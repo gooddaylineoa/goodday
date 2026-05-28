@@ -525,7 +525,8 @@
                 totalPrice: finalPrice,
                 deliveryType: delType,
                 address: finalAddress,
-                useWasteCoupon: useWasteCoupon
+                useWasteCoupon: useWasteCoupon,
+                userName: currentUser.name // 🌟 เพิ่มบรรทัดนี้เข้าไป เพื่อดึงชื่อจากโปรไฟล์ส่งไปหลังบ้าน
             };
 
             const res = await callAPI("placeOrder", orderData);
