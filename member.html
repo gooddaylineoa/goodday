@@ -88,19 +88,18 @@
                 </div>
 
                 <div>
-                    <label class="text-xs font-bold text-gray-500 mb-1 block">วัน/เดือน/ปีเกิด (พ.ศ.)</label>
-                    <input type="date" id="reg-birthdate" class="form-input">
+                    <label class="text-xs font-bold text-gray-500 mb-1 block">วัน/เดือน/ปีเกิด</label>
+                    <input type="date" id="reg-birthdate" onchange="calculateAge()" class="form-input">
                     <label class="inline-flex items-center mt-2 cursor-pointer">
-                        <input type="checkbox" id="no-birthdate" onchange="toggleBirthdate(this)" class="w-4 h-4 rounded border-gray-300 text-pink-600 focus:ring-pink-500">
-                        <span class="ml-2 text-xs font-bold text-gray-600">ไม่ทราบวันเกิด (ระบุเฉพาะอายุ)</span>
+                        <input type="checkbox" id="no-birthdate" onchange="toggleBirthdateMode(this)" class="w-4 h-4 rounded border-gray-300 text-pink-600 focus:ring-pink-500">
+                        <span class="ml-2 text-[11px] font-bold text-gray-600">ไม่ทราบวันเกิด (ระบุเฉพาะอายุ)</span>
                     </label>
                 </div>
 
-                <div id="age-box" class="hidden">
-                    <label class="text-xs font-bold text-gray-500 mb-1 block">อายุ (ปี)</label>
-                    <input type="number" id="reg-age" class="form-input" placeholder="ระบุอายุปัจจุบัน">
+                <div id="age-box">
+                    <label class="text-xs font-bold text-gray-500 mb-1 block">อายุ (ปี) *</label>
+                    <input type="number" id="reg-age" class="form-input bg-gray-50 text-gray-600 font-bold" placeholder="ระบบจะคำนวณจากวันเกิดอัตโนมัติ" readonly>
                 </div>
-
                 <div>
                     <label class="text-xs font-bold text-gray-500 mb-1 block">เบอร์โทรศัพท์ (ใช้เข้าระบบ) *</label>
                     <input type="tel" id="reg-phone" class="form-input" placeholder="08xxxxxxxx">
@@ -291,7 +290,7 @@
 
         <div id="page-edit-address" class="page-section p-4 pt-6">
             <div class="flex items-center mb-6">
-                <button onclick="showPage('profile')" class="w-8 h-8 bg-gray-100 rounded-full text-gray-600 mr-3"><i class="fa-solid fa-arrow-left"></i></button>
+                <button onclick="showPage('profile')" class="w-8 h-8 bg-white rounded-full text-gray-600 mr-3"><i class="fa-solid fa-arrow-left"></i></button>
                 <h2 class="text-lg font-bold text-gray-800">แก้ไขที่อยู่จัดส่ง</h2>
             </div>
             <div class="space-y-3">
@@ -339,7 +338,7 @@
             const selects = ['reg-prov', 'edit-prov', 'wm-prov'];
             selects.forEach(id => {
                 const el = document.getElementById(id);
-                provinces.forEach(p => {
+                provinels.forEach(p => {
                     let opt = document.createElement('option'); opt.value = p; opt.innerText = p;
                     el.appendChild(opt);
                 });
@@ -381,7 +380,6 @@
             if (loader) loader.style.display = 'none';
         }
 
-        // อัปเดต Header เป็นชื่อผู้ใช้ 
         function updateHeaderUser() {
             const header = document.getElementById('loading-header');
             if(currentUser) {
@@ -399,18 +397,59 @@
             window.scrollTo(0, 0);
         }
 
-        function toggleBirthdate(cb) {
-            const dateInput = document.getElementById('reg-birthdate');
-            const ageBox = document.getElementById('age-box');
-            if(cb.checked) {
-                dateInput.disabled = true; dateInput.classList.add('bg-gray-100', 'text-gray-400'); dateInput.value = "";
-                ageBox.classList.remove('hidden');
+        // 🌟 สคริปต์จัดการอายุและวันเกิด
+        function calculateAge() {
+            const isUnknown = document.getElementById('no-birthdate').checked;
+            if (isUnknown) return; 
+
+            const birthDateInput = document.getElementById('reg-birthdate').value;
+            const ageInput = document.getElementById('reg-age');
+            
+            if (birthDateInput) {
+                const today = new Date();
+                const birthDate = new Date(birthDateInput);
+                
+                let age = today.getFullYear() - birthDate.getFullYear();
+                const monthDiff = today.getMonth() - birthDate.getMonth();
+                
+                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                    age--;
+                }
+                ageInput.value = age >= 0 ? age : 0;
             } else {
-                dateInput.disabled = false; dateInput.classList.remove('bg-gray-100', 'text-gray-400');
-                ageBox.classList.add('hidden');
-                document.getElementById('reg-age').value = "";
+                ageInput.value = "";
             }
         }
+
+        function toggleBirthdateMode(cb) {
+            const dateInput = document.getElementById('reg-birthdate');
+            const ageInput = document.getElementById('reg-age');
+
+            if(cb.checked) {
+                dateInput.disabled = true; 
+                dateInput.classList.add('bg-gray-100', 'text-gray-400', 'cursor-not-allowed', 'opacity-60'); 
+                dateInput.classList.remove('bg-white');
+                dateInput.value = "";
+                
+                ageInput.readOnly = false;
+                ageInput.classList.remove('bg-gray-50');
+                ageInput.classList.add('bg-white');
+                ageInput.value = "";
+                ageInput.placeholder = "กรอกอายุของคุณ...";
+                ageInput.focus();
+            } else {
+                dateInput.disabled = false; 
+                dateInput.classList.remove('bg-gray-100', 'text-gray-400', 'cursor-not-allowed', 'opacity-60');
+                dateInput.classList.add('bg-white');
+                
+                ageInput.readOnly = true;
+                ageInput.classList.add('bg-gray-50');
+                ageInput.classList.remove('bg-white');
+                ageInput.placeholder = "ระบบจะคำนวณจากวันเกิดอัตโนมัติ";
+                calculateAge();
+            }
+        }
+        // 🌟 จบส่วนวันเกิด
 
         function nextToReg2() {
             const err = document.getElementById('reg1-error');
@@ -426,10 +465,10 @@
                 err.innerText = "กรุณากรอกข้อมูลที่มี * ให้ครบถ้วน"; err.classList.remove('hidden'); return;
             }
             if(isUnknownDate && !age) {
-                err.innerText = "กรุณาระบุอายุของคุณ"; err.classList.remove('hidden'); return;
+                err.innerText = "กรุณาระบุอายุของคุณให้ครบถ้วน"; err.classList.remove('hidden'); return;
             }
             if(!isUnknownDate && !bDate) {
-                err.innerText = "กรุณาเลือกวันเกิด หรือ ติ๊กไม่ทราบวันเกิด"; err.classList.remove('hidden'); return;
+                err.innerText = "กรุณาเลือกวันเกิด หรือ ติ๊กเลือก 'ไม่ทราบวันเกิด'"; err.classList.remove('hidden'); return;
             }
 
             err.classList.add('hidden'); showPage('reg-2');
@@ -449,8 +488,8 @@
             err.classList.add('hidden');
 
             const isUnknownDate = document.getElementById('no-birthdate').checked;
-            let finalDate = isUnknownDate ? "" : document.getElementById('reg-birthdate').value;
-            let finalAge = isUnknownDate ? document.getElementById('reg-age').value : "";
+            let finalDate = isUnknownDate ? "ไม่ระบุ" : document.getElementById('reg-birthdate').value;
+            let finalAge = document.getElementById('reg-age').value;
 
             const data = {
                 prefix: document.getElementById('reg-prefix').value.trim(), name: document.getElementById('reg-name').value.trim(),
@@ -607,7 +646,7 @@
 
             let totalRecords = res.length;
             let html = res.map((r, index) => {
-                let visitNumber = totalRecords - index; // คำนวณครั้งที่เท่าไหร่จากข้อมูลล่าสุด
+                let visitNumber = totalRecords - index; 
                 let bpColor = "bg-green-100 text-green-700 border-green-200"; let bpLabel = "ปกติ สุขภาพดี";
                 if(r.bp) {
                     let parts = r.bp.split('/');
