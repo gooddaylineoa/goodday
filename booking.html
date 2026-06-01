@@ -231,33 +231,54 @@
                 list = list.filter(a => a.province === currentUser.province || a.province === "" || a.province === "ทั้งหมด");
             }
             if (currentCatFilter !== 'ทั้งหมด') list = list.filter(a => a.category === currentCatFilter);
-
+        
             let html = list.map(a => {
                 let isBooked = myBookedActivities.includes(a.name);
-                let isPast = a.calDate && (a.calDate < todayStr); 
-                
+                let isPast = a.calDate && (a.calDate < todayStr);
+        
+                // ✅ ตรวจสอบอายุ
+                let minAge = parseInt(a.minAge) || 0;
+                let maxAge = parseInt(a.maxAge) || 999;
+                let hasAgeLimit = (minAge > 0 || maxAge < 999);
+                let userAge = currentUser ? (parseInt(currentUser.age) || 0) : 0;
+                let isAgeFail = hasAgeLimit && currentUser && userAge > 0 && (userAge < minAge || userAge > maxAge);
+        
                 let badgeHtml = '';
-                if(isPast) {
+                if (isPast) {
                     badgeHtml = `<span class="bg-gray-100 text-gray-500 text-[10px] px-2 py-1 rounded font-bold">หมดเขต</span>`;
                 } else {
-                    badgeHtml = a.totalRemaining > 0 
-                    ? `<span class="bg-pink-50 text-pink-600 text-[10px] px-2 py-1 rounded font-bold border border-pink-100">ว่าง ${a.totalRemaining} ที่</span>` 
-                    : `<span class="bg-gray-100 text-gray-500 text-[10px] px-2 py-1 rounded font-bold">เต็มแล้ว</span>`;
+                    badgeHtml = a.totalRemaining > 0
+                        ? `<span class="bg-pink-50 text-pink-600 text-[10px] px-2 py-1 rounded font-bold border border-pink-100">ว่าง ${a.totalRemaining} ที่</span>`
+                        : `<span class="bg-gray-100 text-gray-500 text-[10px] px-2 py-1 rounded font-bold">เต็มแล้ว</span>`;
                 }
-                
+        
+                // ✅ badge แสดงช่วงอายุ
+                let ageBadgeHtml = '';
+                if (hasAgeLimit) {
+                    let ageLabel = (minAge > 0 && maxAge < 999) ? `${minAge}-${maxAge} ปี`
+                                 : (minAge > 0) ? `${minAge} ปีขึ้นไป`
+                                 : `ไม่เกิน ${maxAge} ปี`;
+                    ageBadgeHtml = `<span class="bg-blue-50 text-blue-500 text-[10px] px-2 py-1 rounded font-bold border border-blue-100">👤 ${ageLabel}</span>`;
+                }
+        
                 let btnHtml = '';
-                if(isPast) {
+                if (isPast) {
                     btnHtml = `<button disabled class="w-full bg-gray-100 text-gray-400 py-2 rounded-xl text-xs font-bold cursor-not-allowed">ปิดรับสมัคร</button>`;
-                } else if(isBooked) {
+                } else if (isAgeFail) {
+                    let ageLabel = (minAge > 0 && maxAge < 999) ? `${minAge}-${maxAge} ปี`
+                                 : (minAge > 0) ? `${minAge} ปีขึ้นไป`
+                                 : `ไม่เกิน ${maxAge} ปี`;
+                    btnHtml = `<button disabled class="w-full bg-gray-100 text-gray-400 py-2 rounded-xl text-xs font-bold cursor-not-allowed">⛔ สำหรับอายุ ${ageLabel}</button>`;
+                } else if (isBooked) {
                     btnHtml = `<button disabled class="w-full bg-green-50 text-green-600 py-2 rounded-xl text-xs font-bold border border-green-100 cursor-not-allowed">✅ จองแล้ว</button>`;
                 } else if (a.totalRemaining > 0) {
                     btnHtml = `<button onclick="handleBookClick('${a.name}')" class="w-full theme-pink text-white py-2 rounded-xl text-xs font-bold shadow-sm hover:bg-pink-700 transition">จองที่นั่ง</button>`;
                 } else {
                     btnHtml = `<button disabled class="w-full bg-gray-100 text-gray-400 py-2 rounded-xl text-xs font-bold cursor-not-allowed">เต็ม</button>`;
                 }
-
+        
                 let detailsHtml = a.details ? `<div class="bg-gray-50 p-2.5 rounded-lg text-xs text-gray-600 leading-relaxed font-medium mt-2"><i class="fa-solid fa-circle-info theme-text mr-1"></i> ${a.details}</div>` : '';
-
+        
                 return `
                 <div class="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden mb-4">
                     <img src="${a.image || 'https://via.placeholder.com/400'}" class="w-full h-40 object-cover ${isPast ? 'grayscale opacity-70' : ''}">
@@ -269,6 +290,7 @@
                         <div class="text-xs text-gray-500 space-y-1.5 mb-3 font-medium">
                             <p class="${isPast ? 'text-red-500 font-bold' : ''}"><i class="fa-regular fa-clock w-4 text-center mr-1"></i> ${a.datetime}</p>
                             <p><i class="fa-solid fa-location-dot w-4 text-center mr-1"></i> ${a.province || 'ทุกพื้นที่'}</p>
+                            ${hasAgeLimit ? `<p class="flex gap-1 flex-wrap">${ageBadgeHtml}</p>` : ''}
                             ${detailsHtml}
                         </div>
                         ${btnHtml}
@@ -328,10 +350,18 @@
             let html = acts.length === 0 ? '<p class="text-xs text-gray-400 py-4 text-center w-full font-medium">ไม่มีกิจกรรมในวันนี้</p>' : acts.map(a => {
                 let isBooked = myBookedActivities.includes(a.name);
                 let isPast = a.calDate && (a.calDate < todayStr); 
-
+                let minAge = parseInt(a.minAge) || 0;
+                let maxAge = parseInt(a.maxAge) || 999;
+                let hasAgeLimit = (minAge > 0 || maxAge < 999);
+                let userAge = currentUser ? (parseInt(currentUser.age) || 0) : 0;
+                let isAgeFail = hasAgeLimit && currentUser && userAge > 0 && (userAge < minAge || userAge > maxAge);
+                
                 let btn = '';
                 if (isPast) {
                     btn = `<button disabled class="bg-gray-100 text-gray-400 px-3 py-1.5 rounded-lg text-xs font-bold">ปิดรับสมัคร</button>`;
+                } else if (isAgeFail) {
+                    let ageLabel = (minAge > 0 && maxAge < 999) ? `${minAge}-${maxAge} ปี` : (minAge > 0) ? `${minAge}+ ปี` : `≤${maxAge} ปี`;
+                    btn = `<button disabled class="bg-gray-100 text-gray-400 px-3 py-1.5 rounded-lg text-xs font-bold">⛔ ${ageLabel}</button>`;
                 } else if (isBooked) {
                     btn = `<button disabled class="bg-green-50 text-green-600 px-3 py-1.5 rounded-lg text-[10px] font-bold border border-green-100">✅ จองแล้ว</button>`;
                 } else if (a.totalRemaining > 0) {
