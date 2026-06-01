@@ -679,19 +679,59 @@
             const box = document.getElementById('selected-date-events');
             if(acts.length === 0) { box.innerHTML = `<p class="text-center text-gray-400 py-6 text-xs font-medium border border-gray-100 bg-white rounded-xl shadow-sm">ไม่มีกิจกรรมในวันนี้</p>`; return; }
             
-            box.innerHTML = acts.map(a => `
+            box.innerHTML = acts.map(a => {
+                let ageLabel = "";
+                let canJoin = true;
+                let btnText = "ลงทะเบียนเข้าร่วม";
+                let btnClass = "theme-pink text-white hover:bg-pink-700 active:scale-95 shadow-sm";
+
+                // 🌟 ตรวจสอบและแสดงเกณฑ์อายุ
+                if (a.minAge > 0 || a.maxAge < 999) {
+                    let ageText = "";
+                    if (a.minAge > 0 && a.maxAge < 999) ageText = `จำกัดอายุ ${a.minAge}-${a.maxAge} ปี`;
+                    else if (a.minAge > 0) ageText = `อายุ ${a.minAge} ปีขึ้นไป`;
+                    else ageText = `อายุไม่เกิน ${a.maxAge} ปี`;
+
+                    ageLabel = `<span class="text-[9px] text-gray-500 bg-gray-50 px-2 py-0.5 rounded font-bold border border-gray-100 mt-1.5 inline-block"><i class="fa-solid fa-user-check mr-1 text-pink-500"></i> ${ageText}</span>`;
+
+                    // ปิดปุ่มถ้าอายุผู้ใช้ไม่ถึงเกณฑ์
+                    if (currentUser && currentUser.age !== undefined) {
+                        let uAge = parseInt(currentUser.age) || 0;
+                        if (uAge > 0 && (uAge < a.minAge || uAge > a.maxAge)) {
+                            canJoin = false;
+                            btnText = "อายุไม่ถึงเกณฑ์เข้าร่วม";
+                            btnClass = "bg-gray-100 text-gray-400 border border-gray-200 cursor-not-allowed";
+                        }
+                    }
+                }
+
+                // 🌟 ตรวจสอบและปิดปุ่มถ้าที่นั่งเต็ม
+                if (a.remaining <= 0) {
+                    canJoin = false;
+                    btnText = "ที่นั่งเต็มแล้ว";
+                    btnClass = "bg-gray-100 text-gray-400 border border-gray-200 cursor-not-allowed";
+                }
+
+                // สร้างปุ่ม (ถ้า canJoin=false จะกดไม่ได้)
+                let btnHtml = canJoin 
+                    ? `<button onclick="openEventRegModal('${a.name}', '${dStr}')" class="w-full py-2.5 rounded-xl font-bold text-xs transition ${btnClass}">${btnText}</button>`
+                    : `<button disabled class="w-full py-2.5 rounded-xl font-bold text-xs ${btnClass}">${btnText}</button>`;
+
+                return `
                 <div class="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm">
                     <div class="flex justify-between items-start border-b border-gray-50 pb-2 mb-3">
                         <div class="w-2/3">
                             <span class="text-[9px] font-bold ${a.type==='องค์กรภาคี'?'text-blue-500 bg-blue-50':'text-pink-500 bg-pink-50'} px-2 py-0.5 rounded mb-1 block w-fit">${a.type}</span>
                             <h4 class="font-bold text-gray-800 text-sm leading-snug">${a.name}</h4>
+                            ${ageLabel}
                         </div>
+                        <span class="text-[9px] bg-pink-50 text-pink-600 px-2 py-1 rounded font-bold border border-pink-100 whitespace-nowrap">ว่าง ${a.remaining}</span>
                     </div>
-                    <button onclick="openEventRegModal('${a.name}', '${dStr}')" class="w-full theme-pink text-white py-2.5 rounded-xl font-bold text-xs shadow-sm hover:bg-pink-700 active:scale-95 transition">ลงทะเบียนเข้าร่วม</button>
+                    ${btnHtml}
                 </div>
-            `).join('');
+                `;
+            }).join('');
         }
-
         // เปิด Modal จองกิจกรรม
         function openEventRegModal(actName, actDate) {
             tempEventName = actName;
