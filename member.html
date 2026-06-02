@@ -88,21 +88,18 @@
                 </div>
 
                 <div>
-                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-100">
-                    <div class="mb-3">
-                        <label class="block text-xs font-bold text-gray-700 mb-1"><i class="fa-solid fa-calendar-day text-pink-500 mr-1"></i> วัน/เดือน/ปีเกิด *</label>
-                        <input type="date" id="reg-birthdate" onchange="calculateAge()" class="form-input bg-white text-gray-700 font-medium">
-                        <p class="text-[10px] text-pink-600 mt-1.5 font-medium leading-tight">
-                            * หากจำวันเกิดไม่ได้ ให้ระบุเป็นวันที่ <strong>1 มกราคม</strong> และเลือกปีเกิดของคุณ
-                        </p>
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-bold text-gray-700 mb-1"><i class="fa-solid fa-cake-candles text-pink-500 mr-1"></i> อายุปัจจุบัน (ปี) *</label>
-                        <input type="number" id="reg-age" class="form-input bg-white text-gray-700 font-bold" placeholder="กรอกอายุของคุณ">
-                    </div>
+                    <label class="text-xs font-bold text-gray-500 mb-1 block">วัน/เดือน/ปีเกิด</label>
+                    <input type="date" id="reg-birthdate" onchange="calculateAge()" class="form-input">
+                    <label class="inline-flex items-center mt-2 cursor-pointer">
+                        <input type="checkbox" id="no-birthdate" onchange="toggleBirthdateMode(this)" class="w-4 h-4 rounded border-gray-300 text-pink-600 focus:ring-pink-500">
+                        <span class="ml-2 text-[11px] font-bold text-gray-600">ไม่ทราบวันเกิด (ระบุเฉพาะอายุ)</span>
+                    </label>
                 </div>
-                    
+
+                <div id="age-box">
+                    <label class="text-xs font-bold text-gray-500 mb-1 block">อายุ (ปี) *</label>
+                    <input type="number" id="reg-age" class="form-input bg-gray-50 text-gray-600 font-bold" placeholder="ระบบจะคำนวณจากวันเกิดอัตโนมัติ" readonly>
+                </div>
                 <div>
                     <label class="text-xs font-bold text-gray-500 mb-1 block">เบอร์โทรศัพท์ (ใช้เข้าระบบ) *</label>
                     <input type="tel" id="reg-phone" class="form-input" placeholder="08xxxxxxxx">
@@ -402,6 +399,9 @@
 
         // 🌟 สคริปต์จัดการอายุและวันเกิด
         function calculateAge() {
+            const isUnknown = document.getElementById('no-birthdate').checked;
+            if (isUnknown) return; 
+
             const birthDateInput = document.getElementById('reg-birthdate').value;
             const ageInput = document.getElementById('reg-age');
             
@@ -415,14 +415,40 @@
                 if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
                     age--;
                 }
-                
-                // ถ้าระบบคำนวณอายุให้ ไม่ติดลบ ก็นำไปใส่ให้ในช่องอายุ
-                if(age >= 0) {
-                    ageInput.value = age;
-                }
+                ageInput.value = age >= 0 ? age : 0;
+            } else {
+                ageInput.value = "";
             }
         }
 
+        function toggleBirthdateMode(cb) {
+            const dateInput = document.getElementById('reg-birthdate');
+            const ageInput = document.getElementById('reg-age');
+
+            if(cb.checked) {
+                dateInput.disabled = true; 
+                dateInput.classList.add('bg-gray-100', 'text-gray-400', 'cursor-not-allowed', 'opacity-60'); 
+                dateInput.classList.remove('bg-white');
+                dateInput.value = "";
+                
+                ageInput.readOnly = false;
+                ageInput.classList.remove('bg-gray-50');
+                ageInput.classList.add('bg-white');
+                ageInput.value = "";
+                ageInput.placeholder = "กรอกอายุของคุณ...";
+                ageInput.focus();
+            } else {
+                dateInput.disabled = false; 
+                dateInput.classList.remove('bg-gray-100', 'text-gray-400', 'cursor-not-allowed', 'opacity-60');
+                dateInput.classList.add('bg-white');
+                
+                ageInput.readOnly = true;
+                ageInput.classList.add('bg-gray-50');
+                ageInput.classList.remove('bg-white');
+                ageInput.placeholder = "ระบบจะคำนวณจากวันเกิดอัตโนมัติ";
+                calculateAge();
+            }
+        }
         // 🌟 จบส่วนวันเกิด
 
         function nextToReg2() {
@@ -431,17 +457,18 @@
             const name = document.getElementById('reg-name').value.trim();
             const phone = document.getElementById('reg-phone').value.trim();
             
+            const isUnknownDate = document.getElementById('no-birthdate').checked;
             const bDate = document.getElementById('reg-birthdate').value;
             const age = document.getElementById('reg-age').value;
             
             if(!prefix || !name || !phone) {
                 err.innerText = "กรุณากรอกข้อมูลที่มี * ให้ครบถ้วน"; err.classList.remove('hidden'); return;
             }
-            if(!bDate) {
-                err.innerText = "กรุณาเลือกวันเกิด (ถ้าจำไม่ได้ให้ใส่วันที่ 1 มกราคมของปีที่เกิด)"; err.classList.remove('hidden'); return;
-            }
-            if(!age) {
+            if(isUnknownDate && !age) {
                 err.innerText = "กรุณาระบุอายุของคุณให้ครบถ้วน"; err.classList.remove('hidden'); return;
+            }
+            if(!isUnknownDate && !bDate) {
+                err.innerText = "กรุณาเลือกวันเกิด หรือ ติ๊กเลือก 'ไม่ทราบวันเกิด'"; err.classList.remove('hidden'); return;
             }
 
             err.classList.add('hidden'); showPage('reg-2');
@@ -460,10 +487,13 @@
             btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
             err.classList.add('hidden');
 
+            const isUnknownDate = document.getElementById('no-birthdate').checked;
+            let finalDate = isUnknownDate ? "ไม่ระบุ" : document.getElementById('reg-birthdate').value;
+            let finalAge = document.getElementById('reg-age').value;
+
             const data = {
                 prefix: document.getElementById('reg-prefix').value.trim(), name: document.getElementById('reg-name').value.trim(),
-                birthDate: document.getElementById('reg-birthdate').value, 
-                age: document.getElementById('reg-age').value,
+                birthDate: finalDate, age: finalAge,
                 phone: document.getElementById('reg-phone').value.trim(), lineId: document.getElementById('reg-lineid').value.trim(),
                 email: document.getElementById('reg-email').value.trim(), password: pass, lineUid: currentLineUid,
                 houseNo: document.getElementById('reg-house').value.trim(), village: document.getElementById('reg-moo').value.trim(),
