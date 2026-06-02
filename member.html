@@ -69,6 +69,7 @@
             </div>
         </div>
 
+        <!-- หน้าสมัครสมาชิก 1 -->
         <div id="page-reg-1" class="page-section p-4 pt-6">
             <div class="flex items-center mb-6">
                 <button onclick="showPage('login')" class="w-8 h-8 bg-gray-100 rounded-full text-gray-600 mr-3"><i class="fa-solid fa-arrow-left"></i></button>
@@ -87,19 +88,22 @@
                     </div>
                 </div>
 
-                <div>
-                    <label class="text-xs font-bold text-gray-500 mb-1 block">วัน/เดือน/ปีเกิด</label>
-                    <input type="date" id="reg-birthdate" onchange="calculateAge()" class="form-input">
-                    <label class="inline-flex items-center mt-2 cursor-pointer">
-                        <input type="checkbox" id="no-birthdate" onchange="toggleBirthdateMode(this)" class="w-4 h-4 rounded border-gray-300 text-pink-600 focus:ring-pink-500">
-                        <span class="ml-2 text-[11px] font-bold text-gray-600">ไม่ทราบวันเกิด (ระบุเฉพาะอายุ)</span>
-                    </label>
+                <!-- 🌟 ส่วนกรอกวันเกิดและอายุที่อัปเดตใหม่ -->
+                <div class="bg-gray-50 p-4 rounded-xl border border-gray-100">
+                    <div class="mb-3">
+                        <label class="block text-xs font-bold text-gray-700 mb-1"><i class="fa-solid fa-calendar-day text-pink-500 mr-1"></i> วัน/เดือน/ปีเกิด *</label>
+                        <input type="date" id="reg-birthdate" onchange="calculateAge()" class="form-input bg-white text-gray-700 font-medium">
+                        <p class="text-[10px] text-pink-600 mt-1.5 font-medium leading-tight">
+                            * หากจำวันเกิดไม่ได้ ให้ระบุเป็นวันที่ <strong>1 มกราคม</strong> และเลือกปีเกิดของคุณ
+                        </p>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1"><i class="fa-solid fa-cake-candles text-pink-500 mr-1"></i> อายุปัจจุบัน (ปี) *</label>
+                        <input type="number" id="reg-age" class="form-input bg-white text-gray-700 font-bold" placeholder="กรอกอายุของคุณ">
+                    </div>
                 </div>
 
-                <div id="age-box">
-                    <label class="text-xs font-bold text-gray-500 mb-1 block">อายุ (ปี) *</label>
-                    <input type="number" id="reg-age" class="form-input bg-gray-50 text-gray-600 font-bold" placeholder="ระบบจะคำนวณจากวันเกิดอัตโนมัติ" readonly>
-                </div>
                 <div>
                     <label class="text-xs font-bold text-gray-500 mb-1 block">เบอร์โทรศัพท์ (ใช้เข้าระบบ) *</label>
                     <input type="tel" id="reg-phone" class="form-input" placeholder="08xxxxxxxx">
@@ -114,6 +118,7 @@
             </div>
         </div>
 
+        <!-- หน้าสมัครสมาชิก 2 -->
         <div id="page-reg-2" class="page-section p-4 pt-6">
             <div class="flex items-center mb-6">
                 <button onclick="showPage('reg-1')" class="w-8 h-8 bg-gray-100 rounded-full text-gray-600 mr-3"><i class="fa-solid fa-arrow-left"></i></button>
@@ -193,11 +198,11 @@
             <div id="box-active-waste" onclick="openWasteLogbook()" class="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl p-4 mb-4 text-white flex items-center justify-between cursor-pointer shadow-sm hidden">
                 <div class="flex items-center gap-3">
                     <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center text-2xl shadow-inner">
-                        <i class="fa-solid fa-book text-emerald-100"></i>
+                        <i class="fa-solid fa-ticket-simple text-emerald-100"></i>
                     </div>
                     <div>
-                        <h3 class="font-bold text-base leading-tight">สมุดสะสม Waste for Wealth</h3>
-                        <p class="text-emerald-100 text-[10px] mt-0.5">คลิกดูยอดสะสมและประวัติส่งขยะของฉัน</p>
+                        <h3 class="font-bold text-base leading-tight">กระเป๋าคูปองขยะ</h3>
+                        <p class="text-emerald-100 text-[10px] mt-0.5">คลิกดูคูปองส่วนลดและประวัติขายขยะ</p>
                     </div>
                 </div>
                 <i class="fa-solid fa-chevron-right text-lg opacity-50"></i>
@@ -216,35 +221,31 @@
         <div id="page-waste-logbook" class="page-section p-4 pt-6 bg-gray-50 min-h-screen">
             <div class="flex items-center mb-4">
                 <button onclick="showPage('profile')" class="w-8 h-8 bg-white rounded-full text-gray-600 mr-3 shadow-sm border border-gray-200"><i class="fa-solid fa-arrow-left"></i></button>
-                <h2 class="text-lg font-bold text-emerald-800">สมุดสะสมยอดขยะ</h2>
+                <h2 class="text-lg font-bold text-emerald-800">กระเป๋าคูปองส่วนลด</h2>
             </div>
 
-            <div class="bg-white p-4 rounded-xl shadow-sm border border-emerald-100 mb-4 space-y-4">
-                <div class="grid grid-cols-2 gap-2 text-center divider-x">
-                    <div>
-                        <p class="text-[10px] text-gray-400 font-bold uppercase">เงินสะสมทั้งหมด</p>
-                        <p class="text-xl font-black text-emerald-600"><span id="wm-total-amount">0.00</span> <span class="text-xs font-medium text-gray-500">บาท</span></p>
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-emerald-100 mb-6">
+                <p class="text-[10px] text-gray-500 font-bold uppercase mb-3 text-center border-b pb-2">คูปองคงเหลือทั้งหมด</p>
+                
+                <div class="grid grid-cols-3 gap-2">
+                    <div class="bg-emerald-50 rounded-lg p-2 text-center border border-emerald-100">
+                        <p class="text-[10px] font-bold text-emerald-600">คูปอง 5฿</p>
+                        <p class="text-xl font-black text-emerald-700"><span id="wm-c5-count">0</span> <span class="text-[9px] font-medium">ใบ</span></p>
                     </div>
-                    <div class="border-l border-gray-100">
-                        <p class="text-[10px] text-gray-400 font-bold uppercase">สิทธิ์ส่วนลดคงเหลือ</p>
-                        <p class="text-xl font-black text-pink-600"><span id="wm-total-points">0</span> <span class="text-xs font-medium text-gray-500">สิทธิ์</span></p>
+                    <div class="bg-emerald-50 rounded-lg p-2 text-center border border-emerald-100">
+                        <p class="text-[10px] font-bold text-emerald-600">คูปอง 10฿</p>
+                        <p class="text-xl font-black text-emerald-700"><span id="wm-c10-count">0</span> <span class="text-[9px] font-medium">ใบ</span></p>
+                    </div>
+                    <div class="bg-emerald-50 rounded-lg p-2 text-center border border-emerald-100">
+                        <p class="text-[10px] font-bold text-emerald-600">คูปอง 20฿</p>
+                        <p class="text-xl font-black text-emerald-700"><span id="wm-c20-count">0</span> <span class="text-[9px] font-medium">ใบ</span></p>
                     </div>
                 </div>
-
-                <div class="pt-2 border-t border-gray-50">
-                    <div class="flex justify-between text-[10px] font-bold text-gray-500 mb-1">
-                        <span>ความคืบหน้าสิทธิ์ถัดไป</span>
-                        <span id="wm-progress-text">0 / 100 บาท</span>
-                    </div>
-                    <div class="w-full bg-gray-200 h-2 rounded-full overflow-hidden">
-                        <div id="wm-progress-bar" class="bg-emerald-500 h-2 rounded-full transition-all" style="width: 0%"></div>
-                    </div>
-                    <p class="text-[9px] text-gray-400 mt-1">*ทุกๆ ยอดสะสมครบ 100 บาท จะแปลงเป็น 1 สิทธิ์ส่วนลดสินค้าอัตโนมัติ</p>
-                </div>
+                <p class="text-[9px] text-gray-400 mt-3 text-center">* คูปองจะถูกหักอัตโนมัติเมื่อสั่งซื้อสินค้าที่ Goodday Shop</p>
             </div>
 
-            <h3 class="font-bold text-gray-700 text-xs mb-2 ml-1"><i class="fa-solid fa-history mr-1"></i> ประวัติการส่งขยะย้อนหลัง</h3>
-            <div id="waste-history-list" class="space-y-2 pb-10"></div>
+            <h3 class="font-bold text-gray-700 text-xs mb-3 ml-1"><i class="fa-solid fa-history mr-1"></i> ประวัติรับคูปอง (ส่งขยะ)</h3>
+            <div id="waste-history-list" class="space-y-3 pb-10"></div>
         </div>
 
         <div id="page-health" class="page-section p-4 pt-6 bg-gray-50 min-h-screen">
@@ -263,10 +264,13 @@
             </div>
             <div class="bg-white p-4 rounded-xl shadow-sm mb-6 border border-emerald-100">
                 <div class="text-xs text-gray-600 mb-4 leading-relaxed font-medium bg-emerald-50 p-3 rounded-lg">
-                    <p class="font-bold text-emerald-700 mb-1"><i class="fa-solid fa-gift mr-1"></i> กติกาการสะสมยอดขยะ:</p>
-                    1. นำขยะมาชั่งรวมกันที่จุดรวมตามรอบกิจกรรม<br>
+                    <p class="font-bold text-emerald-700 mb-1"><i class="fa-solid fa-gift mr-1"></i> กติกาการรับคูปองส่วนลด:</p>
+                    1. นำขยะมาชั่งรวมกันที่จุดรับตามรอบกิจกรรม<br>
                     2. ทีมงานคำนวณมูลค่าขยะและอัปเดตลงระบบให้ทันที<br>
-                    3. เงินจะถูกสะสมในสมุด <strong class="text-emerald-600">สะสมครบทุกๆ 100 บาท รับสิทธิ์ส่วนลดสินค้าทันที</strong>
+                    3. <strong class="text-emerald-600">รับคูปองอัตโนมัติตามมูลค่าดังนี้:</strong><br>
+                    &nbsp;&nbsp;&nbsp;• 50 - 99 บ. รับคูปอง 5 บาท<br>
+                    &nbsp;&nbsp;&nbsp;• 100 - 199 บ. รับคูปอง 10 บาท<br>
+                    &nbsp;&nbsp;&nbsp;• 200 บ. ขึ้นไป รับคูปอง 20 บาท
                 </div>
                 <p class="text-xs font-bold text-gray-500 mb-2 mt-4">กรุณาระบุที่อยู่จุดรับขยะของท่าน:</p>
                 <div class="space-y-2">
@@ -397,11 +401,8 @@
             window.scrollTo(0, 0);
         }
 
-        // 🌟 สคริปต์จัดการอายุและวันเกิด
+        // 🌟 สคริปต์จัดการอายุและวันเกิดที่อัปเดตใหม่
         function calculateAge() {
-            const isUnknown = document.getElementById('no-birthdate').checked;
-            if (isUnknown) return; 
-
             const birthDateInput = document.getElementById('reg-birthdate').value;
             const ageInput = document.getElementById('reg-age');
             
@@ -415,41 +416,12 @@
                 if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
                     age--;
                 }
-                ageInput.value = age >= 0 ? age : 0;
-            } else {
-                ageInput.value = "";
+                
+                if(age >= 0) {
+                    ageInput.value = age;
+                }
             }
         }
-
-        function toggleBirthdateMode(cb) {
-            const dateInput = document.getElementById('reg-birthdate');
-            const ageInput = document.getElementById('reg-age');
-
-            if(cb.checked) {
-                dateInput.disabled = true; 
-                dateInput.classList.add('bg-gray-100', 'text-gray-400', 'cursor-not-allowed', 'opacity-60'); 
-                dateInput.classList.remove('bg-white');
-                dateInput.value = "";
-                
-                ageInput.readOnly = false;
-                ageInput.classList.remove('bg-gray-50');
-                ageInput.classList.add('bg-white');
-                ageInput.value = "";
-                ageInput.placeholder = "กรอกอายุของคุณ...";
-                ageInput.focus();
-            } else {
-                dateInput.disabled = false; 
-                dateInput.classList.remove('bg-gray-100', 'text-gray-400', 'cursor-not-allowed', 'opacity-60');
-                dateInput.classList.add('bg-white');
-                
-                ageInput.readOnly = true;
-                ageInput.classList.add('bg-gray-50');
-                ageInput.classList.remove('bg-white');
-                ageInput.placeholder = "ระบบจะคำนวณจากวันเกิดอัตโนมัติ";
-                calculateAge();
-            }
-        }
-        // 🌟 จบส่วนวันเกิด
 
         function nextToReg2() {
             const err = document.getElementById('reg1-error');
@@ -457,18 +429,17 @@
             const name = document.getElementById('reg-name').value.trim();
             const phone = document.getElementById('reg-phone').value.trim();
             
-            const isUnknownDate = document.getElementById('no-birthdate').checked;
             const bDate = document.getElementById('reg-birthdate').value;
             const age = document.getElementById('reg-age').value;
             
             if(!prefix || !name || !phone) {
                 err.innerText = "กรุณากรอกข้อมูลที่มี * ให้ครบถ้วน"; err.classList.remove('hidden'); return;
             }
-            if(isUnknownDate && !age) {
-                err.innerText = "กรุณาระบุอายุของคุณให้ครบถ้วน"; err.classList.remove('hidden'); return;
+            if(!bDate) {
+                err.innerText = "กรุณาเลือกวันเกิด (ถ้าจำไม่ได้ให้ใส่วันที่ 1 มกราคมของปีที่เกิด)"; err.classList.remove('hidden'); return;
             }
-            if(!isUnknownDate && !bDate) {
-                err.innerText = "กรุณาเลือกวันเกิด หรือ ติ๊กเลือก 'ไม่ทราบวันเกิด'"; err.classList.remove('hidden'); return;
+            if(!age) {
+                err.innerText = "กรุณาระบุอายุของคุณให้ครบถ้วน"; err.classList.remove('hidden'); return;
             }
 
             err.classList.add('hidden'); showPage('reg-2');
@@ -487,13 +458,10 @@
             btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
             err.classList.add('hidden');
 
-            const isUnknownDate = document.getElementById('no-birthdate').checked;
-            let finalDate = isUnknownDate ? "ไม่ระบุ" : document.getElementById('reg-birthdate').value;
-            let finalAge = document.getElementById('reg-age').value;
-
             const data = {
                 prefix: document.getElementById('reg-prefix').value.trim(), name: document.getElementById('reg-name').value.trim(),
-                birthDate: finalDate, age: finalAge,
+                birthDate: document.getElementById('reg-birthdate').value, 
+                age: document.getElementById('reg-age').value,
                 phone: document.getElementById('reg-phone').value.trim(), lineId: document.getElementById('reg-lineid').value.trim(),
                 email: document.getElementById('reg-email').value.trim(), password: pass, lineUid: currentLineUid,
                 houseNo: document.getElementById('reg-house').value.trim(), village: document.getElementById('reg-moo').value.trim(),
@@ -581,7 +549,7 @@
             const res = await callAPI("joinWasteMoney", wmAddress);
             if(res.success) {
                 currentUser.wasteMoney = "ใช่"; localStorage.setItem('gooddaySession', JSON.stringify(currentUser));
-                alert("เข้าร่วมโครงการสำเร็จ! พาทีมงานมาชั่งขยะเพื่อสะสมแต้มได้เลยครับ"); renderProfile();
+                alert("เข้าร่วมโครงการสำเร็จ! พาทีมงานมาชั่งขยะเพื่อรับคูปองได้เลยครับ"); renderProfile();
             } else {
                 alert("เกิดข้อผิดพลาด: " + res.message); btn.disabled = false; btn.innerText = "ยืนยันเข้าร่วมโครงการ";
             }
@@ -596,15 +564,14 @@
 
         async function openWasteLogbook() {
             showPage('waste-logbook');
-            document.getElementById('waste-history-list').innerHTML = '<div class="text-center py-10 text-gray-400"><i class="fa-solid fa-spinner fa-spin text-xl text-emerald-500 mb-2 block"></i>กำลังโหลดสมุดบันทึก...</div>';
+            document.getElementById('waste-history-list').innerHTML = '<div class="text-center py-10 text-gray-400"><i class="fa-solid fa-spinner fa-spin text-xl text-emerald-500 mb-2 block"></i>กำลังโหลดกระเป๋าคูปอง...</div>';
             
             const res = await callAPI("getWasteRecords", { memberId: currentUser.memberId, phone: currentUser.phone });
             
             if(res && res.success) {
-                document.getElementById('wm-total-amount').innerText = res.totalAmount.toFixed(2);
-                document.getElementById('wm-total-points').innerText = res.availableCoupons;
-                document.getElementById('wm-progress-text').innerText = `${res.remainingForNext.toFixed(0)} / 100 บาท`;
-                document.getElementById('wm-progress-bar').style.width = `${res.remainingForNext}%`;
+                document.getElementById('wm-c5-count').innerText = res.coupons.c5;
+                document.getElementById('wm-c10-count').innerText = res.coupons.c10;
+                document.getElementById('wm-c20-count').innerText = res.coupons.c20;
                 
                 const listObj = document.getElementById('waste-history-list');
                 if(!res.logs || res.logs.length === 0) {
@@ -615,17 +582,16 @@
                 listObj.innerHTML = res.logs.map(l => `
                     <div class="bg-white border border-gray-100 rounded-xl p-3 shadow-sm flex justify-between items-center text-sm mb-2">
                         <div>
-                            <p class="font-bold text-gray-800"><i class="fa-solid fa-recycle text-emerald-500 mr-1"></i> ส่งขยะร่วมโครงการ</p>
+                            <p class="font-bold text-gray-800"><i class="fa-solid fa-recycle text-emerald-500 mr-1"></i> ขายขยะมูลค่า ${l.amount.toFixed(2)} บาท</p>
                             <p class="text-[10px] text-gray-400 mt-1"><i class="fa-regular fa-clock mr-0.5"></i> ${l.date}</p>
                         </div>
                         <div class="text-right">
-                            <p class="font-black text-emerald-600 text-base">+${l.amount.toFixed(2)}</p>
-                            <p class="text-[9px] text-gray-400">บาท</p>
+                            ${l.coupon > 0 ? `<span class="bg-pink-50 text-pink-600 font-bold border border-pink-100 px-2 py-1 rounded text-[10px] shadow-sm">ได้รับคูปอง ${l.coupon}฿</span>` : `<span class="text-gray-400 font-medium text-[10px]">- ไม่ได้รับคูปอง -</span>`}
                         </div>
                     </div>
                 `).join('');
             } else {
-                alert("ดึงข้อมูลสมุดบันทึกไม่สำเร็จ");
+                alert("ดึงข้อมูลไม่สำเร็จ");
             }
         }
 
