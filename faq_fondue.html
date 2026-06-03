@@ -33,7 +33,7 @@
         
         #liff-loading { position:fixed; inset:0; background:#fff; z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; }
         
-        /* 🌟 จัดการไม่ให้แผนที่บังแถบเมนู */
+        /* จัดการไม่ให้แผนที่บังแถบเมนู */
         .leaflet-container { z-index: 10 !important; font-family: 'Sarabun'; }
     </style>
 </head>
@@ -66,10 +66,9 @@
 
             <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm mb-4">
                 <h4 class="font-bold text-gray-800 mb-3 border-l-4 theme-border pl-2 text-sm">ช่องทางการติดต่อ</h4>
-                    <div class="flex items-center gap-3 text-sm text-gray-600 p-2 rounded-lg">
-                        <div class="w-10 h-10 rounded-full bg-pink-50 text-pink-500 flex items-center justify-center text-base shadow-sm"><i class="fa-solid fa-envelope"></i></div>
-                        <div><p class="font-bold text-gray-800">อีเมล</p><p class="text-[11px] text-gray-500 mt-0.5">goodday.lineoa@gmail.com</p></div>
-                    </div>
+                <div class="flex items-center gap-3 text-sm text-gray-600 p-2 rounded-lg">
+                    <div class="w-10 h-10 rounded-full bg-pink-50 text-pink-500 flex items-center justify-center text-base shadow-sm"><i class="fa-solid fa-envelope"></i></div>
+                    <div><p class="font-bold text-gray-800">อีเมล</p><p class="text-[11px] text-gray-500 mt-0.5">goodday.lineoa@gmail.com</p></div>
                 </div>
             </div>
         </div>
@@ -102,6 +101,7 @@
                         <div id="img-placeholder" class="text-center">
                             <i class="fa-solid fa-image-text text-3xl mb-2 text-gray-300"></i>
                             <p class="text-xs font-bold text-gray-500">กดเพื่อถ่ายรูป หรือ เลือกจากคลังภาพ</p>
+                            <p class="text-[9px] text-gray-400 mt-1">(ระบบจะทำการลดขนาดภาพให้อัตโนมัติ)</p>
                         </div>
                         <input type="file" id="fondue-image" accept="image/*" class="hidden" onchange="previewAndCompressImage(this)">
                     </label>
@@ -256,19 +256,17 @@
             
             if(pageId === 'history') fetchHistory();
             
-            // 🌟 ถ้าย้ายมาหน้า Fondue ให้โหลดแผนที่
             if(pageId === 'fondue') {
                 setTimeout(() => {
                     initMap();
-                }, 300); // ดีเลย์นิดนึงรอให้ CSS ขยายเต็มที่ก่อนวาดแผนที่
+                }, 300); 
             }
         }
 
         // 🌟 ระบบแผนที่ปักหมุด
         function initMap() {
-            if (map) { map.invalidateSize(); return; } // ถ้าเคยวาดแล้ว ไม่ต้องวาดซ้ำ
+            if (map) { map.invalidateSize(); return; } 
 
-            // ค่าเริ่มต้นอยู่ที่ กทม.
             let defaultLatLng = [13.7563, 100.5018];
             
             map = L.map('map-container').setView(defaultLatLng, 10);
@@ -279,19 +277,16 @@
             marker = L.marker(defaultLatLng, {draggable: true}).addTo(map);
             updateGpsInput(defaultLatLng[0], defaultLatLng[1]);
 
-            // ลากหมุดเพื่อเปลี่ยนตำแหน่ง
             marker.on('dragend', function(e) {
                 let pos = marker.getLatLng();
                 updateGpsInput(pos.lat, pos.lng);
             });
 
-            // จิ้มแผนที่เพื่อย้ายหมุด
             map.on('click', function(e) {
                 marker.setLatLng(e.latlng);
                 updateGpsInput(e.latlng.lat, e.latlng.lng);
             });
 
-            // พยายามดึง GPS ของผู้ใช้จริงๆ
             if (navigator.geolocation) {
                 document.getElementById('fondue-gps').value = "กำลังค้นหาตำแหน่งของคุณ...";
                 navigator.geolocation.getCurrentPosition(
@@ -303,7 +298,6 @@
                         updateGpsInput(userLat, userLng);
                     },
                     function(error) {
-                        // ถ้าผู้ใช้ไม่ให้สิทธิ์ ก็ใช้ค่าเริ่มต้นไป
                         updateGpsInput(defaultLatLng[0], defaultLatLng[1]);
                     }
                 );
@@ -381,7 +375,6 @@
             });
         }
 
-        // บีบอัดรูปภาพ
         function previewAndCompressImage(input) {
             if (input.files && input.files[0]) {
                 const file = input.files[0];
@@ -472,7 +465,6 @@
                 document.getElementById('fondue-detail').value = '';
                 document.getElementById('fondue-location').value = '';
                 
-                // รีเซ็ตแผนที่
                 initMap();
                 base64Image = null;
                 showPage('history'); 
@@ -504,7 +496,8 @@
                         if(match) {
                             let coords = match[1];
                             let desc = l.location.replace(/📍 \[.*?\]/, '').trim();
-                            locHtml = `<a href="http://maps.google.com/?q=${coords}" target="_blank" class="text-pink-500 underline font-bold"><i class="fa-solid fa-map-location-dot"></i> ดูแผนที่</a> ${desc}`;
+                            // 🌟 แก้ลิงก์แผนที่ให้ถูกต้อง
+                            locHtml = `<a href="https://maps.google.com/?q=${coords}" target="_blank" class="text-pink-500 underline font-bold"><i class="fa-solid fa-map-location-dot"></i> ดูแผนที่</a> ${desc}`;
                         }
                     }
 
