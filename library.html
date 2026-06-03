@@ -256,13 +256,15 @@
 
         <!-- ❤️ หน้าย่อย: เสนอแนะ/บริจาค -->
         <div id="page-donate" class="page-section p-4 bg-gray-50 min-h-screen relative z-10">
-            <div class="flex items-center mb-6 pt-2">
-                <button onclick="showPage('home')" class="w-8 h-8 bg-white border rounded-full text-gray-600 mr-3 shadow-sm flex items-center justify-center"><i class="fa-solid fa-arrow-left"></i></button>
-                <h2 class="text-lg font-bold text-gray-800">เสนอแนะ / บริจาค</h2>
-            </div>
-            <div class="bg-white p-8 rounded-2xl border border-dashed border-gray-200 shadow-sm text-center mt-10">
+            <div class="flex items-center mb-6 pt-2">
+                <button onclick="showPage('home')" class="w-8 h-8 bg-white border rounded-full text-gray-600 mr-3 shadow-sm flex items-center justify-center"><i class="fa-solid fa-arrow-left"></i></button>
+                <h2 class="text-lg font-bold text-gray-800">เสนอแนะ / บริจาค</h2>
+            </div>
+            
+            <div class="bg-white p-8 rounded-2xl border border-dashed border-gray-200 shadow-sm text-center mt-10">
                 <i class="fa-solid fa-box-open text-4xl text-pink-300 mb-3 block"></i>
                 <h3 class="text-base font-bold text-gray-700 mb-1">⏳ Coming Soon</h3>
+                <p class="text-xs text-gray-500 font-medium">ระบบรับเรื่องเสนอแนะและบริจาคหนังสือ<br>กำลังอยู่ระหว่างการพัฒนา รอติดตามเร็วๆ นี้นะครับ</p>
                 <button onclick="showPage('home')" class="mt-6 bg-pink-50 text-pink-600 px-5 py-2 rounded-xl text-xs font-bold hover:bg-pink-100 transition">กลับหน้าหลัก</button>
             </div>
         </div>
@@ -754,31 +756,6 @@
                 showPage('history');
             } else alert("เกิดข้อผิดพลาด: " + (res?res.message:''));
         }
-        async function submitRequest(btn) {
-            const reqType = document.getElementById('req-type').value;
-            const reqDetail = document.getElementById('req-detail').value.trim();
-            
-            if(!reqDetail) return alert("กรุณาระบุรายละเอียด หรือชื่อหนังสือครับ");
-            
-            btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังส่งข้อมูล...';
-            
-            const res = await callAPI("submitRequest", {
-                uid: currentUser.lineUid, 
-                name: currentUser.name, 
-                reqType: reqType, 
-                detail: reqDetail
-            });
-            
-            btn.disabled = false; btn.innerText = 'ส่งข้อมูล';
-            
-            if(res && res.success) {
-                alert("ส่งข้อมูลเรียบร้อย ขอบพระคุณสำหรับข้อเสนอแนะ!");
-                document.getElementById('req-detail').value = '';
-                showPage('home');
-            } else { 
-                alert("เกิดข้อผิดพลาด: " + (res ? res.message : "ไม่สามารถเชื่อมต่อได้")); 
-            }
-        }
     </script>
 </body>
 </html>
