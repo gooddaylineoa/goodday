@@ -501,7 +501,7 @@
                 initMap();
                 base64Image = null;
                 showPage('history'); 
-            } else { alert("เกิดข้อผิดพลาดในการประมวลผล กรุณาลองใหม่อีกครั้ง"); }
+            } else { alert("เกิดข้อผิดพลาด: " + (res ? res.message : "ไม่สามารถเชื่อมต่อระบบได้")); }
         }
 
         async function fetchHistory() {
