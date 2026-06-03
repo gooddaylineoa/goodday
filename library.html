@@ -121,18 +121,18 @@
             </div>
         </div>
 
-        <!-- 🛋️ หน้า 2: จองคิวพื้นที่ -->
+        <!-- 🛋️ หน้า 2: จองคิวพื้นที่ (อัปเดตแบบใหม่ เลือกรอบเวลา) -->
         <div id="page-booking" class="page-section p-4 pt-6 bg-white min-h-screen relative z-10">
             <h2 class="text-lg font-bold text-gray-800 mb-4 text-center">จองเข้าใช้บริการพื้นที่</h2>
             
             <div class="grid grid-cols-2 gap-3 mb-6">
                 <div class="bg-blue-50 border border-blue-100 rounded-2xl p-4 text-center shadow-sm">
                     <p class="text-[10px] text-blue-600 font-bold mb-1 uppercase tracking-wider">Co-Working</p>
-                    <p class="text-3xl font-black text-blue-700"><span id="stat-coworking">0</span> <span class="text-xs font-medium">คน</span></p>
+                    <p class="text-3xl font-black text-blue-700"><span id="stat-coworking">...</span> <span class="text-xs font-medium">ที่นั่ง</span></p>
                 </div>
                 <div class="bg-purple-50 border border-purple-100 rounded-2xl p-4 text-center shadow-sm">
                     <p class="text-[10px] text-purple-600 font-bold mb-1 uppercase tracking-wider">PC Room</p>
-                    <p class="text-3xl font-black text-purple-700"><span id="stat-pc">0</span> <span class="text-xs font-medium">คน</span></p>
+                    <p class="text-3xl font-black text-purple-700"><span id="stat-pc">...</span> <span class="text-xs font-medium">เครื่อง</span></p>
                 </div>
             </div>
             
@@ -140,22 +140,29 @@
                 <div>
                     <label class="text-xs font-bold text-gray-500 mb-1 block">เลือกสาขาห้องสมุด *</label>
                     <select id="book-space-branch" class="form-input bg-white font-bold text-pink-600 border-pink-200" onchange="refreshSpaceStatus()">
-                        <!-- ไม่มี ทั้งหมด แล้ว -->
                         <option value="สัตหีบ">ห้องสมุดประชาชน "เฉลิมราชกุมารี" อำเภอสัตหีบ</option>
                     </select>
                 </div>
                 <div>
                     <label class="text-xs font-bold text-gray-500 mb-1 block">เลือกพื้นที่ *</label>
-                    <select id="book-type" class="form-input bg-white font-bold text-gray-700">
+                    <select id="book-type" class="form-input bg-white font-bold text-gray-700" onchange="refreshSpaceStatus()">
                         <option value="Co-working">Co-working Space</option>
                         <option value="คอมพิวเตอร์">เครื่องคอมพิวเตอร์</option>
                     </select>
                 </div>
                 <div>
-                    <label class="text-xs font-bold text-gray-500 mb-1 block">วัน-เวลาที่ต้องการใช้งาน *</label>
-                    <input type="datetime-local" id="book-datetime" class="form-input bg-white text-gray-700 font-medium">
+                    <label class="text-xs font-bold text-gray-500 mb-1 block">วันที่ต้องการใช้งาน *</label>
+                    <input type="date" id="book-date" class="form-input bg-white text-gray-700 font-medium" onchange="refreshSpaceStatus()">
                 </div>
-                <button onclick="submitSpaceBooking(this)" class="w-full theme-pink text-white py-3.5 rounded-xl font-bold shadow-md hover:bg-pink-700 transition active:scale-95 text-sm">ยืนยันการจอง</button>
+                <div>
+                    <label class="text-xs font-bold text-gray-500 mb-1 block">รอบเวลา *</label>
+                    <select id="book-time" class="form-input bg-white font-bold text-gray-700" onchange="refreshSpaceStatus()">
+                        <option value="">-- เลือกรอบเวลา --</option>
+                        <option value="รอบเช้า">รอบเช้า</option>
+                        <option value="รอบบ่าย">รอบบ่าย</option>
+                    </select>
+                </div>
+                <button onclick="submitSpaceBooking(this)" class="w-full theme-pink text-white py-3.5 rounded-xl font-bold shadow-md hover:bg-pink-700 transition active:scale-95 text-sm mt-2">ยืนยันการจอง</button>
             </div>
         </div>
 
@@ -260,19 +267,11 @@
                 <button onclick="showPage('home')" class="w-8 h-8 bg-white border rounded-full text-gray-600 mr-3 shadow-sm flex items-center justify-center"><i class="fa-solid fa-arrow-left"></i></button>
                 <h2 class="text-lg font-bold text-gray-800">เสนอแนะ / บริจาค</h2>
             </div>
-            <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm space-y-4">
-                <div>
-                    <label class="text-xs font-bold text-gray-500 mb-1 block">ประเภท</label>
-                    <select id="req-type" class="form-input bg-gray-50 text-gray-700 font-bold">
-                        <option value="เสนอซื้อ">เสนอให้ห้องสมุดซื้อเข้า</option>
-                        <option value="บริจาค">ฉันต้องการบริจาคหนังสือ</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="text-xs font-bold text-gray-500 mb-1 block">รายละเอียด / ชื่อหนังสือ</label>
-                    <textarea id="req-detail" rows="4" class="form-input bg-gray-50" placeholder="ระบุข้อมูลหนังสือ..."></textarea>
-                </div>
-                <button onclick="submitRequest(this)" class="w-full theme-pink text-white py-3.5 rounded-xl font-bold shadow-md hover:bg-pink-700 active:scale-95 text-sm">ส่งข้อมูล</button>
+            
+            <div class="bg-white p-8 rounded-2xl border border-dashed border-gray-200 shadow-sm text-center mt-10">
+                <i class="fa-solid fa-box-open text-4xl text-pink-300 mb-3 block"></i>
+                <h3 class="text-base font-bold text-gray-700 mb-1">Coming Soon</h3>
+                <button onclick="showPage('home')" class="mt-6 bg-pink-50 text-pink-600 px-5 py-2 rounded-xl text-xs font-bold hover:bg-pink-100 transition active:scale-95">กลับหน้าหลัก</button>
             </div>
         </div>
 
@@ -480,32 +479,47 @@
 
         async function refreshSpaceStatus() {
             const branch = document.getElementById('book-space-branch').value;
+            const date = document.getElementById('book-date').value;
+            const time = document.getElementById('book-time').value;
+            
             document.getElementById('stat-coworking').innerText = "...";
             document.getElementById('stat-pc').innerText = "...";
-            const stats = await callAPI("getLibraryStatus", { branch: branch });
+            
+            // รอให้ผู้ใช้เลือกวันที่และเวลาให้ครบก่อน ค่อยวิ่งไปเช็กหลังบ้าน
+            if(!date || !time) return; 
+
+            const stats = await callAPI("getLibraryStatus", { branch: branch, date: date, time: time });
             if(stats) {
-                document.getElementById('stat-coworking').innerText = stats.coworking;
-                document.getElementById('stat-pc').innerText = stats.pc;
+                // คืนค่ากลับมาแสดงเป็น (ที่นั่งทั้งหมด - ที่นั่งที่ถูกจองไปแล้ว)
+                document.getElementById('stat-coworking').innerText = (20 - stats.coworking) + "/20";
+                document.getElementById('stat-pc').innerText = (10 - stats.pc) + "/10";
             }
         }
 
         async function submitSpaceBooking(btn) {
-            const dt = document.getElementById('book-datetime').value;
+            const dt = document.getElementById('book-date').value;
+            const tm = document.getElementById('book-time').value;
             const branch = document.getElementById('book-space-branch').value;
-            if(!dt) return alert("กรุณาเลือกเวลา");
             
-            btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังดำเนินการ...';
+            if(!dt || !tm) return alert("กรุณาเลือกวันที่ และรอบเวลาที่ต้องการจอง");
+            
+            btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังตรวจสอบคิว...';
+            
             const res = await callAPI("bookLibrarySpace", {
                 memberId: currentUser.memberId, lineUid: currentUser.lineUid, userName: currentUser.name,
                 branch: branch, spaceType: document.getElementById('book-type').value,
-                bookDateTime: dt.replace("T", " ")
+                bookDateTime: dt + " " + tm
             });
+            
             if(res && res.success) { 
                 alert("จองพื้นที่สำเร็จ!"); 
-                document.getElementById('book-datetime').value = "";
+                document.getElementById('book-date').value = "";
+                document.getElementById('book-time').value = "";
                 refreshSpaceStatus(); 
                 showPage('history');
-            } else { alert("เกิดข้อผิดพลาด"); }
+            } else { 
+                alert(res ? res.message : "เกิดข้อผิดพลาด"); 
+            }
             btn.disabled = false; btn.innerText = "ยืนยันการจอง";
         }
 
