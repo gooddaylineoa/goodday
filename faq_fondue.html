@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Goodday FAQ</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
@@ -66,9 +66,19 @@
 
             <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm mb-4">
                 <h4 class="font-bold text-gray-800 mb-3 border-l-4 theme-border pl-2 text-sm">ช่องทางการติดต่อ</h4>
-                <div class="flex items-center gap-3 text-sm text-gray-600 p-2 rounded-lg">
-                    <div class="w-10 h-10 rounded-full bg-pink-50 text-pink-500 flex items-center justify-center text-base shadow-sm"><i class="fa-solid fa-envelope"></i></div>
-                    <div><p class="font-bold text-gray-800">อีเมล</p><p class="text-[11px] text-gray-500 mt-0.5">goodday.lineoa@gmail.com</p></div>
+                <div class="space-y-3">
+                    <a href="tel:-" class="flex items-center gap-3 text-sm text-gray-600 hover:bg-gray-50 p-2 rounded-lg transition">
+                        <div class="w-10 h-10 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center text-base shadow-sm"><i class="fa-solid fa-phone"></i></div>
+                        <div><p class="font-bold text-gray-800">โทรศัพท์</p><p class="text-[11px] text-gray-500 mt-0.5">-</p></div>
+                    </a>
+                    <a href="-" target="_blank" class="flex items-center gap-3 text-sm text-gray-600 hover:bg-gray-50 p-2 rounded-lg transition">
+                        <div class="w-10 h-10 rounded-full bg-green-50 text-green-500 flex items-center justify-center text-base shadow-sm"><i class="fa-brands fa-line"></i></div>
+                        <div><p class="font-bold text-gray-800">ผู้ประสานงาน</p><p class="text-[11px] text-gray-500 mt-0.5">สอบถาม-แจ้งปัญหาโดยตรง</p></div>
+                    </a>
+                    <div class="flex items-center gap-3 text-sm text-gray-600 p-2 rounded-lg">
+                        <div class="w-10 h-10 rounded-full bg-pink-50 text-pink-500 flex items-center justify-center text-base shadow-sm"><i class="fa-solid fa-envelope"></i></div>
+                        <div><p class="font-bold text-gray-800">อีเมล</p><p class="text-[11px] text-gray-500 mt-0.5">goodday.lineoa@gmail.com</p></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -101,7 +111,6 @@
                         <div id="img-placeholder" class="text-center">
                             <i class="fa-solid fa-image-text text-3xl mb-2 text-gray-300"></i>
                             <p class="text-xs font-bold text-gray-500">กดเพื่อถ่ายรูป หรือ เลือกจากคลังภาพ</p>
-                            <p class="text-[9px] text-gray-400 mt-1">(ระบบจะทำการลดขนาดภาพให้อัตโนมัติ)</p>
                         </div>
                         <input type="file" id="fondue-image" accept="image/*" class="hidden" onchange="previewAndCompressImage(this)">
                     </label>
@@ -136,11 +145,10 @@
 
                 <div class="mb-4">
                     <label class="block text-sm font-bold text-gray-700 mb-2">3. สถานที่ / ปักหมุดจุดที่พบปัญหา *</label>
-                    <p class="text-[10px] text-pink-500 font-bold mb-2"><i class="fa-solid fa-hand-pointer mr-1"></i> จิ้มบนแผนที่เพื่อเลื่อนหมุดไปยังจุดเกิดเหตุ</p>
                     
-                    <div class="border border-gray-200 rounded-xl p-1 bg-white mb-2 shadow-sm">
-                        <div id="map-container" class="w-full h-48 bg-gray-100 rounded-lg z-0 relative"></div>
-                    </div>
+                    <button type="button" onclick="openMapModal()" class="w-full bg-blue-50 border border-blue-200 text-blue-600 py-3 rounded-xl font-bold shadow-md hover:bg-blue-100 flex items-center justify-center gap-2 transition-all active:scale-95 mb-3">
+                        <i class="fa-solid fa-map-location-dot text-lg"></i> กดเพื่อเปิดแผนที่ปักหมุด
+                    </button>
                     
                     <input type="text" id="fondue-gps" class="form-input text-xs bg-pink-50 text-pink-600 font-bold border-pink-200 mb-2" placeholder="พิกัด GPS จะแสดงที่นี่..." readonly>
                     <input type="text" id="fondue-location" class="form-input" placeholder="พิมพ์ชื่อสถานที่ ตึก หรือจุดสังเกตเพิ่มเติมให้ชัดเจน...">
@@ -152,6 +160,20 @@
                 </div>
 
                 <button onclick="submitFondueBtn(this)" class="w-full theme-pink text-white py-3.5 rounded-xl font-semibold text-sm shadow-md hover:bg-pink-700 transition active:scale-95">🚀 ส่งเรื่องแจ้งเหตุ</button>
+            </div>
+        </div>
+
+        <div id="map-modal" class="hidden fixed inset-0 bg-white z-[9999] flex flex-col">
+            <div class="theme-pink text-white p-4 flex justify-between items-center shadow-md z-10">
+                <h3 class="font-bold text-lg"><i class="fa-solid fa-map-location-dot mr-2"></i>เลื่อนพิกัดปักหมุด</h3>
+                <button type="button" onclick="closeMapModal()" class="text-white text-2xl px-2 active:scale-90 transition"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="p-2 bg-pink-50 text-pink-600 text-xs font-bold text-center z-10 shadow-sm">
+                <i class="fa-solid fa-hand-pointer mr-1"></i> เลื่อนแผนที่ หรือลากหมุดไปยังจุดเกิดเหตุ
+            </div>
+            <div id="map-container" class="flex-1 w-full bg-gray-200 z-0"></div>
+            <div class="p-4 bg-white shadow-[0_-4px_15px_rgba(0,0,0,0.05)] z-10">
+                <button type="button" onclick="closeMapModal()" class="w-full theme-pink text-white py-3.5 rounded-xl font-bold text-sm shadow-md active:scale-95 transition">✅ ยืนยันพิกัดนี้</button>
             </div>
         </div>
 
@@ -255,15 +277,26 @@
             }
             
             if(pageId === 'history') fetchHistory();
-            
-            if(pageId === 'fondue') {
-                setTimeout(() => {
-                    initMap();
-                }, 300); 
+        }
+
+        function openMapModal() {
+            document.getElementById('map-modal').classList.remove('hidden');
+            setTimeout(() => {
+                initMap();
+                if (map) { map.invalidateSize(); } 
+            }, 300);
+        }
+
+        function closeMapModal() {
+            document.getElementById('map-modal').classList.add('hidden');
+            const gpsInput = document.getElementById('fondue-gps');
+            if(gpsInput.value !== "") {
+                gpsInput.classList.replace('text-pink-600', 'text-green-600');
+                gpsInput.classList.replace('bg-pink-50', 'bg-green-50');
+                gpsInput.classList.replace('border-pink-200', 'border-green-200');
             }
         }
 
-        // 🌟 ระบบแผนที่ปักหมุด
         function initMap() {
             if (map) { map.invalidateSize(); return; } 
 
@@ -494,10 +527,10 @@
                     if(l.location.includes("📍 [")) {
                         let match = l.location.match(/\[(.*?)\]/);
                         if(match) {
-                            let coords = match[1];
+                            let coords = match[1].trim();
                             let desc = l.location.replace(/📍 \[.*?\]/, '').trim();
-                            // 🌟 แก้ลิงก์แผนที่ให้ถูกต้อง
-                            locHtml = `<a href="https://maps.google.com/?q=${coords}" target="_blank" class="text-pink-500 underline font-bold"><i class="fa-solid fa-map-location-dot"></i> ดูแผนที่</a> ${desc}`;
+                            // 🌟 แก้ไข URL Google Maps เป็นรูปแบบค้นหาพิกัด
+                            locHtml = `<a href="https://www.google.com/maps/search/?api=1&query=${coords}" target="_blank" class="text-pink-500 underline font-bold"><i class="fa-solid fa-map-location-dot"></i> ดูแผนที่</a> ${desc}`;
                         }
                     }
 
