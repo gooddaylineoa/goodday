@@ -96,9 +96,14 @@
             </div>
 
             <div class="bg-white border border-gray-100 rounded-xl p-4 mb-6 shadow-sm">
+                <img id="confirm-act-image" src="" class="w-full h-32 object-cover rounded-lg mb-3 hidden shadow-sm border border-gray-100">
+                
                 <p class="text-xs text-pink-500 font-bold mb-1">กิจกรรม</p>
-                <h3 id="confirm-act-name" class="text-gray-800 font-bold text-base leading-snug mb-2">-</h3>
-                <p class="text-xs text-gray-500 font-medium"><i class="fa-solid fa-location-dot mr-1 text-gray-300"></i> <span id="confirm-act-prov">-</span></p>
+                <h3 id="confirm-act-name" class="text-gray-800 font-bold text-base leading-snug mb-3">-</h3>
+                
+                <div id="confirm-act-details" class="text-xs text-gray-600 bg-gray-50 p-3 rounded-lg mb-3 font-medium hidden leading-relaxed border border-gray-100"></div>
+                
+                <div id="confirm-act-map-btn" class="mt-1"></div>
             </div>
             
             <p class="font-bold text-sm text-gray-800 mb-3"><i class="fa-regular fa-clock theme-text mr-2"></i>เลือกรอบเวลาที่ต้องการ</p>
@@ -112,7 +117,6 @@
             <h2 class="text-xl font-bold text-gray-800 mb-2">จองสำเร็จ!</h2>
             <p class="text-gray-500 text-xs mb-6 font-medium">รหัสการจองของคุณคือ</p>
             <div id="show-booking-id" class="inline-block bg-green-50 text-green-600 text-2xl font-black tracking-wider px-6 py-3 rounded-xl border border-green-200 mb-6 shadow-sm">BK-000000</div>
-            <p class="text-xs text-gray-500 mb-6 font-medium">ระบบได้ส่งข้อความยืนยันไปที่ LINE ของท่านแล้ว</p>
             <button onclick="showPage('book')" class="w-full bg-gray-100 text-gray-700 py-3.5 rounded-xl font-semibold text-sm hover:bg-gray-200 transition">กลับสู่หน้าหลัก</button>
         </div>
 
@@ -212,6 +216,9 @@
         }
 
         async function fetchActivities() {
+            // 1. เพิ่มบรรทัดนี้: โชว์ตัวหมุนติ้วๆ ระหว่างรอข้อมูล
+            document.getElementById('activity-list').innerHTML = '<div class="text-center py-20 text-gray-400 flex flex-col items-center justify-center"><i class="fa-solid fa-spinner fa-spin text-3xl theme-text mb-3"></i><p class="text-sm font-medium">กำลังโหลดกิจกรรมล่าสุด...</p></div>';
+            
             let res = await callAPI("getActivities");
             allActivities = Array.isArray(res) ? res : [];
             
@@ -228,7 +235,7 @@
         function renderActivityList() {
             let list = allActivities;
             if (currentUser && currentUser.province) {
-                list = list.filter(a => a.province === currentUser.province || a.province === "" || a.province === "ทั้งหมด");
+                list = list.filter(a => a.province === currentUser.province || !a.province || a.province === "ทั้งหมด" || a.province === "ออนไลน์" || a.province === "ทุกจังหวัด");
             }
             if (currentCatFilter !== 'ทั้งหมด') list = list.filter(a => a.category === currentCatFilter);
         
@@ -258,7 +265,9 @@
                     let ageLabel = (minAge > 0 && maxAge < 999) ? `${minAge}-${maxAge} ปี`
                                  : (minAge > 0) ? `${minAge} ปีขึ้นไป`
                                  : `ไม่เกิน ${maxAge} ปี`;
-                    ageBadgeHtml = `<span class="bg-blue-50 text-blue-500 text-[10px] px-2 py-1 rounded font-bold border border-blue-100">👤 ${ageLabel}</span>`;
+                    ageBadgeHtml = `<span class="bg-blue-50 text-blue-500 text-[10px] px-2 py-1 rounded font-bold border border-blue-100">👤 อายุ ${ageLabel}</span>`;
+                } else {
+                    ageBadgeHtml = `<span class="bg-emerald-50 text-emerald-600 text-[10px] px-2 py-1 rounded font-bold border border-emerald-100">👤 ไม่จำกัดอายุ</span>`;
                 }
         
                 let btnHtml = '';
@@ -277,7 +286,12 @@
                     btnHtml = `<button disabled class="w-full bg-gray-100 text-gray-400 py-2 rounded-xl text-xs font-bold cursor-not-allowed">เต็ม</button>`;
                 }
         
-                let detailsHtml = a.details ? `<div class="bg-gray-50 p-2.5 rounded-lg text-xs text-gray-600 leading-relaxed font-medium mt-2"><i class="fa-solid fa-circle-info theme-text mr-1"></i> ${a.details}</div>` : '';
+                let detailsHtml = '';
+                if (a.details) {
+                    let formattedDesc = a.details.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" class="text-blue-500 underline font-bold"><i class="fa-solid fa-link"></i> เปิดลิงก์เอกสาร</a>');
+                    formattedDesc = formattedDesc.replace(/\n/g, '<br>');
+                    detailsHtml = `<div class="bg-gray-50 p-2.5 rounded-lg text-xs text-gray-600 leading-relaxed font-medium mt-2 line-clamp-2"><i class="fa-solid fa-circle-info theme-text mr-1"></i> ${formattedDesc}</div>`;
+                }
         
                 return `
                 <div class="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden mb-4">
@@ -290,7 +304,7 @@
                         <div class="text-xs text-gray-500 space-y-1.5 mb-3 font-medium">
                             <p class="${isPast ? 'text-red-500 font-bold' : ''}"><i class="fa-regular fa-clock w-4 text-center mr-1"></i> ${a.datetime}</p>
                             <p><i class="fa-solid fa-location-dot w-4 text-center mr-1"></i> ${a.province || 'ทุกพื้นที่'}</p>
-                            ${hasAgeLimit ? `<p class="flex gap-1 flex-wrap">${ageBadgeHtml}</p>` : ''}
+                            <p class="flex gap-1 flex-wrap">${ageBadgeHtml}</p>
                             ${detailsHtml}
                         </div>
                         ${btnHtml}
@@ -321,7 +335,7 @@
             for(let day=1; day<=days; day++){
                 const dStr = `${y}-${String(m+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
                 let acts = allActivities.filter(a => a.calDate === dStr);
-                if (currentUser && currentUser.province) acts = acts.filter(a => a.province === currentUser.province || a.province === "" || a.province === "ทั้งหมด");
+                if (currentUser && currentUser.province) acts = acts.filter(a => a.province === currentUser.province || !a.province || a.province === "ทั้งหมด" || a.province === "ออนไลน์" || a.province === "ทุกจังหวัด");
                 
                 let dot = '';
                 if(acts.length > 0){
@@ -345,7 +359,7 @@
 
             document.getElementById('selected-date-text').innerText = `วันที่ ${d} ${monthNames[m]}`;
             let acts = allActivities.filter(a => a.calDate === dStr);
-            if (currentUser && currentUser.province) acts = acts.filter(a => a.province === currentUser.province || a.province === "" || a.province === "ทั้งหมด");
+            if (currentUser && currentUser.province) acts = acts.filter(a => a.province === currentUser.province || !a.province || a.province === "ทั้งหมด" || a.province === "ออนไลน์" || a.province === "ทุกจังหวัด");
             
             let html = acts.length === 0 ? '<p class="text-xs text-gray-400 py-4 text-center w-full font-medium">ไม่มีกิจกรรมในวันนี้</p>' : acts.map(a => {
                 let isBooked = myBookedActivities.includes(a.name);
@@ -355,6 +369,13 @@
                 let hasAgeLimit = (minAge > 0 || maxAge < 999);
                 let userAge = currentUser ? (parseInt(currentUser.age) || 0) : 0;
                 let isAgeFail = hasAgeLimit && currentUser && userAge > 0 && (userAge < minAge || userAge > maxAge);
+                let ageBadgeHtml = '';
+                if (hasAgeLimit) {
+                    let ageLabel = (minAge > 0 && maxAge < 999) ? `${minAge}-${maxAge} ปี` : (minAge > 0) ? `${minAge}+ ปี` : `≤${maxAge} ปี`;
+                    ageBadgeHtml = `<span class="text-blue-500 font-bold">👤 ${ageLabel}</span>`;
+                } else {
+                    ageBadgeHtml = `<span class="text-emerald-500 font-bold">👤 ไม่จำกัดอายุ</span>`;
+                }
                 
                 let btn = '';
                 if (isPast) {
@@ -374,7 +395,10 @@
                 <div class="bg-white p-3 rounded-xl flex justify-between items-center mb-3 border border-gray-100 shadow-sm ${isPast ? 'opacity-70' : ''}">
                     <div class="flex flex-col pr-2">
                         <span class="font-bold text-sm ${isPast ? 'text-gray-500 line-through' : 'text-gray-800'} leading-snug">${a.name}</span>
-                        <span class="text-[10px] ${isPast ? 'text-red-400' : 'text-gray-500'} mt-1 font-medium"><i class="fa-regular fa-clock mr-1"></i> ${a.datetime}</span>
+                        <span class="text-[10px] ${isPast ? 'text-red-400' : 'text-gray-500'} mt-1 font-medium flex gap-2">
+                            <span><i class="fa-regular fa-clock mr-1"></i> ${a.datetime}</span>
+                            ${ageBadgeHtml}
+                        </span>
                     </div>
                     <div>${btn}</div>
                 </div>`;
@@ -391,9 +415,54 @@
             document.getElementById('btn-submit-booking').disabled = true;
             document.getElementById('btn-submit-booking').className = "w-full bg-gray-200 text-gray-400 py-3.5 rounded-xl font-semibold shadow-sm transition text-sm cursor-not-allowed";
             
+            // 1. ใส่ชื่อกิจกรรม
             document.getElementById('confirm-act-name').innerText = act.name;
-            document.getElementById('confirm-act-prov').innerText = act.province || "ทุกพื้นที่";
             
+            // 2. จัดการรูปภาพ
+            const imgEl = document.getElementById('confirm-act-image');
+            if(act.image) {
+                imgEl.src = act.image;
+                imgEl.classList.remove('hidden');
+            } else { imgEl.classList.add('hidden'); }
+
+            // 3. จัดการรายละเอียด + แปลงข้อความ http://... ให้กลายเป็นลิงก์กดได้
+            const detailsEl = document.getElementById('confirm-act-details');
+            if(act.details) {
+                // โค้ดแปลง URL เป็นปุ่มสีฟ้า
+                let formattedDetails = act.details.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" class="text-blue-500 underline font-bold"><i class="fa-solid fa-link"></i> กดเพื่อเปิดลิงก์</a>');
+                // แปลงการขึ้นบรรทัดใหม่
+                formattedDetails = formattedDetails.replace(/\n/g, '<br>');
+                
+                detailsEl.innerHTML = formattedDetails;
+                detailsEl.classList.remove('hidden');
+            } else { detailsEl.classList.add('hidden'); }
+            
+            // 4. จัดการปุ่มแผนที่ (แบบรองรับลิงก์และพิกัด)
+            let locName = act.province || "ทุกพื้นที่";
+            let mapContainer = document.getElementById('confirm-act-map-btn');
+            
+            if(locName === "ออนไลน์" || locName === "ทุกพื้นที่" || locName === "ทั้งหมด") {
+                mapContainer.innerHTML = `<span class="text-xs text-gray-500 font-bold bg-gray-100 px-3 py-1.5 rounded-lg inline-block"><i class="fa-solid fa-globe mr-1 text-gray-400"></i> ${locName}</span>`;
+            } else {
+                let finalMapUrl = "";
+                
+                if(act.mapUrl) {
+                    // ถ้าแอดมินใส่มาเป็นลิงก์ (มีคำว่า http) ก็ให้ใช้ลิงก์นั้นเลย
+                    if(act.mapUrl.toString().startsWith("http")) {
+                        finalMapUrl = act.mapUrl;
+                    } else {
+                        // ถ้าใส่มาเป็นพิกัด (เช่น 12.345, 100.567) ให้แปลงเป็น URL ของ Google Maps
+                        finalMapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(act.mapUrl)}`;
+                    }
+                } else {
+                    // ถ้าแอดมินปล่อยคอลัมน์ K ว่างไว้ จะใช้ชื่อสถานที่ไปค้นหาแทน
+                    finalMapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(locName)}`;
+                }
+                
+                mapContainer.innerHTML = `<a href="${finalMapUrl}" target="_blank" class="inline-flex items-center gap-1.5 bg-blue-50 text-blue-600 px-3 py-1.5 rounded-lg text-xs font-bold border border-blue-100 hover:bg-blue-100 transition shadow-sm active:scale-95"><i class="fa-solid fa-map-location-dot"></i> ดูแผนที่: ${locName}</a>`;
+            }
+            
+            // 5. แสดงปุ่มรอบเวลา
             let slotsHtml = act.slots.map(slot => {
                 if (slot.remaining > 0) {
                     return `
@@ -457,7 +526,7 @@
 
         async function fetchHistory() {
             if(!currentUser) return;
-            document.getElementById('history-list').innerHTML = '<div class="text-center py-10"><i class="fa-solid fa-spinner fa-spin text-2xl theme-text"></i><p class="text-xs text-gray-500 mt-2">กำลังดึงข้อมูล...</p></div>';
+            document.getElementById('history-list').innerHTML = '<div class="text-center py-10"><i class="fa-solid fa-spinner fa-spin text-2xl theme-text"></i><p class="text-xs text-gray-500 mt-2">กำลังโหลดข้อมูล...</p></div>';
             const data = await callAPI("getUserBookings", { phone: currentUser.phone });
             
             let html = (!data || data.length === 0) ? '<p class="text-center py-10 text-gray-400 font-medium text-sm">ไม่พบประวัติการจอง</p>' : data.map(b => {
