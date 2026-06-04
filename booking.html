@@ -452,11 +452,11 @@
                         finalMapUrl = act.mapUrl;
                     } else {
                         // ถ้าใส่มาเป็นพิกัด (เช่น 12.345, 100.567) ให้แปลงเป็น URL ของ Google Maps
-                        finalMapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(act.mapUrl)}`;
+                        finalMapUrl = "https://maps.google.com/?q=$" + encodeURIComponent(act.mapUrl);
                     }
                 } else {
                     // ถ้าแอดมินปล่อยคอลัมน์ K ว่างไว้ จะใช้ชื่อสถานที่ไปค้นหาแทน
-                    finalMapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(locName)}`;
+                    finalMapUrl = "https://maps.google.com/?q=$" + encodeURIComponent(locName);
                 }
                 
                 mapContainer.innerHTML = `<a href="${finalMapUrl}" target="_blank" class="inline-flex items-center gap-1.5 bg-blue-50 text-blue-600 px-3 py-1.5 rounded-lg text-xs font-bold border border-blue-100 hover:bg-blue-100 transition shadow-sm active:scale-95"><i class="fa-solid fa-map-location-dot"></i> ดูแผนที่: ${locName}</a>`;
