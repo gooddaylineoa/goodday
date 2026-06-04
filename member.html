@@ -674,15 +674,25 @@
 
                 let isSattahip = currentUser.address && currentUser.address.dist.includes("สัตหีบ");
                 let liverHtml = "";
-                if(!isSattahip && r.liverFluke) {
-                    let lvColor = (r.liverFluke === "ตรวจพบ") ? "text-red-600 bg-red-50" : "text-green-600 bg-green-50";
+                if(!isSattahip) {
+                    let flukeStatus = r.liverFluke ? r.liverFluke.trim() : "ยังไม่ได้รับการตรวจ";
+                    let lvColor = "";
+                    
+                    if (flukeStatus === "ตรวจพบ") {
+                        lvColor = "text-red-600 bg-red-50 border border-red-100";
+                    } else if (flukeStatus === "ตรวจไม่พบ") {
+                        lvColor = "text-green-600 bg-green-50 border border-green-100";
+                    } else {
+                        flukeStatus = "ยังไม่ได้รับการตรวจ";
+                        lvColor = "text-gray-500 bg-gray-100 border border-gray-200";
+                    }
+
                     liverHtml = `
                     <div class="flex justify-between items-center py-2 border-t border-gray-100">
                         <span class="text-gray-600 text-xs font-semibold"><i class="fa-solid fa-microscope text-gray-400 w-4 text-center mr-1"></i> พยาธิใบไม้ตับ</span>
-                        <span class="${lvColor} text-[10px] font-bold px-2 py-0.5 rounded">${r.liverFluke}</span>
+                        <span class="${lvColor} text-[10px] font-bold px-2 py-0.5 rounded">${flukeStatus}</span>
                     </div>`;
                 }
-
                 return `
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-3">
                     <div class="bg-blue-50 px-4 py-2 border-b border-blue-100 flex justify-between items-center">
