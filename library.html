@@ -346,12 +346,18 @@
         document.addEventListener("DOMContentLoaded", function() {
             showPage('home');
             
+            // 🌟 สร้างวันที่ปัจจุบัน และคำนวณวันล่วงหน้า 5 วัน
             const d = new Date();
             const todayStr = d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,'0') + "-" + String(d.getDate()).padStart(2,'0');
+            
+            const dMax = new Date();
+            dMax.setDate(dMax.getDate() + 5); // กำหนดให้จองล่วงหน้าได้ 5 วัน
+            const maxStr = dMax.getFullYear() + "-" + String(dMax.getMonth()+1).padStart(2,'0') + "-" + String(dMax.getDate()).padStart(2,'0');
+
             const dateInput = document.getElementById('book-date');
             dateInput.min = todayStr; // ห้ามย้อนหลัง
-            dateInput.max = todayStr; // ห้ามล่วงหน้า
-            dateInput.value = todayStr; // บังคับเป็นวันนี้เสมอ
+            dateInput.max = maxStr;   // ให้กดเลือกได้ไม่เกิน 5 วัน
+            dateInput.value = todayStr;
             
             const saved = localStorage.getItem('gooddaySession');
             if(saved) {
