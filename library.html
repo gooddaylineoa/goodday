@@ -132,7 +132,6 @@
                     <label class="text-xs font-bold text-gray-500 mb-1 block">เลือกสาขาห้องสมุด *</label>
                     <select id="book-branch" class="form-input bg-white font-bold text-pink-600 border-pink-200" onchange="loadRooms()">
                         <option value="สัตหีบ">ห้องสมุดประชาชน "เฉลิมราชกุมารี" อำเภอสัตหีบ</option>
-                        <option value="พัทยา">ห้องสมุดประชาชน เมืองพัทยา</option>
                     </select>
                 </div>
                 <div>
@@ -346,7 +345,13 @@
 
         document.addEventListener("DOMContentLoaded", function() {
             showPage('home');
-            document.getElementById('book-date').valueAsDate = new Date(); // เซ็ตวันจองเริ่มต้นเป็นวันนี้
+            
+            const d = new Date();
+            const todayStr = d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,'0') + "-" + String(d.getDate()).padStart(2,'0');
+            const dateInput = document.getElementById('book-date');
+            dateInput.min = todayStr; // ห้ามย้อนหลัง
+            dateInput.max = todayStr; // ห้ามล่วงหน้า
+            dateInput.value = todayStr; // บังคับเป็นวันนี้เสมอ
             
             const saved = localStorage.getItem('gooddaySession');
             if(saved) {
@@ -472,7 +477,7 @@
             loading.classList.remove('hidden');
             container.innerHTML = '';
 
-            const res = await callAPI("getLibraryRoomsData", { branch: branch, dateStr: dateStr });
+            const res = await callAPI("getLibraryRoomsData", { branch: branch, dateStr: dateStr, uid: currentUser.lineUid });
             loading.classList.add('hidden');
 
             if(res.isClosed) {
