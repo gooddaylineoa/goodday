@@ -253,10 +253,14 @@
                 let badgeHtml = '';
                 if (isPast) {
                     badgeHtml = `<span class="bg-gray-100 text-gray-500 text-[10px] px-2 py-1 rounded font-bold">หมดเขต</span>`;
+                } else if (a.allExpired) {
+                    badgeHtml = `<span class="bg-red-50 text-red-500 text-[10px] px-2 py-1 rounded font-bold border border-red-100">หมดเวลาจอง</span>`;
                 } else {
-                    badgeHtml = a.totalRemaining > 0
-                        ? `<span class="bg-pink-50 text-pink-600 text-[10px] px-2 py-1 rounded font-bold border border-pink-100">ว่าง ${a.totalRemaining} ที่</span>`
-                        : `<span class="bg-gray-100 text-gray-500 text-[10px] px-2 py-1 rounded font-bold">เต็มแล้ว</span>`;
+                    badgeHtml = a.totalRemaining === "ไม่จำกัด" 
+                        ? `<span class="bg-pink-50 text-pink-600 text-[10px] px-2 py-1 rounded font-bold border border-pink-100">ว่าง ไม่จำกัด</span>`
+                        : (a.totalRemaining > 0 
+                            ? `<span class="bg-pink-50 text-pink-600 text-[10px] px-2 py-1 rounded font-bold border border-pink-100">ว่าง ${a.totalRemaining} ที่</span>`
+                            : `<span class="bg-gray-100 text-gray-500 text-[10px] px-2 py-1 rounded font-bold">เต็มแล้ว</span>`);
                 }
         
                 // ✅ badge แสดงช่วงอายุ
@@ -273,14 +277,14 @@
                 let btnHtml = '';
                 if (isPast) {
                     btnHtml = `<button disabled class="w-full bg-gray-100 text-gray-400 py-2 rounded-xl text-xs font-bold cursor-not-allowed">ปิดรับสมัคร</button>`;
+                } else if (a.allExpired) {
+                    btnHtml = `<button disabled class="w-full bg-red-50 text-red-500 py-2 rounded-xl text-xs font-bold cursor-not-allowed border border-red-100">หมดเวลาจองแล้ว</button>`;
                 } else if (isAgeFail) {
-                    let ageLabel = (minAge > 0 && maxAge < 999) ? `${minAge}-${maxAge} ปี`
-                                 : (minAge > 0) ? `${minAge} ปีขึ้นไป`
-                                 : `ไม่เกิน ${maxAge} ปี`;
+                    let ageLabel = (minAge > 0 && maxAge < 999) ? `${minAge}-${maxAge} ปี` : (minAge > 0) ? `${minAge} ปีขึ้นไป` : `ไม่เกิน ${maxAge} ปี`;
                     btnHtml = `<button disabled class="w-full bg-gray-100 text-gray-400 py-2 rounded-xl text-xs font-bold cursor-not-allowed">⛔ สำหรับอายุ ${ageLabel}</button>`;
                 } else if (isBooked) {
                     btnHtml = `<button disabled class="w-full bg-green-50 text-green-600 py-2 rounded-xl text-xs font-bold border border-green-100 cursor-not-allowed">✅ จองแล้ว</button>`;
-                } else if (a.totalRemaining > 0) {
+                } else if (a.totalRemaining === "ไม่จำกัด" || a.totalRemaining > 0) {
                     btnHtml = `<button onclick="handleBookClick('${a.name}')" class="w-full theme-pink text-white py-2 rounded-xl text-xs font-bold shadow-sm hover:bg-pink-700 transition">จองที่นั่ง</button>`;
                 } else {
                     btnHtml = `<button disabled class="w-full bg-gray-100 text-gray-400 py-2 rounded-xl text-xs font-bold cursor-not-allowed">เต็ม</button>`;
@@ -380,12 +384,14 @@
                 let btn = '';
                 if (isPast) {
                     btn = `<button disabled class="bg-gray-100 text-gray-400 px-3 py-1.5 rounded-lg text-xs font-bold">ปิดรับสมัคร</button>`;
+                } else if (a.allExpired) {
+                    btn = `<button disabled class="bg-red-50 text-red-500 px-3 py-1.5 rounded-lg text-[10px] font-bold border border-red-100">หมดเวลา</button>`;
                 } else if (isAgeFail) {
                     let ageLabel = (minAge > 0 && maxAge < 999) ? `${minAge}-${maxAge} ปี` : (minAge > 0) ? `${minAge}+ ปี` : `≤${maxAge} ปี`;
-                    btn = `<button disabled class="bg-gray-100 text-gray-400 px-3 py-1.5 rounded-lg text-xs font-bold">⛔ ${ageLabel}</button>`;
+                    btn = `<button disabled class="bg-gray-100 text-gray-400 px-3 py-1.5 rounded-lg text-[10px] font-bold">⛔ ${ageLabel}</button>`;
                 } else if (isBooked) {
                     btn = `<button disabled class="bg-green-50 text-green-600 px-3 py-1.5 rounded-lg text-[10px] font-bold border border-green-100">✅ จองแล้ว</button>`;
-                } else if (a.totalRemaining > 0) {
+                } else if (a.totalRemaining === "ไม่จำกัด" || a.totalRemaining > 0) {
                     btn = `<button onclick="handleBookClick('${a.name}')" class="theme-pink text-white px-4 py-1.5 rounded-lg text-xs font-bold shadow-sm hover:bg-pink-700">จอง</button>`;
                 } else {
                     btn = `<button disabled class="bg-gray-100 text-gray-400 px-3 py-1.5 rounded-lg text-xs font-bold">เต็ม</button>`;
@@ -464,7 +470,16 @@
             
             // 5. แสดงปุ่มรอบเวลา
             let slotsHtml = act.slots.map(slot => {
-                if (slot.remaining > 0) {
+                if (slot.isExpired) {
+                    return `
+                    <button disabled class="slot-box disabled bg-gray-50 opacity-60">
+                        <div class="flex items-center">
+                            <div class="w-4 h-4 rounded-full border border-gray-300 mr-3"></div>
+                            <span class="font-bold text-sm line-through text-gray-400">${slot.time}</span>
+                        </div>
+                        <span class="text-[10px] font-bold text-gray-400">หมดเวลา</span>
+                    </button>`;
+                } else if (slot.remaining === "ไม่จำกัด" || slot.remaining > 0) {
                     return `
                     <button onclick="selectSlot(this, '${slot.time}')" class="slot-box">
                         <div class="flex items-center">
@@ -531,6 +546,17 @@
             
             let html = (!data || data.length === 0) ? '<p class="text-center py-10 text-gray-400 font-medium text-sm">ไม่พบประวัติการจอง</p>' : data.map(b => {
                 const ok = (b.status === "ยืนยันการจอง");
+                
+                // 🌟 โซนสร้างปุ่มแผนที่ (เช็กว่ามีลิงก์ mapUrl ส่งมาไหม)
+                let mapBtnHtml = '';
+                if(b.mapUrl) {
+                    // ถ้าพิกัดไม่ได้ขึ้นต้นด้วย http ให้แปลงเป็นลิงก์ Google Maps อัตโนมัติ
+                    let finalMapUrl = b.mapUrl.toString().startsWith("http") ? b.mapUrl : `https://maps.google.com/?q=${encodeURIComponent(b.mapUrl)}`;
+                    mapBtnHtml = `<a href="${finalMapUrl}" target="_blank" class="w-full flex items-center justify-center bg-blue-50 text-blue-600 border border-blue-200 py-2.5 rounded-lg text-xs font-bold hover:bg-blue-100 transition"><i class="fa-solid fa-map-location-dot mr-1.5"></i> นำทาง</a>`;
+                }
+                
+                let cancelBtnHtml = ok ? `<button onclick="cancelIt('${b.id}')" class="w-full text-red-500 text-xs font-bold border border-red-100 py-2.5 rounded-lg hover:bg-red-50 transition">ยกเลิกการจอง</button>` : '';
+
                 return `
                 <div class="bg-white border border-gray-100 rounded-xl p-4 shadow-sm mb-4">
                     <div class="flex justify-between items-start mb-3 border-b pb-2">
@@ -540,7 +566,11 @@
                     <p class="text-[11px] text-gray-500 font-medium mb-1"><i class="fa-solid fa-hashtag mr-1 w-4 text-center"></i> ${b.id}</p>
                     <p class="text-[11px] text-gray-500 font-medium"><i class="fa-regular fa-calendar mr-1 w-4 text-center"></i> ${b.date}</p>
                     ${ok ? `<div class="flex justify-center my-4"><img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${b.id}" class="border rounded-lg shadow-sm p-1"></div>` : ''}
-                    ${ok ? `<button onclick="cancelIt('${b.id}')" class="w-full text-red-500 text-xs font-bold border border-red-100 py-2.5 rounded-lg hover:bg-red-50 transition mt-2">ยกเลิกการจอง</button>` : ''}
+                    
+                    <div class="flex gap-2 mt-2">
+                        ${mapBtnHtml}
+                        ${cancelBtnHtml}
+                    </div>
                 </div>`;
             }).join('');
             document.getElementById('history-list').innerHTML = html;
