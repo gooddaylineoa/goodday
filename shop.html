@@ -769,7 +769,9 @@
                         <p class="text-sm font-bold text-gray-800">${bHolder}</p>
                         <p class="text-xs font-medium text-gray-500 mb-4">${bName}</p>
                         <input type="file" id="slip-${o.id}" accept="image/*" class="w-full mb-3 text-sm file:mr-3 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-white file:text-pink-600 file:shadow-sm">
-                        <button onclick="submitSlip('${o.id}')" class="w-full theme-pink text-white py-3 rounded-xl text-sm font-semibold shadow-md hover:bg-pink-700">ส่งหลักฐานการโอนเงิน</button>
+                        <button onclick="submitSlip('${o.id}')" class="w-full theme-pink text-white py-3 rounded-xl text-sm font-semibold shadow-md hover:bg-pink-700 mb-2">ส่งหลักฐานการโอนเงิน</button>
+                        
+                        <button onclick="cancelShopOrder('${o.id}')" class="w-full bg-white text-red-500 py-3 rounded-xl text-xs font-bold border border-red-100 hover:bg-red-50 transition shadow-sm"><i class="fa-solid fa-xmark mr-1"></i> ยกเลิกคำสั่งซื้อ</button>
                     </div>`;
                 } else if (o.status === 'รอตรวจสอบสลิป') {
                     actionBtn = `<div class="mt-4 text-center text-sm text-orange-500 bg-orange-50 py-3 rounded-xl font-bold border border-orange-100"><i class="fa-solid fa-hourglass-half mr-2"></i> รอทีมงานตรวจสอบสลิป</div>`;
@@ -794,6 +796,35 @@
                 </div>`;
             }).join('');
             document.getElementById('order-list').innerHTML = html || '<div class="text-center py-16 flex flex-col items-center"><i class="fa-solid fa-clipboard-list text-gray-200 text-6xl mb-4"></i><p class="text-gray-400 font-medium text-sm">ไม่มีคำสั่งซื้อในหมวดหมู่นี้</p></div>';
+        }
+
+        // 🌟 ฟังก์ชันกดยกเลิกคำสั่งซื้อ
+        async function cancelShopOrder(orderId) {
+            if(!confirm("คุณแน่ใจหรือไม่ว่าต้องการยกเลิกคำสั่งซื้อนี้?")) return;
+            
+            // แสดงหน้าจอโหลดดิ้ง
+            const loader = document.getElementById('liff-loading');
+            loader.style.display = 'flex';
+            loader.querySelector('p').innerText = "กำลังดำเนินการยกเลิก...";
+            loader.querySelector('i.fa-spinner').classList.remove('hidden');
+            loader.querySelector('i.fa-store').classList.add('hidden');
+            
+            const res = await callAPI("cancelShopOrder", { orderId: orderId, phone: currentUser.phone });
+            
+            if(res && res.success) {
+                alert("ดำเนินการยกเลิกคำสั่งซื้อเรียบร้อยแล้ว");
+                // รีเฟรชข้อมูลใหม่ทั้งหมด (อัปเดตสิทธิ์คูปองที่ได้คืนมาด้วย)
+                fetchOrders();
+                syncWasteCoupons(); 
+            } else {
+                alert(res ? res.message : "เกิดข้อผิดพลาด");
+            }
+            
+            // ซ่อนหน้าจอโหลดดิ้ง
+            loader.style.display = 'none';
+            loader.querySelector('p').innerText = "กำลังโหลดข้อมูลร้านค้า...";
+            loader.querySelector('i.fa-spinner').classList.add('hidden');
+            loader.querySelector('i.fa-store').classList.remove('hidden');
         }
 
         function submitSlip(orderId) {
