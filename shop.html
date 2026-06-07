@@ -758,8 +758,21 @@
                     }
                 } catch(e) {}
                 
-                // ถ้าระบบหาชื่อร้านเจอ จะแสดงชื่อร้านแทน แต่ถ้าเป็นออเดอร์รวมมิตรหลายร้านจะแสดงแบบคั่นลูกน้ำ
                 let displayStoreName = storeNamesArray.length > 0 ? storeNamesArray.join(', ') : "Goodday Shop";
+
+                // 🌟 ระบบแยกสีป้ายสถานะ (Color-coding)
+                let badgeStyle = "text-pink-600 bg-pink-50 border border-pink-100"; // ค่าเริ่มต้น (ที่ต้องชำระ)
+                if (o.status === 'รอตรวจสอบสลิป') {
+                    badgeStyle = "text-yellow-600 bg-yellow-50 border border-yellow-200";
+                } else if (o.status === 'เตรียมจัดส่ง') {
+                    badgeStyle = "text-blue-500 bg-blue-50 border border-blue-200";
+                } else if (o.status === 'จัดส่งแล้ว') {
+                    badgeStyle = "text-red-500 bg-red-50 border border-red-200";
+                } else if (o.status === 'จัดส่งเสร็จสิ้น' || o.status === 'สำเร็จ') {
+                    badgeStyle = "text-green-600 bg-green-50 border border-green-200";
+                } else if (o.status === 'ยกเลิกคำสั่งซื้อ' || o.status === 'ยกเลิก') {
+                    badgeStyle = "text-gray-500 bg-gray-100 border border-gray-200";
+                }
 
                 if (o.status === 'ที่ต้องชำระ') {
                     actionBtn = `
@@ -774,14 +787,15 @@
                         <button onclick="cancelShopOrder('${o.id}')" class="w-full bg-white text-red-500 py-3 rounded-xl text-xs font-bold border border-red-100 hover:bg-red-50 transition shadow-sm"><i class="fa-solid fa-xmark mr-1"></i> ยกเลิกคำสั่งซื้อ</button>
                     </div>`;
                 } else if (o.status === 'รอตรวจสอบสลิป') {
-                    actionBtn = `<div class="mt-4 text-center text-sm text-orange-500 bg-orange-50 py-3 rounded-xl font-bold border border-orange-100"><i class="fa-solid fa-hourglass-half mr-2"></i> รอทีมงานตรวจสอบสลิป</div>`;
+                    actionBtn = `<div class="mt-4 text-center text-sm text-yellow-600 bg-yellow-50 py-3 rounded-xl font-bold border border-yellow-200"><i class="fa-solid fa-hourglass-half mr-2"></i> รอทีมงานตรวจสอบสลิป</div>`;
                 }
                 
                 return `
                 <div class="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm mb-4">
                     <div class="flex justify-between items-start border-b pb-3 mb-3">
                         <span class="text-sm font-bold text-gray-800 pr-2 line-clamp-1"><i class="fa-solid fa-store theme-text mr-1"></i> ${displayStoreName}</span>
-                        <span class="text-[10px] font-bold theme-text bg-pink-50 px-2 py-1 rounded-md shrink-0">${o.status}</span>
+                        <!-- 🌟 เรียกใช้ตัวแปรสีป้ายตรงนี้ -->
+                        <span class="text-[10px] font-bold px-2 py-1 rounded-md shrink-0 ${badgeStyle}">${o.status}</span>
                     </div>
                     <div>
                         <h3 class="font-bold text-sm text-gray-800 leading-relaxed">${o.items}</h3>
