@@ -41,14 +41,30 @@
         </div>
 
         <div id="page-stores" class="page-section active p-4 pt-6 bg-gray-50 min-h-screen">
-            <div class="relative mb-6">
-                <input type="text" id="search-store" onkeyup="searchStores()" placeholder="ค้นหาร้านค้าที่ต้องการ..." class="form-input pl-10 shadow-sm border-gray-200">
-                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-gray-400"></i>
+            
+            <div id="stores-main-view">
+                <div class="relative mb-6">
+                    <input type="text" id="search-store" onkeyup="searchStores()" placeholder="ค้นหาร้านค้าที่ต้องการ..." class="form-input pl-10 shadow-sm border-gray-200 rounded-xl">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-gray-400"></i>
+                </div>
+                <h2 class="font-bold text-gray-800 mb-3 text-base border-l-4 border-pink-500 pl-2">ร้านค้าชุมชน</h2>
+                <div id="store-list" class="space-y-3 pb-10">
+                    <div class="text-center py-10 text-gray-400 text-sm"><i class="fa-solid fa-spinner fa-spin text-2xl theme-text mb-2 block"></i>กำลังโหลดร้านค้า...</div>
+                </div>
             </div>
-            <h2 class="font-bold text-gray-800 mb-3 text-base border-l-4 border-pink-500 pl-2">ร้านค้าชุมชน</h2>
-            <div id="store-list" class="space-y-3 pb-10">
-                <div class="text-center py-10 text-gray-400 text-sm"><i class="fa-solid fa-spinner fa-spin text-2xl theme-text mb-2 block"></i>กำลังโหลดร้านค้า...</div>
+
+            <div id="stores-products-view" class="hidden">
+                <div class="flex gap-2 mb-4">
+                    <button onclick="backToStoreList()" class="w-11 h-11 bg-white rounded-xl flex items-center justify-center text-gray-600 shadow-sm border border-gray-200 shrink-0 active:scale-95 transition shadow-sm"><i class="fa-solid fa-arrow-left"></i></button>
+                    <div class="relative flex-1">
+                        <input type="text" id="search-store-product" onkeyup="searchStoreProducts()" placeholder="ค้นหาสินค้าในร้านนี้..." class="form-input pl-10 shadow-sm border-gray-200 rounded-xl">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-gray-400"></i>
+                    </div>
+                </div>
+                <h2 id="selected-store-title" class="font-bold text-gray-800 mb-4 text-base border-l-4 border-pink-500 pl-2">สินค้าในร้าน</h2>
+                <div id="store-product-list" class="grid grid-cols-2 gap-3 pb-24"></div>
             </div>
+
         </div>
 
         <div id="page-products" class="page-section p-4 pt-6 bg-gray-50 min-h-screen">
@@ -280,10 +296,13 @@
                 document.getElementById('nav-' + pageId).classList.add('theme-text', 'font-medium');
             }
             
+            // 🌟 เพิ่มเงื่อนไขนี้: ถ้ากดเมนูสลับมาแท็บร้านค้า ให้รีเซ็ตกลับมาหน้ารวมรายชื่อร้านเสมอ
+            if (pageId === 'stores') {
+                backToStoreList();
+            }
             if (pageId === 'orders') fetchOrders();
             if (pageId === 'cart') renderCart();
-            if (pageId === 'products' && currentViewingStore) {
-                // ถ้ากดเมนู "สินค้าทั้งหมด" ให้ล้างฟิลเตอร์ร้านค้า
+            if (pageId === 'products') {
                 currentViewingStore = null;
                 document.getElementById('btn-back-store').classList.add('hidden');
                 document.getElementById('store-title').innerText = "สินค้าทั้งหมด";
@@ -324,15 +343,50 @@
             renderStores(keyword);
         }
 
+        // 🌟 อัปเดต: เปิดดูสินค้าเฉพาะร้านให้อยู่ในหน้าเดิม
         function viewStore(storeName) {
             currentViewingStore = storeName;
-            document.getElementById('search-product').value = '';
-            document.getElementById('btn-back-store').classList.remove('hidden');
-            document.getElementById('store-title').innerText = `สินค้าจากร้าน: ${storeName}`;
-            showPage('products');
-            renderProducts();
+            document.getElementById('search-store-product').value = '';
+            document.getElementById('selected-store-title').innerText = `สินค้าจากร้าน: ${storeName}`;
+            
+            // สลับการแสดงผลหน้าย่อยภายในแท็บร้านค้า
+            document.getElementById('stores-main-view').classList.add('hidden');
+            document.getElementById('stores-products-view').classList.remove('hidden');
+            
+            renderStoreProducts();
         }
 
+        function backToStoreList() {
+            currentViewingStore = null;
+            document.getElementById('stores-main-view').classList.remove('hidden');
+            document.getElementById('stores-products-view').classList.add('hidden');
+            renderStores();
+        }
+
+        // 🌟 เพิ่มใหม่: วาดรายการสินค้าเฉพาะร้านลงหน้าย่อย (รองรับหยิบใส่ตะกร้าปกติ)
+        function renderStoreProducts(search = '') {
+            let list = allProducts.filter(p => p.storeName === currentViewingStore);
+            if (search) list = list.filter(p => p.name.toLowerCase().includes(search.toLowerCase()));
+
+            let html = list.map(p => `
+            <div class="bg-white border rounded-xl shadow-sm overflow-hidden flex flex-col justify-between border-gray-100 animate-[fadeIn_0.2s_ease]">
+                <img src="${p.image}" class="w-full h-32 object-cover">
+                <div class="p-3">
+                    <span class="text-[9px] bg-gray-100 text-gray-500 px-2 py-0.5 rounded font-bold mb-1 inline-block truncate max-w-full">${p.storeName}</span>
+                    <h3 class="text-sm font-bold text-gray-800 leading-snug mb-1 line-clamp-2">${p.name}</h3>
+                    <p class="text-sm font-bold theme-text mb-3">฿${p.price}</p>
+                    <button onclick="addToCart('${p.id}')" class="w-full border border-pink-500 text-pink-600 bg-pink-50 py-2 rounded-lg text-xs font-bold hover:bg-pink-500 hover:text-white transition"><i class="fa-solid fa-cart-plus mr-1"></i> หยิบใส่ตะกร้า</button>
+                </div>
+            </div>`).join('');
+            document.getElementById('store-product-list').innerHTML = html || '<div class="text-center col-span-2 py-10 text-gray-400 font-medium text-sm">ยังไม่มีสินค้าจำหน่ายในขณะนี้</div>';
+        }
+
+        // 🌟 เพิ่มใหม่: ค้นหาสินค้าภายในร้านค้าที่เลือก
+        function searchStoreProducts() {
+            const keyword = document.getElementById('search-store-product').value;
+            renderStoreProducts(keyword);
+        }
+        
         // --- ระบบหน้าสินค้า (Products) ---
         function renderProducts(search = '') {
             let list = allProducts;
@@ -612,11 +666,11 @@
         function submitSlip(orderId) {
             const fileInput = document.getElementById(`slip-${orderId}`);
             const file = fileInput.files[0];
-            if (!file) { alert("กรุณาแนบสลิป"); return; }
+            if (!file) { alert("กรุณาแนบสลิปก่อนส่งหลักฐานครับ"); return; }
             
             const btn = fileInput.nextElementSibling;
             const oriText = btn.innerHTML;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังบีบอัดและอัปโหลด...';
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังอัปโหลด...';
             btn.disabled = true;
             
             const reader = new FileReader();
@@ -625,38 +679,42 @@
                 const img = new Image();
                 img.src = event.target.result;
                 img.onload = async function() {
-                    // 🌟 ระบบบีบอัดรูปภาพอัตโนมัติ (แก้ปัญหาอัปโหลดค้าง)
-                    const canvas = document.createElement("canvas");
-                    const MAX_WIDTH = 800; // ย่อขนาดความกว้างรูปไม่ให้เกิน 800px
-                    let width = img.width;
-                    let height = img.height;
+                    try {
+                        const canvas = document.createElement("canvas");
+                        const MAX_WIDTH = 800; 
+                        let width = img.width;
+                        let height = img.height;
 
-                    if (width > MAX_WIDTH) {
-                        height = Math.round((height * MAX_WIDTH) / width);
-                        width = MAX_WIDTH;
-                    }
-                    canvas.width = width;
-                    canvas.height = height;
-                    const ctx = canvas.getContext("2d");
-                    ctx.drawImage(img, 0, 0, width, height);
+                        if (width > MAX_WIDTH) {
+                            height = Math.round((height * MAX_WIDTH) / width);
+                            width = MAX_WIDTH;
+                        }
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext("2d");
+                        ctx.drawImage(img, 0, 0, width, height);
 
-                    // แปลงเป็น JPEG แบบลดขนาดคุณภาพเหลือ 70% (ไฟล์จะเหลือแค่ไม่กี่ KB)
-                    const compressedBase64 = canvas.toDataURL("image/jpeg", 0.7);
+                        const compressedBase64 = canvas.toDataURL("image/jpeg", 0.7);
 
-                    // ส่งไฟล์ที่บีบอัดแล้วไปให้ Google Apps Script
-                    const res = await callAPI("uploadSlip", { 
-                        base64Data: compressedBase64, 
-                        fileName: "SLIP_" + orderId + ".jpg", 
-                        orderId: orderId 
-                    });
-                    
-                    if (res.success) { 
-                        alert("ส่งสลิปเรียบร้อย!"); 
-                        fetchOrders(); 
-                    } else { 
-                        alert("เกิดข้อผิดพลาด: " + res.message); 
+                        // 🌟 ครอบด้วย Try-Catch ชั้นใน ป้องกันการค้างกรณีเน็ตสะดุด
+                        const res = await callAPI("uploadSlip", { 
+                            base64Data: compressedBase64, 
+                            fileName: "SLIP_" + orderId + ".jpg", 
+                            orderId: orderId 
+                        });
+                        
+                        if (res && res.success) { 
+                            alert("ส่งหลักฐานสำเร็จ! แอดมินจะรีบตรวจสอบสลิปให้ครับ"); 
+                            fetchOrders(); 
+                        } else { 
+                            alert("เกิดข้อผิดพลาดจากเซิร์ฟเวอร์: " + (res ? res.message : "ล้มเหลว")); 
+                            btn.innerHTML = oriText; 
+                            btn.disabled = false; 
+                        }
+                    } catch (err) {
+                        alert("การเชื่อมต่อขัดข้อง กรุณาลองใหม่อีกครั้งครับ");
                         btn.innerHTML = oriText; 
-                        btn.disabled = false; 
+                        btn.disabled = false;
                     }
                 };
             };
