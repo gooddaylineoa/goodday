@@ -850,9 +850,8 @@
             } else { err.innerText = res.message; err.classList.remove('hidden'); }
         }
 
-        const originalRenderProfile = renderProfile;
-        renderProfile = function() {
-            if(!currentUser) { showPage('login'); return; }
+        function renderProfile() {
+        if(!currentUser) { showPage('login'); return; }
             
             document.getElementById('prof-memberid').innerText = currentUser.memberId || "GD-00000";
             document.getElementById('prof-fullname').innerText = (currentUser.prefix || "") + " " + currentUser.name;
