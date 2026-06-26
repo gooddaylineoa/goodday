@@ -7,7 +7,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-    <!-- เพิ่ม Library สำหรับสร้างกราฟ -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation"></script>
     <style>
@@ -27,7 +26,6 @@
         
         #liff-loading { position:fixed; inset:0; background:#fff; z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; }
         
-        /* ซ่อน Scrollbar สำหรับแกนเลื่อนซ้ายขวา (ส่วนที่ 3 ออมรอน) */
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
@@ -67,7 +65,6 @@
                     <input type="password" id="login-pass" class="form-input" placeholder="กรอกรหัสผ่าน...">
                 </div>
                 <div id="login-error" class="bg-red-50 text-red-600 text-xs p-3 rounded-lg text-center font-bold hidden"></div>
-                
                 <button onclick="doLogin(this)" class="w-full theme-pink text-white py-3.5 rounded-xl font-semibold shadow-md hover:bg-pink-700 transition mt-2 text-sm">เข้าสู่ระบบ</button>
                 <div class="text-center mt-6">
                     <p class="text-gray-500 font-medium text-xs">ยังไม่เป็นสมาชิก?</p>
@@ -81,7 +78,6 @@
                 <button onclick="showPage('login')" class="w-8 h-8 bg-gray-100 rounded-full text-gray-600 mr-3"><i class="fa-solid fa-arrow-left"></i></button>
                 <h2 class="text-lg font-bold theme-text">สร้างบัญชี (1/2)</h2>
             </div>
-            
             <div class="space-y-4">
                 <div class="grid grid-cols-3 gap-2">
                     <div class="col-span-1">
@@ -93,7 +89,6 @@
                         <input type="text" id="reg-name" class="form-input" placeholder="ชื่อ นามสกุล">
                     </div>
                 </div>
-
                 <div>
                     <label class="text-xs font-bold text-gray-500 mb-1 block">วัน/เดือน/ปีเกิด</label>
                     <input type="date" id="reg-birthdate" onchange="calculateAge()" class="form-input">
@@ -102,10 +97,9 @@
                         <span class="ml-2 text-[11px] font-bold text-gray-600">ไม่ทราบวันเกิด (ระบุเฉพาะอายุ)</span>
                     </label>
                 </div>
-
                 <div id="age-box">
                     <label class="text-xs font-bold text-gray-500 mb-1 block">อายุ (ปี) *</label>
-                    <input type="number" id="reg-age" class="form-input bg-gray-50 text-gray-600 font-bold" placeholder="ระบบจะคำนวณจากวันเกิดอัตโนมัติ" readonly>
+                    <input type="number" id="reg-age" class="form-input bg-gray-50 text-gray-600 font-bold" placeholder="ระบบจะคำนวณอัตโนมัติ" readonly>
                 </div>
                 <div>
                     <label class="text-xs font-bold text-gray-500 mb-1 block">เบอร์โทรศัพท์ (ใช้เข้าระบบ) *</label>
@@ -115,7 +109,6 @@
                     <label class="text-xs font-bold text-gray-500 mb-1 block">LINE ID</label>
                     <input type="text" id="reg-lineid" class="form-input" placeholder="ไอดีไลน์ของคุณ">
                 </div>
-
                 <div id="reg1-error" class="bg-red-50 text-red-600 text-xs p-3 rounded-lg text-center font-bold hidden"></div>
                 <button onclick="nextToReg2()" class="w-full theme-pink text-white py-3.5 rounded-xl font-semibold shadow-md mt-2 transition text-sm">ถัดไป <i class="fa-solid fa-arrow-right ml-1"></i></button>
             </div>
@@ -126,7 +119,6 @@
                 <button onclick="showPage('reg-1')" class="w-8 h-8 bg-gray-100 rounded-full text-gray-600 mr-3"><i class="fa-solid fa-arrow-left"></i></button>
                 <h2 class="text-lg font-bold theme-text">ข้อมูลที่อยู่ (2/2)</h2>
             </div>
-            
             <div class="space-y-4">
                 <div>
                     <label class="text-xs font-bold text-gray-500 mb-1 block">อีเมล </label>
@@ -136,10 +128,8 @@
                     <div><label class="text-xs font-bold text-gray-500 mb-1 block">รหัสผ่าน *</label><input type="password" id="reg-pass" class="form-input" placeholder="รหัสผ่าน"></div>
                     <div><label class="text-xs font-bold text-gray-500 mb-1 block">ยืนยันรหัสผ่าน *</label><input type="password" id="reg-pass2" class="form-input" placeholder="ยืนยันอีกครั้ง"></div>
                 </div>
-
                 <hr class="my-4 border-gray-100">
                 <p class="font-bold text-gray-800 text-sm mb-2"><i class="fa-solid fa-location-dot theme-text mr-1"></i>ที่อยู่ปัจจุบัน</p>
-                
                 <div class="grid grid-cols-2 gap-2">
                     <input type="text" id="reg-house" class="form-input" placeholder="บ้านเลขที่ *">
                     <input type="text" id="reg-moo" class="form-input" placeholder="หมู่ / หมู่บ้าน">
@@ -153,13 +143,11 @@
                     <select id="reg-prov" class="form-input bg-gray-50 font-bold"><option value="">-- จังหวัด * --</option></select>
                     <input type="text" id="reg-zip" class="form-input" placeholder="รหัสไปรษณีย์ *">
                 </div>
-
                 <div id="reg2-error" class="bg-red-50 text-red-600 text-xs p-3 rounded-lg text-center font-bold hidden"></div>
                 <button onclick="submitRegister(this)" class="w-full theme-pink text-white py-3.5 rounded-xl font-semibold shadow-md mt-4 text-sm">✅ ยืนยันสมัครสมาชิก</button>
             </div>
         </div>
 
-        <!-- หน้าโปรไฟล์หลัก -->
         <div id="page-profile" class="page-section p-4 pt-6">
             <div class="bg-gradient-to-r from-pink-500 to-rose-500 rounded-xl p-5 text-white shadow-sm mb-6 relative overflow-hidden">
                 <div class="absolute right-[-10px] top-[-10px] opacity-20 text-8xl"><i class="fa-solid fa-address-card"></i></div>
@@ -171,7 +159,6 @@
                 <h3 id="prof-fullname" class="text-base font-semibold">-</h3>
             </div>
 
-            <!-- กล่องที่ 1: กรอกข้อมูลสุขภาพ -->
             <div id="box-fill-health" onclick="openHealthForm()" class="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl p-4 mb-4 text-white flex items-center justify-between cursor-pointer shadow-sm">
                 <div class="flex items-center gap-3">
                     <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center text-2xl shadow-inner relative overflow-hidden">
@@ -185,7 +172,6 @@
                 <i class="fa-solid fa-chevron-right text-lg opacity-50"></i>
             </div>
 
-            <!-- กล่องที่ 2: สมุดบันทึกสุขภาพ (ประวัติ) -->
             <div onclick="openHealthRecords()" class="bg-white border-2 border-blue-100 rounded-xl p-4 mb-4 text-blue-800 flex items-center justify-between cursor-pointer shadow-sm hover:bg-blue-50 transition">
                 <div class="flex items-center gap-3">
                     <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-2xl shadow-inner">
@@ -199,8 +185,7 @@
                 <i class="fa-solid fa-clock-rotate-left text-lg opacity-50"></i>
             </div>
 
-            <!-- กล่องที่ 3: Well Well Well! (จะแสดงหลังกดเข้าร่วม) -->
-            <div id="box-active-www" onclick="alert('ฟีเจอร์ WWW Dashboard กำลังมาในอัปเดตถัดไป!')" class="bg-gradient-to-br from-yellow-400 to-amber-500 rounded-xl p-4 mb-4 text-white flex items-center justify-between cursor-pointer shadow-sm hidden">
+            <div id="box-active-www" onclick="showPage('www-dashboard')" class="bg-gradient-to-br from-yellow-400 to-amber-500 rounded-xl p-4 mb-4 text-white flex items-center justify-between cursor-pointer shadow-sm hidden">
                 <div class="flex items-center gap-3">
                     <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center text-2xl shadow-inner">
                         <i class="fa-solid fa-ranking-star text-yellow-100"></i>
@@ -213,7 +198,6 @@
                 <i class="fa-solid fa-chevron-right text-lg opacity-50"></i>
             </div>
 
-            <!-- กล่องที่ 4: Waste For Wealth -->
             <div id="box-join-waste" onclick="showPage('waste-reg')" class="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl p-4 mb-4 text-white flex items-center justify-between cursor-pointer shadow-sm hidden">
                 <div class="flex items-center gap-3">
                     <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center text-2xl shadow-inner">
@@ -246,8 +230,21 @@
                     <i class="fa-solid fa-chevron-right text-gray-300 text-sm"></i>
                 </button>
             </div>
-
             <button onclick="doLogout()" class="w-full text-gray-400 font-semibold py-3 text-xs hover:text-red-500 transition"><i class="fa-solid fa-power-off mr-1"></i> ออกจากระบบ</button>
+        </div>
+
+        <div id="page-edit-address" class="page-section p-4 pt-6">
+            <div class="flex items-center mb-6">
+                <button onclick="showPage('profile')" class="w-8 h-8 bg-white rounded-full text-gray-600 mr-3"><i class="fa-solid fa-arrow-left"></i></button>
+                <h2 class="text-lg font-bold text-gray-800">แก้ไขที่อยู่จัดส่ง</h2>
+            </div>
+            <div class="space-y-3">
+                <div class="grid grid-cols-2 gap-2"><input type="text" id="edit-house" class="form-input" placeholder="บ้านเลขที่"><input type="text" id="edit-moo" class="form-input" placeholder="หมู่ / หมู่บ้าน"></div>
+                <input type="text" id="edit-road" class="form-input" placeholder="ซอย / ถนน">
+                <div class="grid grid-cols-2 gap-2"><input type="text" id="edit-subdist" class="form-input" placeholder="ตำบล/แขวง"><input type="text" id="edit-dist" class="form-input" placeholder="อำเภอ/เขต"></div>
+                <div class="grid grid-cols-2 gap-2"><select id="edit-prov" class="form-input bg-gray-50 font-bold"><option value="">-- จังหวัด --</option></select><input type="text" id="edit-zip" class="form-input" placeholder="รหัสไปรษณีย์"></div>
+                <button onclick="saveAddress(this)" class="w-full theme-pink text-white py-3.5 rounded-xl font-semibold shadow-md mt-4 text-sm">บันทึกข้อมูล</button>
+            </div>
         </div>
 
         <div id="page-waste-logbook" class="page-section p-4 pt-6 bg-gray-50 min-h-screen">
@@ -304,24 +301,9 @@
             <button onclick="confirmWasteMoney(this)" class="w-full bg-emerald-500 text-white py-3.5 rounded-xl font-semibold shadow-md hover:bg-emerald-600 transition text-sm">ยืนยันเข้าร่วมโครงการ</button>
         </div>
 
-        <div id="page-edit-address" class="page-section p-4 pt-6">
-            <div class="flex items-center mb-6">
-                <button onclick="showPage('profile')" class="w-8 h-8 bg-white rounded-full text-gray-600 mr-3"><i class="fa-solid fa-arrow-left"></i></button>
-                <h2 class="text-lg font-bold text-gray-800">แก้ไขที่อยู่จัดส่ง</h2>
-            </div>
-            <div class="space-y-3">
-                <div class="grid grid-cols-2 gap-2"><input type="text" id="edit-house" class="form-input" placeholder="บ้านเลขที่"><input type="text" id="edit-moo" class="form-input" placeholder="หมู่ / หมู่บ้าน"></div>
-                <input type="text" id="edit-road" class="form-input" placeholder="ซอย / ถนน">
-                <div class="grid grid-cols-2 gap-2"><input type="text" id="edit-subdist" class="form-input" placeholder="ตำบล/แขวง"><input type="text" id="edit-dist" class="form-input" placeholder="อำเภอ/เขต"></div>
-                <div class="grid grid-cols-2 gap-2"><select id="edit-prov" class="form-input bg-gray-50 font-bold"><option value="">-- จังหวัด --</option></select><input type="text" id="edit-zip" class="form-input" placeholder="รหัสไปรษณีย์"></div>
-                <button onclick="saveAddress(this)" class="w-full theme-pink text-white py-3.5 rounded-xl font-semibold shadow-md mt-4 text-sm">บันทึกข้อมูล</button>
-            </div>
-        </div>
-
-        <!-- หน้าฟอร์มกรอกข้อมูลสุขภาพ (Health Form) -->
         <div id="page-health-form" class="page-section p-4 pt-6 bg-gray-50 min-h-screen">
             <div class="flex items-center mb-4">
-                <button onclick="showPage('profile')" class="w-8 h-8 bg-white rounded-full text-gray-600 mr-3 shadow-sm border border-gray-200"><i class="fa-solid fa-arrow-left"></i></button>
+                <button onclick="showPage('profile')" class="w-8 h-8 bg-white rounded-full text-gray-600 mr-3 shadow-sm border"><i class="fa-solid fa-arrow-left"></i></button>
                 <h2 class="text-lg font-bold text-blue-800">บันทึกข้อมูลสุขภาพ</h2>
             </div>
 
@@ -453,14 +435,12 @@
             <button onclick="submitHealthRecord(this)" class="w-full bg-blue-600 text-white py-3.5 rounded-xl font-semibold shadow-md hover:bg-blue-700 transition text-sm">บันทึกข้อมูลเข้าสู่ระบบ</button>
         </div>
 
-        <!-- หน้าสมุดพกสุขภาพ (4 ส่วน) -->
         <div id="page-health" class="page-section p-4 pt-6 bg-gray-50 min-h-screen pb-24">
             <div class="flex items-center mb-6">
                 <button onclick="showPage('profile')" class="w-8 h-8 bg-white rounded-full text-gray-600 mr-3 shadow-sm border border-gray-200"><i class="fa-solid fa-arrow-left"></i></button>
                 <h2 class="text-lg font-bold text-blue-800">สมุดพกสุขภาพ</h2>
             </div>
 
-            <!-- แจ้งเตือนกรณีไม่มีข้อมูล -->
             <div id="health-no-data" class="hidden text-center py-12 bg-white rounded-xl shadow-sm border border-gray-100 mt-4">
                 <div class="text-4xl text-gray-200 mb-3"><i class="fa-solid fa-notes-medical"></i></div>
                 <p class="text-gray-500 font-bold text-sm mb-1">ยังไม่มีข้อมูลสุขภาพ</p>
@@ -468,10 +448,8 @@
                 <button onclick="openHealthForm()" class="bg-blue-500 text-white px-4 py-2 rounded-lg text-xs font-bold shadow-sm">กรอกข้อมูลสุขภาพ</button>
             </div>
 
-            <!-- คอนเทนเนอร์ 4 ส่วน -->
             <div id="health-content" class="hidden space-y-4">
                 
-                <!-- ส่วนที่ 1: ประวัติส่วนตัว -->
                 <div class="bg-blue-600 p-4 rounded-xl shadow-sm text-white relative overflow-hidden">
                     <div class="absolute -right-4 -bottom-4 opacity-10 text-7xl"><i class="fa-solid fa-clipboard-user"></i></div>
                     <div class="flex justify-between items-start mb-2 relative z-10">
@@ -489,7 +467,6 @@
                     </div>
                 </div>
 
-                <!-- ส่วนที่ 2: สรุปข้อมูล (กราฟ) -->
                 <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
                     <h3 class="font-bold text-gray-800 text-sm mb-3 border-b pb-2"><i class="fa-solid fa-chart-line text-blue-500 mr-1"></i> 2. ประวัติการวัดองค์ประกอบร่างกาย</h3>
                     
@@ -521,15 +498,12 @@
                     </div>
                 </div>
 
-                <!-- ส่วนที่ 3: ค่าที่ได้จากออมรอน (เลื่อนซ้ายขวาได้) -->
                 <div>
                     <h3 class="font-bold text-gray-800 text-sm mb-2 px-1"><i class="fa-solid fa-calculator text-blue-500 mr-1"></i> ส่วนที่ 3 ข้อมูลออมรอน</h3>
                     <div id="omron-carousel" class="flex overflow-x-auto gap-3 pb-4 snap-x snap-mandatory hide-scrollbar">
-                        <!-- การ์ดข้อมูลจะถูก Generate ใส่ตรงนี้ด้วย JS -->
-                    </div>
+                        </div>
                 </div>
 
-                <!-- ส่วนที่ 4: ประเมินความเสี่ยง -->
                 <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
                     <h3 class="font-bold text-gray-800 text-sm mb-3 border-b pb-2"><i class="fa-solid fa-heart-pulse text-red-500 mr-1"></i> ส่วนที่ 4 ประเมินความเสี่ยง</h3>
                     
@@ -573,6 +547,86 @@
                     </div>
                 </div>
 
+                <div id="health-part5-container" class="hidden mt-6 bg-indigo-50 p-4 rounded-xl shadow-sm border border-indigo-100">
+                    <h3 class="font-bold text-indigo-800 text-sm mb-3 border-b border-indigo-200 pb-2"><i class="fa-solid fa-file-medical text-indigo-500 mr-1"></i> ส่วนที่ 5 ข้อมูลการตรวจกับโครงการ</h3>
+                    <div id="part5-list" class="space-y-2">
+                        </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="page-www-dashboard" class="page-section p-4 pt-6 bg-yellow-50 min-h-screen">
+            <div class="flex items-center mb-6">
+                <button onclick="showPage('profile')" class="w-8 h-8 bg-white rounded-full text-gray-600 mr-3 shadow-sm border border-yellow-200"><i class="fa-solid fa-arrow-left"></i></button>
+                <h2 class="text-lg font-bold text-amber-700">Well Well Well!</h2>
+            </div>
+            <div onclick="openWWWForm()" class="bg-white rounded-xl p-5 mb-4 border-2 border-amber-400 flex items-center justify-between cursor-pointer shadow-sm hover:bg-amber-50 transition">
+                <div class="flex items-center gap-4">
+                    <div class="w-14 h-14 bg-amber-100 rounded-full flex items-center justify-center text-3xl text-amber-500 shadow-inner"><i class="fa-solid fa-pen-to-square"></i></div>
+                    <div>
+                        <h3 class="font-bold text-lg text-amber-700">อัปเดตข้อมูลสุขภาพ</h3>
+                        <p class="text-gray-500 text-[10px] mt-0.5">กรอกค่าที่วัดได้จากเครื่อง InBody</p>
+                    </div>
+                </div>
+            </div>
+            <div onclick="openWWWHistory()" class="bg-white rounded-xl p-5 mb-4 border-2 border-yellow-300 flex items-center justify-between cursor-pointer shadow-sm hover:bg-yellow-50 transition">
+                <div class="flex items-center gap-4">
+                    <div class="w-14 h-14 bg-yellow-100 rounded-full flex items-center justify-center text-3xl text-yellow-500 shadow-inner"><i class="fa-solid fa-chart-pie"></i></div>
+                    <div>
+                        <h3 class="font-bold text-lg text-yellow-700">ประวัติและการเปลี่ยนแปลง</h3>
+                        <p class="text-gray-500 text-[10px] mt-0.5">ดูกราฟวัดองค์ประกอบร่างกาย (มี ECW)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="page-www-form" class="page-section p-4 pt-6 bg-white min-h-screen">
+            <div class="flex items-center mb-4">
+                <button onclick="showPage('www-dashboard')" class="w-8 h-8 bg-gray-100 rounded-full text-gray-600 mr-3 shadow-sm"><i class="fa-solid fa-arrow-left"></i></button>
+                <h2 class="text-lg font-bold text-amber-600">บันทึกข้อมูล (InBody)</h2>
+            </div>
+            <div class="space-y-4">
+                <div><label class="text-xs font-bold text-gray-500 mb-1 block">น้ำหนัก (kg)</label><input type="number" step="0.1" id="www-weight" class="form-input bg-yellow-50 font-bold text-lg text-amber-700"></div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div><label class="text-[11px] font-bold text-gray-500 mb-1 block">ไขมันในร่างกาย (%)</label><input type="number" step="0.1" id="www-fat" class="form-input border-amber-200 focus:border-amber-500"></div>
+                    <div><label class="text-[11px] font-bold text-gray-500 mb-1 block">ไขมันช่องท้อง</label><input type="number" step="0.1" id="www-visceral" class="form-input border-amber-200 focus:border-amber-500"></div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div><label class="text-[11px] font-bold text-gray-500 mb-1 block">มวลกล้ามเนื้อ (kg)</label><input type="number" step="0.1" id="www-muscle" class="form-input border-amber-200 focus:border-amber-500"></div>
+                    <div><label class="text-[11px] font-bold text-gray-500 mb-1 block text-amber-600">อัตราส่วน ECW</label><input type="number" step="0.001" id="www-ecw" class="form-input border-amber-400 bg-amber-50 focus:border-amber-600"></div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div><label class="text-[11px] font-bold text-gray-500 mb-1 block">อายุร่างกาย (ปี)</label><input type="number" id="www-bodyage" class="form-input border-amber-200 focus:border-amber-500"></div>
+                    <div><label class="text-[11px] font-bold text-gray-500 mb-1 block">BMR (Kcal)</label><input type="number" id="www-bmr" class="form-input border-amber-200 focus:border-amber-500"></div>
+                </div>
+                <div class="p-3 bg-green-50 border border-green-200 rounded-xl mt-4">
+                    <label class="text-[11px] font-bold text-green-800 mb-1 block"><i class="fa-solid fa-person-running mr-1"></i> เลือกระดับการออกกำลังกาย</label>
+                    <select id="www-activity" class="form-input bg-white text-xs mb-2 outline-none">
+                        <option value="1.2">ไม่ค่อยออกกำลังกาย (x1.2)</option>
+                        <option value="1.375">เบาๆ 1-3 วัน/สัปดาห์ (x1.375)</option>
+                        <option value="1.55">ปานกลาง 3-5 วัน/สัปดาห์ (x1.55)</option>
+                        <option value="1.725">หนัก 6-7 วัน/สัปดาห์ (x1.725)</option>
+                        <option value="1.9">หนักมาก / ใช้แรงงาน (x1.9)</option>
+                    </select>
+                </div>
+                <button onclick="submitWWWRecord(this)" class="w-full bg-amber-500 text-white py-3.5 rounded-xl font-semibold shadow-md hover:bg-amber-600 transition mt-4">บันทึกและอัปเดตสมุดสุขภาพ</button>
+            </div>
+        </div>
+
+        <div id="page-www-history" class="page-section p-4 pt-6 bg-gray-50 min-h-screen">
+            <div class="flex items-center mb-4">
+                <button onclick="showPage('www-dashboard')" class="w-8 h-8 bg-white rounded-full text-gray-600 mr-3 shadow-sm border"><i class="fa-solid fa-arrow-left"></i></button>
+                <h2 class="text-lg font-bold text-amber-700">ประวัติการวัดองค์ประกอบร่างกาย</h2>
+            </div>
+            <div class="bg-white p-3 rounded-xl shadow-sm border border-gray-200 mb-4 flex gap-4">
+                <label class="inline-flex items-center cursor-pointer"><input type="radio" name="wwwChartMode" value="current" onchange="loadWWWCharts()" class="w-4 h-4 text-amber-600"><span class="ml-2 text-xs font-bold text-gray-700">ปัจจุบัน</span></label>
+                <label class="inline-flex items-center cursor-pointer"><input type="radio" name="wwwChartMode" value="all" onchange="loadWWWCharts()" class="w-4 h-4 text-amber-600" checked><span class="ml-2 text-xs font-bold text-gray-700">รวมสะสม</span></label>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-300 overflow-hidden mb-10 relative">
+                <div class="p-2 border-b border-gray-200 flex items-center bg-gray-50"><div class="w-20 text-[10px] font-bold text-gray-600">น้ำหนัก (kg)</div><div class="flex-1 relative h-16"><canvas id="chart-www-w"></canvas></div></div>
+                <div class="p-2 border-b border-gray-200 flex items-center bg-gray-50"><div class="w-20 text-[10px] font-bold text-gray-600">มวลกล้ามเนื้อ<br>โครงร่าง (kg)</div><div class="flex-1 relative h-16"><canvas id="chart-www-m"></canvas></div></div>
+                <div class="p-2 border-b border-gray-200 flex items-center bg-gray-50"><div class="w-20 text-[10px] font-bold text-gray-600">เปอร์เซ็นต์<br>ไขมัน (%)</div><div class="flex-1 relative h-16"><canvas id="chart-www-f"></canvas></div></div>
+                <div class="p-2 flex items-center bg-gray-50"><div class="w-20 text-[10px] font-bold text-gray-600">อัตราส่วน ECW</div><div class="flex-1 relative h-20"><canvas id="chart-www-e"></canvas></div></div>
             </div>
         </div>
 
@@ -584,7 +638,7 @@
         
         let currentUser = null;
         let currentLineUid = "";
-        let globalHealthRecords = []; // ย้ายมาประกาศด้านบนๆ เผื่อใช้ข้ามฟังก์ชัน
+        let globalHealthRecords = []; 
 
         const provinces = [
             "กรุงเทพมหานคร","กระบี่","กาญจนบุรี","กาฬสินธุ์","กำแพงเพชร","ขอนแก่น","จันทบุรี","ฉะเชิงเทรา","ชลบุรี","ชัยนาท","ชัยภูมิ","ชุมพร","เชียงราย","เชียงใหม่","ตรัง","ตราด","ตาก","นครนายก","นครปฐม","นครพนม","นครราชสีมา","นครศรีธรรมราช","นครสวรรค์","นนทบุรี","นราธิวาส","น่าน","บึงกาฬ","บุรีรัมย์","ปทุมธานี","ประจวบคีรีขันธ์","ปราจีนบุรี","ปัตตานี","พระนครศรีอยุธยา","พะเยา","พังงา","พัทลุง","พิจิตร","พิษณุโลก","เพชรบุรี","เพชรบูรณ์","แพร่","ภูเก็ต","มหาสารคาม","มุกดาหาร","แม่ฮ่องสอน","ยโสธร","ยะลา","ร้อยเอ็ด","ระนอง","ระยอง","ราชบุรี","ลพบุรี","ลำปาง","ลำพูน","เลย","ศรีสะเกษ","สกลนคร","สงขลา","สตูล","สมุทรปราการ","สมุทรสงคราม","สมุทรสาคร","สระแก้ว","สระบุรี","สิงห์บุรี","สุโขทัย","สุพรรณบุรี","สุราษฎร์ธานี","สุรินทร์","หนองคาย","หนองบัวลำภู","อ่างทอง","อำนาจเจริญ","อุดรธานี","อุตรดิตถ์","อุทัยธานี","อุบลราชธานี"
@@ -796,7 +850,8 @@
             } else { err.innerText = res.message; err.classList.remove('hidden'); }
         }
 
-        function renderProfile() {
+        const originalRenderProfile = renderProfile;
+        renderProfile = function() {
             if(!currentUser) { showPage('login'); return; }
             
             document.getElementById('prof-memberid').innerText = currentUser.memberId || "GD-00000";
@@ -834,7 +889,7 @@
                 }
             }
             showPage('profile');
-        }
+        };
 
         async function saveAddress(btn) {
             btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> บันทึก...';
@@ -916,26 +971,43 @@
             
             document.getElementById('health-content').classList.add('hidden');
             document.getElementById('health-no-data').classList.add('hidden');
+            document.getElementById('health-part5-container').classList.add('hidden');
             
-            const res = await callAPI("getHealthRecords", { memberId: currentUser.memberId });
+            const [resHealth, resProject] = await Promise.all([
+                callAPI("getHealthRecords", { memberId: currentUser.memberId }),
+                callAPI("getProjectHealthData", { memberId: currentUser.memberId })
+            ]);
             
-            if(!res || res.length === 0) {
+            if(resProject && resProject.length > 0) {
+                document.getElementById('health-part5-container').classList.remove('hidden');
+                let p5Html = resProject.map(p => `
+                    <div class="bg-white p-3 rounded-lg border border-indigo-100">
+                        <p class="text-[9px] text-gray-400"><i class="fa-regular fa-clock mr-1"></i> ${p.date}</p>
+                        <p class="text-xs font-bold text-indigo-800 mt-1">${p.title}</p>
+                        <p class="text-sm font-black text-gray-700">${p.result}</p>
+                        <p class="text-[10px] text-indigo-600 mt-1 bg-indigo-50 p-1.5 rounded">💡 คำแนะนำ: ${p.advice}</p>
+                    </div>
+                `).join('');
+                document.getElementById('part5-list').innerHTML = p5Html;
+            }
+
+            if(!resHealth || resHealth.length === 0) {
                 document.getElementById('health-no-data').classList.remove('hidden');
                 return;
             }
 
-            globalHealthRecords = res;
+            globalHealthRecords = resHealth;
             document.getElementById('health-content').classList.remove('hidden');
 
-            const latest = res[0]; 
+            const latest = resHealth[0]; 
             document.getElementById('hp-name').innerText = currentUser.name + (currentUser.nickname ? ` (${currentUser.nickname})` : "");
             document.getElementById('hp-age').innerText = currentUser.age || "-";
             document.getElementById('hp-gender').innerText = currentUser.gender === 'male' ? 'ชาย' : (currentUser.gender === 'female' ? 'หญิง' : '-');
             document.getElementById('hp-height').innerText = latest.height || "-";
             document.getElementById('hp-disease').innerText = latest.disease || "-";
 
-            renderOmronCards(res, currentUser);
-            renderHealthCharts(res, currentUser);
+            renderOmronCards(resHealth, currentUser);
+            renderHealthCharts(resHealth, currentUser);
 
             document.getElementById('risk-bp').innerText = latest.bp || "-";
             document.getElementById('risk-waist').innerText = latest.waist || "-";
@@ -1354,6 +1426,86 @@
             createMiniChart('chart-muscle', musData, annMus, false);
             createMiniChart('chart-bodyage', bAgeData, annAge, false);
             createMiniChart('chart-bmr', bmrData, annBMR, true); 
+        }
+
+        // ==========================================
+        // 🏃‍♂️ ฟังก์ชันควบคุมโครงการ Well Well Well!
+        // ==========================================
+        
+        function openWWWForm() {
+            document.querySelectorAll('#page-www-form input').forEach(inp => inp.value = '');
+            showPage('www-form');
+        }
+
+        async function submitWWWRecord(btn) {
+            const w = parseFloat(document.getElementById('www-weight').value)||0;
+            const bmr = parseFloat(document.getElementById('www-bmr').value)||0;
+            const act = parseFloat(document.getElementById('www-activity').value)||1.2;
+
+            if(!w) { alert("กรุณาระบุน้ำหนักปัจจุบัน"); return; }
+            
+            btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังบันทึก...';
+            
+            const payload = {
+                memberId: currentUser.memberId,
+                weight: w,
+                fat: document.getElementById('www-fat').value,
+                visceral: document.getElementById('www-visceral').value,
+                muscle: document.getElementById('www-muscle').value,
+                ecw: document.getElementById('www-ecw').value,
+                bodyAge: document.getElementById('www-bodyage').value,
+                bmr: bmr,
+                tdee: Math.round(bmr * act)
+            };
+
+            const res = await callAPI("saveWWWRecord", payload);
+            if(res.success) {
+                alert("บันทึกข้อมูลเรียบร้อย ข้อมูลถูกเชื่อมโยงไปยังสมุดพกสุขภาพแล้ว!");
+                showPage('www-dashboard');
+            } else {
+                alert("เกิดข้อผิดพลาด: " + res.message);
+            }
+            btn.disabled = false; btn.innerText = "บันทึกและอัปเดตสมุดสุขภาพ";
+        }
+
+        let wwwDataArr = [];
+        let wwwChartsObj = {};
+
+        async function openWWWHistory() {
+            showPage('www-history');
+            const res = await callAPI("getWellRecords", { memberId: currentUser.memberId });
+            if(res.success && res.data) {
+                wwwDataArr = res.data;
+                loadWWWCharts();
+            }
+        }
+
+        function loadWWWCharts() {
+            if(wwwDataArr.length === 0) return;
+            const mode = document.querySelector('input[name="wwwChartMode"]:checked').value;
+            const displayData = mode === 'current' ? [wwwDataArr[wwwDataArr.length - 1]] : wwwDataArr;
+
+            const labels = displayData.map(d => d.date);
+            const wData = displayData.map(d => d.weight);
+            const mData = displayData.map(d => d.muscle);
+            const fData = displayData.map(d => d.fat);
+            const eData = displayData.map(d => d.ecw);
+
+            function createWWWChart(canvasId, dataArr, showX) {
+                if (wwwChartsObj[canvasId]) wwwChartsObj[canvasId].destroy();
+                const ctx = document.getElementById(canvasId).getContext('2d');
+                wwwChartsObj[canvasId] = new Chart(ctx, {
+                    type: 'line',
+                    data: { labels: labels, datasets: [{ data: dataArr, borderColor: '#374151', backgroundColor: '#1f2937', borderWidth: 1.5, pointRadius: 3, tension: 0, datalabels: { display: true, align: 'top', font: { size: 9 }, color: '#374151' } }] },
+                    options: { responsive: true, maintainAspectRatio: false, layout: { padding: { top: 15, bottom: showX ? 0 : 5, left: 10, right: 10 } }, plugins: { legend: { display: false } }, scales: { x: { display: showX, grid: { color: '#e5e7eb' }, ticks: { font: { size: 9 }, maxRotation: 0 } }, y: { display: false } } },
+                    plugins: [{ id: 'customDataLabels', afterDatasetsDraw(chart) { const ctx = chart.ctx; chart.data.datasets.forEach((dataset, i) => { chart.getDatasetMeta(i).data.forEach((bar, index) => { ctx.fillStyle = '#374151'; ctx.font = 'bold 9px Sarabun'; ctx.textAlign = 'center'; ctx.fillText(dataset.data[index], bar.x, bar.y - 6); }); }); } }]
+                });
+            }
+
+            createWWWChart('chart-www-w', wData, false);
+            createWWWChart('chart-www-m', mData, false);
+            createWWWChart('chart-www-f', fData, false);
+            createWWWChart('chart-www-e', eData, true);
         }
     </script>
 </body>
