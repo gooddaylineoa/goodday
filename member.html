@@ -143,7 +143,6 @@
                     <input type="text" id="reg-zip" class="form-input" placeholder="รหัสไปรษณีย์ *">
                 </div>
 
-                <!-- กล่อง PDPA -->
                 <div class="mt-6 p-4 bg-gray-50 rounded-xl border border-gray-100 shadow-sm">
                     <p class="font-bold text-gray-700 text-xs mb-2">กรุณาศึกษานโยบายการเก็บข้อมูลส่วนบุคคล (PDPA) โดยละเอียด</p>
                     <div class="mb-4">
@@ -225,7 +224,6 @@
                 </div>
                 <i class="fa-solid fa-circle-plus text-xl opacity-75"></i>
             </div>
-
             <div id="box-active-waste" onclick="openWasteLogbook()" class="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl p-4 mb-4 text-white flex items-center justify-between cursor-pointer shadow-sm hidden">
                 <div class="flex items-center gap-3">
                     <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center text-2xl shadow-inner">
@@ -316,13 +314,11 @@
             <button onclick="confirmWasteMoney(this)" class="w-full bg-emerald-500 text-white py-3.5 rounded-xl font-semibold shadow-md hover:bg-emerald-600 transition text-sm">ยืนยันเข้าร่วมโครงการ</button>
         </div>
 
-        <!-- หน้าฟอร์มกรอกข้อมูลสุขภาพ (Health Form) -->
         <div id="page-health-form" class="page-section p-4 pt-6 bg-gray-50 min-h-screen">
             <div class="flex items-center mb-4">
                 <button onclick="showPage('profile')" class="w-8 h-8 bg-white rounded-full text-gray-600 mr-3 shadow-sm border border-gray-200"><i class="fa-solid fa-arrow-left"></i></button>
                 <h2 class="text-lg font-bold text-blue-800">บันทึกข้อมูลสุขภาพ</h2>
             </div>
-
             <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200 mb-4">
                 <h3 class="font-bold text-gray-800 text-sm mb-3 border-b pb-2"><i class="fa-solid fa-address-card text-blue-500 mr-1"></i> 1. ประวัติส่วนตัว</h3>
                 <div class="space-y-3">
@@ -334,102 +330,52 @@
                         <div>
                             <label class="text-xs font-bold text-gray-500 mb-1 block">เพศ (เพื่อคำนวณ) *</label>
                             <select id="hr-gender" onchange="calculateRealtime()" class="form-input bg-blue-50 font-bold">
-                                <option value="">-- เลือก --</option>
-                                <option value="male">ชาย</option>
-                                <option value="female">หญิง</option>
+                                <option value="">-- เลือก --</option><option value="male">ชาย</option><option value="female">หญิง</option>
                             </select>
                         </div>
                     </div>
                     <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <label class="text-xs font-bold text-gray-500 mb-1 block">ส่วนสูง (ซม.) *</label>
-                            <input type="number" id="hr-height" oninput="calculateRealtime()" class="form-input bg-blue-50 font-bold" placeholder="ซม.">
-                        </div>
-                        <div>
-                            <!-- แก้ไข: รอบเอว ไม่บังคับกรอก -->
-                            <label class="text-xs font-bold text-gray-500 mb-1 block">รอบเอว (ซม.)</label>
-                            <input type="number" id="hr-waist" oninput="calculateRealtime()" class="form-input bg-blue-50 font-bold" placeholder="ซม.">
-                        </div>
+                        <div><label class="text-xs font-bold text-gray-500 mb-1 block">ส่วนสูง (ซม.) *</label><input type="number" id="hr-height" oninput="calculateRealtime()" class="form-input bg-blue-50 font-bold" placeholder="ซม."></div>
+                        <div><label class="text-xs font-bold text-gray-500 mb-1 block">รอบเอว (ซม.)</label><input type="number" id="hr-waist" oninput="calculateRealtime()" class="form-input bg-blue-50 font-bold" placeholder="ซม."></div>
                     </div>
-                    <div>
-                        <label class="text-xs font-bold text-gray-500 mb-1 block">โรคประจำตัว (ถ้ามี)</label>
-                        <input type="text" id="hr-disease" class="form-input" placeholder="ระบุโรคประจำตัว">
-                    </div>
+                    <div><label class="text-xs font-bold text-gray-500 mb-1 block">โรคประจำตัว (ถ้ามี)</label><input type="text" id="hr-disease" class="form-input" placeholder="ระบุโรคประจำตัว"></div>
                     <div class="p-3 bg-gray-50 rounded-lg border border-gray-100">
                         <p class="text-[11px] font-bold text-gray-600 mb-2">ข้อมูลเพื่อประเมินความเสี่ยงหัวใจ (CV Risk)</p>
-                        <label class="flex items-center mb-2 cursor-pointer">
-                            <input type="checkbox" id="hr-diabetes" onchange="calculateRealtime()" class="w-4 h-4 text-blue-600 rounded border-gray-300">
-                            <span class="ml-2 text-xs text-gray-700">ปัจจุบันเป็นโรคเบาหวาน</span>
-                        </label>
-                        <label class="flex items-center cursor-pointer">
-                            <input type="checkbox" id="hr-smoking" onchange="calculateRealtime()" class="w-4 h-4 text-blue-600 rounded border-gray-300">
-                            <span class="ml-2 text-xs text-gray-700">สูบบุหรี่ (หรือเพิ่งเลิกไม่เกิน 1 ปี)</span>
-                        </label>
+                        <label class="flex items-center mb-2 cursor-pointer"><input type="checkbox" id="hr-diabetes" onchange="calculateRealtime()" class="w-4 h-4 text-blue-600 rounded border-gray-300"><span class="ml-2 text-xs text-gray-700">ปัจจุบันเป็นโรคเบาหวาน</span></label>
+                        <label class="flex items-center cursor-pointer"><input type="checkbox" id="hr-smoking" onchange="calculateRealtime()" class="w-4 h-4 text-blue-600 rounded border-gray-300"><span class="ml-2 text-xs text-gray-700">สูบบุหรี่ (หรือเพิ่งเลิกไม่เกิน 1 ปี)</span></label>
                     </div>
                 </div>
             </div>
-
             <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200 mb-4">
                 <h3 class="font-bold text-gray-800 text-sm mb-3 border-b pb-2"><i class="fa-solid fa-calculator text-blue-500 mr-1"></i> 2. ข้อมูลจากเครื่อง Omron</h3>
                 <div class="space-y-4">
                     <div class="grid grid-cols-2 gap-3">
-                        <div>
-                            <label class="text-xs font-bold text-gray-500 mb-1 block">น้ำหนัก (กก.)</label>
-                            <input type="number" step="0.1" id="hr-weight" oninput="calculateRealtime()" class="form-input text-lg font-bold text-blue-700">
-                            <div id="res-weight" class="text-[10px] mt-1 font-medium leading-tight"></div>
-                        </div>
-                        <div>
-                            <label class="text-xs font-bold text-gray-500 mb-1 block">ไขมันร่างกาย (%)</label>
-                            <input type="number" step="0.1" id="hr-fat" oninput="calculateRealtime()" class="form-input">
-                            <!-- เพิ่มส่วนแสดงผลประเมินความเสี่ยงไขมัน -->
-                            <div id="res-fat" class="text-[10px] mt-1 font-medium leading-tight"></div>
-                        </div>
+                        <div><label class="text-xs font-bold text-gray-500 mb-1 block">น้ำหนัก (กก.)</label><input type="number" step="0.1" id="hr-weight" oninput="calculateRealtime()" class="form-input text-lg font-bold text-blue-700"><div id="res-weight" class="text-[10px] mt-1 font-medium leading-tight"></div></div>
+                        <div><label class="text-xs font-bold text-gray-500 mb-1 block">ไขมันร่างกาย (%)</label><input type="number" step="0.1" id="hr-fat" oninput="calculateRealtime()" class="form-input"><div id="res-fat" class="text-[10px] mt-1 font-medium leading-tight"></div></div>
                     </div>
                     <div class="grid grid-cols-2 gap-3">
-                        <div>
-                            <label class="text-xs font-bold text-gray-500 mb-1 block">ไขมันช่องท้อง</label>
-                            <input type="number" id="hr-visceral" oninput="calculateRealtime()" class="form-input">
-                            <div id="res-visceral" class="text-[10px] mt-1 font-medium"></div>
-                        </div>
-                        <div>
-                            <label class="text-xs font-bold text-gray-500 mb-1 block">กล้ามเนื้อโครงร่าง (%)</label>
-                            <input type="number" step="0.1" id="hr-muscle" oninput="calculateRealtime()" class="form-input">
-                            <!-- เพิ่มส่วนแสดงผลประเมินความเสี่ยงกล้ามเนื้อ -->
-                            <div id="res-muscle" class="text-[10px] mt-1 font-medium leading-tight"></div>
-                        </div>
+                        <div><label class="text-xs font-bold text-gray-500 mb-1 block">ไขมันช่องท้อง</label><input type="number" id="hr-visceral" oninput="calculateRealtime()" class="form-input"><div id="res-visceral" class="text-[10px] mt-1 font-medium"></div></div>
+                        <div><label class="text-xs font-bold text-gray-500 mb-1 block">กล้ามเนื้อโครงร่าง (%)</label><input type="number" step="0.1" id="hr-muscle" oninput="calculateRealtime()" class="form-input"><div id="res-muscle" class="text-[10px] mt-1 font-medium leading-tight"></div></div>
                     </div>
                     <div class="grid grid-cols-2 gap-3">
-                        <div>
-                            <label class="text-xs font-bold text-gray-500 mb-1 block">อายุร่างกาย (ปี)</label>
-                            <input type="number" id="hr-bodyage" oninput="calculateRealtime()" class="form-input">
-                            <div id="res-bodyage" class="text-[10px] mt-1 font-medium"></div>
-                        </div>
-                        <div>
-                            <label class="text-xs font-bold text-gray-500 mb-1 block">BMR (Kcal)</label>
-                            <input type="number" id="hr-bmr" oninput="calculateRealtime()" class="form-input text-blue-700 font-bold">
-                            <div id="res-bmr" class="text-[10px] mt-1 font-medium leading-tight"></div>
-                        </div>
+                        <div><label class="text-xs font-bold text-gray-500 mb-1 block">อายุร่างกาย (ปี)</label><input type="number" id="hr-bodyage" oninput="calculateRealtime()" class="form-input"><div id="res-bodyage" class="text-[10px] mt-1 font-medium"></div></div>
+                        <div><label class="text-xs font-bold text-gray-500 mb-1 block">BMR (Kcal)</label><input type="number" id="hr-bmr" oninput="calculateRealtime()" class="form-input text-blue-700 font-bold"><div id="res-bmr" class="text-[10px] mt-1 font-medium leading-tight"></div></div>
                     </div>
-                    <div class="bg-blue-50 p-2 rounded text-[10px] text-blue-800">
-                        <strong>BMI ปัจจุบัน: <span id="res-bmi">-</span></strong> (ค่าปกติควรอยู่ระหว่าง 18.5 - 22.9)
-                    </div>
+                    <div class="bg-blue-50 p-2 rounded text-[10px] text-blue-800"><strong>BMI ปัจจุบัน: <span id="res-bmi">-</span></strong> (ค่าปกติควรอยู่ระหว่าง 18.5 - 22.9)</div>
                 </div>
             </div>
-
             <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200 mb-4">
                 <h3 class="font-bold text-gray-800 text-sm mb-3 border-b pb-2"><i class="fa-solid fa-heart-pulse text-red-500 mr-1"></i> 3. ประเมินความเสี่ยง</h3>
                 <div class="mb-4">
                     <label class="text-xs font-bold text-gray-500 mb-1 block">ความดันโลหิต (ตัวบน / ตัวล่าง)</label>
                     <div class="flex items-center gap-2">
-                        <input type="number" id="hr-sys" placeholder="ตัวบน (SYS)" oninput="calculateRealtime()" class="form-input w-1/2">
-                        <span class="text-gray-400">/</span>
-                        <input type="number" id="hr-dia" placeholder="ตัวล่าง (DIA)" class="form-input w-1/2">
+                        <input type="number" id="hr-sys" placeholder="ตัวบน (SYS)" oninput="calculateRealtime()" class="form-input w-1/2"><span class="text-gray-400">/</span><input type="number" id="hr-dia" placeholder="ตัวล่าง (DIA)" class="form-input w-1/2">
                     </div>
                     <div id="res-cv" class="text-[10px] mt-1 font-bold text-red-600 hidden">ความเสี่ยงโรคหัวใจ 5 ปี (CV Risk): <span id="cv-score"></span>%</div>
                 </div>
                 <div class="p-3 bg-green-50 border border-green-100 rounded-xl">
                     <label class="text-xs font-bold text-green-800 mb-1 block"><i class="fa-solid fa-utensils mr-1"></i> พฤติกรรมการออกกำลังกาย</label>
-                    <select id="hr-activity" onchange="calculateRealtime()" class="form-input bg-white text-xs mb-2">
+                    <select id="hr-activity-form" onchange="calculateRealtime()" class="form-input bg-white text-xs mb-2">
                         <option value="1.2">นั่งทำงานอยู่กับที่ ไม่ค่อยออกกำลังกาย</option>
                         <option value="1.375">ออกกำลังกายเบาๆ (1-3 วัน/สัปดาห์)</option>
                         <option value="1.55">ออกกำลังกายปานกลาง (3-5 วัน/สัปดาห์)</option>
@@ -438,11 +384,10 @@
                     </select>
                     <div class="text-center bg-white py-2 rounded-lg border border-green-200">
                         <p class="text-[10px] text-gray-500">พลังงานที่ร่างกายคุณใช้ต่อวัน (TDEE)</p>
-                        <p class="text-lg font-black text-green-600"><span id="res-tdee">0</span> <span class="text-xs">Kcal</span></p>
+                        <p class="text-lg font-black text-green-600"><span id="display-tdee-form">0</span> <span class="text-xs">Kcal</span></p>
                     </div>
                 </div>
             </div>
-
             <div id="www-optin-box" class="bg-gradient-to-br from-yellow-100 to-amber-100 p-4 rounded-xl shadow-sm border border-amber-200 mb-6 hidden">
                 <div class="flex items-start gap-3">
                     <input type="checkbox" id="join-www" class="w-5 h-5 mt-1 text-amber-600 rounded border-amber-300 focus:ring-amber-500">
@@ -452,26 +397,21 @@
                     </div>
                 </div>
             </div>
-
             <button onclick="submitHealthRecord(this)" class="w-full bg-blue-600 text-white py-3.5 rounded-xl font-semibold shadow-md hover:bg-blue-700 transition text-sm">บันทึกข้อมูลเข้าสู่ระบบ</button>
         </div>
 
-        <!-- หน้าสมุดพกสุขภาพ (Health Records) -->
         <div id="page-health" class="page-section p-4 pt-6 bg-gray-50 min-h-screen pb-24">
             <div class="flex items-center mb-6">
                 <button onclick="showPage('profile')" class="w-8 h-8 bg-white rounded-full text-gray-600 mr-3 shadow-sm border border-gray-200"><i class="fa-solid fa-arrow-left"></i></button>
                 <h2 class="text-lg font-bold text-blue-800">สมุดพกสุขภาพ</h2>
             </div>
-
             <div id="health-no-data" class="hidden text-center py-12 bg-white rounded-xl shadow-sm border border-gray-100 mt-4">
                 <div class="text-4xl text-gray-200 mb-3"><i class="fa-solid fa-notes-medical"></i></div>
                 <p class="text-gray-500 font-bold text-sm mb-1">ยังไม่มีข้อมูลสุขภาพ</p>
                 <p class="text-gray-400 text-xs mb-4">กรุณากรอกข้อมูลเริ่มต้นเพื่อเปิดใช้งาน</p>
                 <button onclick="openHealthForm()" class="bg-blue-500 text-white px-4 py-2 rounded-lg text-xs font-bold shadow-sm">กรอกข้อมูลสุขภาพ</button>
             </div>
-
             <div id="health-content" class="hidden space-y-4">
-                
                 <div class="bg-blue-600 p-4 rounded-xl shadow-sm text-white relative overflow-hidden">
                     <div class="absolute -right-4 -bottom-4 opacity-10 text-7xl"><i class="fa-solid fa-clipboard-user"></i></div>
                     <div class="flex justify-between items-start mb-2 relative z-10">
@@ -488,7 +428,6 @@
                         <p class="font-semibold" id="hp-disease">-</p>
                     </div>
                 </div>
-
                 <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
                     <h3 class="font-bold text-gray-800 text-sm mb-3 border-b pb-2"><i class="fa-solid fa-chart-line text-blue-500 mr-1"></i> 2. ประวัติการวัดองค์ประกอบร่างกาย</h3>
                     <div class="border border-gray-300 rounded-lg overflow-hidden bg-white">
@@ -500,12 +439,10 @@
                         <div class="flex items-center"><div class="w-20 p-2 text-[10px] font-bold text-gray-600 bg-gray-50 text-center flex-shrink-0">BMR<br>(Kcal)</div><div class="flex-1 relative h-20"><canvas id="chart-bmr"></canvas></div></div>
                     </div>
                 </div>
-
                 <div>
                     <h3 class="font-bold text-gray-800 text-sm mb-2 px-1"><i class="fa-solid fa-calculator text-blue-500 mr-1"></i> ส่วนที่ 3 ข้อมูลออมรอน</h3>
                     <div id="omron-carousel" class="flex overflow-x-auto gap-3 pb-4 snap-x snap-mandatory hide-scrollbar"></div>
                 </div>
-
                 <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
                     <h3 class="font-bold text-gray-800 text-sm mb-3 border-b pb-2"><i class="fa-solid fa-heart-pulse text-red-500 mr-1"></i> ส่วนที่ 4 ประเมินความเสี่ยง</h3>
                     <div class="grid grid-cols-2 gap-3 mb-4">
@@ -518,7 +455,7 @@
                     </div>
                     <div class="p-3 bg-green-50 border border-green-200 rounded-xl">
                         <label class="text-xs font-bold text-green-800 mb-2 block"><i class="fa-solid fa-utensils mr-1"></i> คำนวณ TDEE (เพื่อจัดอาหาร)</label>
-                        <select id="tdee-activity" onchange="calculateTDEEOnDisplay()" class="w-full border border-green-300 rounded-lg p-2 text-xs mb-3 bg-white outline-none">
+                        <select id="tdee-activity-disp" onchange="calculateTDEEOnDisplay()" class="w-full border border-green-300 rounded-lg p-2 text-xs mb-3 bg-white outline-none">
                             <option value="1.2">นั่งทำงานอยู่กับที่ ไม่ค่อยออกกำลังกาย</option>
                             <option value="1.375">ออกกำลังกายเบาๆ (1-3 วัน/สัปดาห์)</option>
                             <option value="1.55">ออกกำลังกายปานกลาง (3-5 วัน/สัปดาห์)</option>
@@ -527,21 +464,15 @@
                         </select>
                         <div class="text-center bg-white py-3 rounded-lg shadow-sm">
                             <p class="text-[10px] text-gray-500 font-bold">พลังงานที่ร่างกายคุณใช้ต่อวัน (TDEE)</p>
-                            <p class="text-2xl font-black text-green-600 my-1"><span id="display-tdee">0</span> <span class="text-xs font-medium text-gray-500">Kcal</span></p>
+                            <p class="text-2xl font-black text-green-600 my-1"><span id="display-tdee-disp">0</span> <span class="text-xs font-medium text-gray-500">Kcal</span></p>
                             <p class="text-[9px] text-gray-400">*อิงจากค่า BMR ล่าสุดของคุณ</p>
                         </div>
                     </div>
                 </div>
-
-                <!-- ส่วนที่ 5: สรุปสถานะสุขภาพปัจจุบัน -->
                 <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200 mt-4">
                     <h3 class="font-bold text-gray-800 text-sm mb-3 border-b pb-2"><i class="fa-solid fa-clipboard-list text-blue-500 mr-1"></i> 5. สรุปสถานะความเสี่ยงล่าสุด</h3>
-                    <div id="current-risk-summary" class="space-y-2">
-                        <!-- ค่าความเสี่ยงปัจจุบันจะแสดงตรงนี้จาก JS -->
-                    </div>
+                    <div id="current-risk-summary" class="space-y-2"></div>
                 </div>
-
-                <!-- ส่วนที่ 6: ข้อมูลการตรวจกับโครงการ -->
                 <div id="health-part5-container" class="hidden mt-6 bg-indigo-50 p-4 rounded-xl shadow-sm border border-indigo-100">
                     <h3 class="font-bold text-indigo-800 text-sm mb-3 border-b border-indigo-200 pb-2"><i class="fa-solid fa-file-medical text-indigo-500 mr-1"></i> 6. ข้อมูลการตรวจกับโครงการ</h3>
                     <div id="part5-list" class="space-y-2"></div>
@@ -549,19 +480,16 @@
             </div>
         </div>
 
-        <!-- หน้า Dashboard WWW -->
         <div id="page-www-dashboard" class="page-section p-4 pt-6 bg-yellow-50 min-h-screen">
             <div class="flex items-center mb-6">
                 <button onclick="showPage('profile')" class="w-8 h-8 bg-white rounded-full text-gray-600 mr-3 shadow-sm border border-yellow-200"><i class="fa-solid fa-arrow-left"></i></button>
                 <h2 class="text-lg font-bold text-amber-700">Well Well Well!</h2>
             </div>
             <div class="grid grid-cols-2 gap-3 mb-4">
-                <!-- แก้ไขชื่อ: อัปเดตข้อมูล Omron -->
                 <div onclick="openWWWForm()" class="bg-white rounded-xl p-4 border-2 border-amber-300 cursor-pointer shadow-sm hover:bg-amber-50 text-center">
                     <div class="w-10 h-10 mx-auto bg-amber-100 rounded-full flex items-center justify-center text-xl text-amber-600 mb-2"><i class="fa-solid fa-pen-to-square"></i></div>
                     <h3 class="font-bold text-xs text-amber-800">อัปเดตข้อมูล Omron</h3>
                 </div>
-                <!-- แก้ไขชื่อ: โปรไฟล์ร่างกาย -->
                 <div onclick="openWWWHistory()" class="bg-white rounded-xl p-4 border-2 border-amber-300 cursor-pointer shadow-sm hover:bg-amber-50 text-center">
                     <div class="w-10 h-10 mx-auto bg-amber-100 rounded-full flex items-center justify-center text-xl text-amber-600 mb-2"><i class="fa-solid fa-chart-pie"></i></div>
                     <h3 class="font-bold text-xs text-amber-800">โปรไฟล์ร่างกาย</h3>
@@ -582,7 +510,6 @@
                 </div>
                 <i class="fa-solid fa-chevron-right text-sm opacity-70"></i>
             </div>
-            <!-- แก้ไขชื่อ: Sleep well - Wake me up -->
             <div onclick="openSleepTracker()" class="bg-gradient-to-r from-indigo-400 to-purple-500 rounded-xl p-4 mb-3 text-white flex items-center justify-between cursor-pointer shadow-sm">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center text-xl"><i class="fa-solid fa-moon"></i></div>
@@ -599,18 +526,14 @@
             </div>
         </div>
 
-        <!-- หน้า Good Food, Good Mood -->
         <div id="page-www-food" class="page-section p-4 pt-6 bg-gray-50 min-h-screen">
             <div class="flex items-center mb-6">
                 <button onclick="showPage('www-dashboard')" class="w-8 h-8 bg-white rounded-full text-gray-600 mr-3 shadow-sm border"><i class="fa-solid fa-arrow-left"></i></button>
                 <h2 class="text-lg font-bold text-orange-600">Good Food, Good Mood</h2>
             </div>
-            <div id="food-list" class="space-y-4">
-                <!-- ตะกร้ารอรับข้อมูลร้านอาหารจาก Google Sheets -->
-            </div>
+            <div id="food-list" class="space-y-4"></div>
         </div>
 
-        <!-- หน้า The Long March (ตารางก้าวเดิน) -->
         <div id="page-www-march" class="page-section p-4 pt-6 bg-white min-h-screen">
             <div class="flex items-center mb-6">
                 <button onclick="showPage('www-dashboard')" class="w-8 h-8 bg-gray-100 rounded-full text-gray-600 mr-3 shadow-sm border"><i class="fa-solid fa-arrow-left"></i></button>
@@ -641,7 +564,6 @@
             </div>
         </div>
 
-        <!-- หน้า Sleep Well -->
         <div id="page-www-sleep" class="page-section p-4 pt-6 bg-indigo-50 min-h-screen pb-20">
             <div class="flex items-center mb-4">
                 <button onclick="showPage('www-dashboard')" class="w-8 h-8 bg-white rounded-full text-gray-600 mr-3 shadow-sm border"><i class="fa-solid fa-arrow-left"></i></button>
@@ -670,11 +592,9 @@
             <button onclick="saveSleepLog(this)" class="w-full bg-indigo-600 text-white py-3.5 rounded-xl font-semibold shadow-md hover:bg-indigo-700 transition text-sm">บันทึกข้อมูลการนอน</button>
         </div>
 
-        <!-- หน้าฟอร์มอัปเดตข้อมูลสำหรับ WWW -->
         <div id="page-www-form" class="page-section p-4 pt-6 bg-white min-h-screen">
             <div class="flex items-center mb-4">
                 <button onclick="showPage('www-dashboard')" class="w-8 h-8 bg-gray-100 rounded-full text-gray-600 mr-3 shadow-sm"><i class="fa-solid fa-arrow-left"></i></button>
-                <!-- แก้ไขชื่อ: บันทึกข้อมูล (Omron) -->
                 <h2 class="text-lg font-bold text-amber-600">บันทึกข้อมูล (Omron)</h2>
             </div>
             <div class="space-y-4">
@@ -691,14 +611,10 @@
                     <div><label class="text-[11px] font-bold text-gray-500 mb-1 block">อายุร่างกาย (ปี)</label><input type="number" id="www-bodyage" class="form-input border-amber-200 focus:border-amber-500"></div>
                     <div><label class="text-[11px] font-bold text-gray-500 mb-1 block">BMR (Kcal)</label><input type="number" id="www-bmr" class="form-input border-amber-200 focus:border-amber-500"></div>
                 </div>
-                
-                <!-- เลือกระดับการออกกำลังกาย (TDEE) เอาออกตามที่คุณขอแล้วครับ -->
-
                 <div>
                     <label class="text-xs font-bold text-gray-500 mb-1 block">ยุวทูตสายสุขภาพที่ท่านสังกัด *</label>
                     <input type="text" id="www-ambassador" class="form-input" placeholder="ชื่อ-นามสกุล คนดูแล">
                 </div>
-                
                 <div class="mt-4 p-3 bg-amber-50 rounded-xl border border-amber-200">
                     <label class="flex items-center cursor-pointer">
                         <input type="checkbox" id="www-confirm" class="w-5 h-5 text-amber-600 rounded border-gray-300">
@@ -709,25 +625,21 @@
             </div>
         </div>
 
-        <!-- หน้ากราฟเจาะลึก 4 ชั้น -->
         <div id="page-www-history" class="page-section p-4 pt-6 bg-gray-50 min-h-screen">
             <div class="flex items-center mb-4">
                 <button onclick="showPage('www-dashboard')" class="w-8 h-8 bg-white rounded-full text-gray-600 mr-3 shadow-sm border"><i class="fa-solid fa-arrow-left"></i></button>
                 <h2 class="text-lg font-bold text-amber-700">ประวัติองค์ประกอบร่างกาย</h2>
             </div>
-            
             <div id="www-history-loading" class="text-center py-12">
                 <i class="fa-solid fa-spinner fa-spin text-3xl text-amber-500 mb-3"></i>
                 <p class="text-gray-500 font-bold text-sm">กำลังโหลดกราฟ...</p>
             </div>
-            
             <div id="www-history-no-data" class="hidden text-center py-12 bg-white rounded-xl shadow-sm border border-gray-100 mt-4">
                 <div class="text-4xl text-gray-200 mb-3"><i class="fa-solid fa-chart-pie"></i></div>
                 <p class="text-gray-500 font-bold text-sm mb-1">ยังไม่มีประวัติโภชนาการ</p>
-                <p class="text-gray-400 text-[11px] mb-4 px-4">กรุณาอัปเดตข้อมูล Omron อย่างน้อย 1 ครั้ง เพื่อให้ระบบสร้างกราฟประมวลผลครับ</p>
+                <p class="text-gray-400 text-[11px] mb-4 px-4">กรุณาอัปเดตข้อมูล Omron อย่างน้อย 1 ครั้ง เพื่อให้ระบบสร้างกราฟประมวลผล</p>
                 <button onclick="openWWWForm()" class="bg-amber-500 text-white px-4 py-2 rounded-lg text-xs font-bold shadow-sm">อัปเดตข้อมูล Omron</button>
             </div>
-
             <div id="www-history-content" class="hidden">
                 <div class="bg-white p-3 rounded-xl shadow-sm border border-gray-200 mb-4 flex gap-4 justify-center">
                     <label class="inline-flex items-center cursor-pointer"><input type="radio" name="wwwChartMode" value="current" onchange="loadWWWCharts()" class="w-4 h-4 text-amber-600"><span class="ml-2 text-xs font-bold text-gray-700">ล่าสุด</span></label>
@@ -929,7 +841,7 @@
 
             const pdpa = document.getElementById('reg-pdpa');
             if(pdpa && !pdpa.checked) {
-                err.innerText = "กรุณายืนยันการยอมรับนโยบาย PDPA ก่อนสมัครสมาชิกครับ"; 
+                err.innerText = "กรุณายืนยันการยอมรับนโยบาย PDPA ก่อนสมัครสมาชิก"; 
                 err.classList.remove('hidden'); 
                 return; 
             }
@@ -1042,7 +954,7 @@
             const res = await callAPI("joinWasteMoney", wmAddress);
             if(res.success) {
                 currentUser.wasteMoney = "ใช่"; localStorage.setItem('gooddaySession', JSON.stringify(currentUser));
-                alert("เข้าร่วมโครงการสำเร็จ! พาทีมงานมาชั่งขยะเพื่อสะสมแต้มได้เลยครับ"); renderProfile();
+                alert("เข้าร่วมโครงการสำเร็จ! พาทีมงานมาชั่งขยะเพื่อสะสมแต้มได้เลย"); renderProfile();
             } else {
                 alert("เกิดข้อผิดพลาด: " + res.message); btn.disabled = false; btn.innerText = "ยืนยันเข้าร่วมโครงการ";
             }
@@ -1434,14 +1346,24 @@
                 document.getElementById('res-bodyage').innerHTML = `<span class="${aColor}">${aText}</span>`;
             }
 
-            if(age > 0 && sys > 0 && waist > 0 && h > 0) {
+            // เอา && waist > 0 ออกจากเงื่อนไขหลัก
+            if(age > 0 && sys > 0 && h > 0) {
                 let isDiabetes = document.getElementById('hr-diabetes').checked;
                 let isSmoking = document.getElementById('hr-smoking').checked;
                 let baseScore = (age * 0.1) + (sys > 140 ? 5 : 0) + (isSmoking ? 5 : 0) + (isDiabetes ? 6 : 0);
-                if((waist / h) > 0.5) baseScore += 3;
+                
+                // ค่อยมาเช็คข้างในว่า ถ้าระบุรอบเอวมา และรอบเอวเกินมาตรฐาน ค่อยบวก 3
+                if(waist > 0 && (waist / h) > 0.5) {
+                    baseScore += 3;
+                }
                 
                 document.getElementById('res-cv').classList.remove('hidden');
                 document.getElementById('cv-score').innerText = baseScore.toFixed(1);
+            } else {
+                // ถ้ายังกรอกข้อมูลหลัก (อายุ, ความดัน, ส่วนสูง) ไม่ครบ ให้ซ่อนและล้างค่า
+                const cvEl = document.getElementById('res-cv');
+                if(cvEl) cvEl.classList.add('hidden');
+                document.getElementById('cv-score').innerText = "-";
             }
         }
 
@@ -1452,7 +1374,7 @@
             const weight = document.getElementById('hr-weight').value;
             
             if(!nickname || !gender || !height || !weight) {
-                alert("กรุณากรอก ชื่อเล่น, เพศ, ส่วนสูง และ น้ำหนัก ให้ครบถ้วนครับ");
+                alert("กรุณากรอก ชื่อเล่น, เพศ, ส่วนสูง และ น้ำหนัก ให้ครบถ้วน");
                 return;
             }
 
@@ -1760,7 +1682,7 @@
         async function saveSleepLog(btn) {
             if(!currentUser) return;
             const mood = document.getElementById('sleep-mood').value;
-            if(mood === "0") { alert("กรุณาเลือกอารมณ์การตื่นนอนเช้านี้ครับ"); return; }
+            if(mood === "0") { alert("กรุณาเลือกอารมณ์การตื่นนอนเช้านี้"); return; }
             
             const selectedSymptoms = Array.from(document.querySelectorAll('.sleep-symptom-cb:checked')).map(cb => cb.value);
             
