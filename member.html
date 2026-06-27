@@ -1131,8 +1131,8 @@
         function calculateTDEEOnDisplay() {
             if(globalHealthRecords.length === 0) return;
             let latestBMR = globalHealthRecords[0].bmr || 0;
-            let multiplier = parseFloat(document.getElementById('tdee-activity').value);
-            document.getElementById('display-tdee').innerText = Math.round(latestBMR * multiplier);
+            let multiplier = parseFloat(document.getElementById('tdee-activity-disp').value);
+            document.getElementById('display-tdee-disp').innerText = Math.round(latestBMR * multiplier);
         }
 
         function renderOmronCards(records, user) {
@@ -1762,6 +1762,44 @@
                 }
             });
         }
-    </script>
+        let healthChartsObj = {};
+        function renderHealthCharts(records, user) {
+            const sorted = [...records].reverse(); // เรียงเก่า -> ใหม่
+            const labels = sorted.map(r => r.date);
+        
+            function draw(canvasId, key) {
+                const el = document.getElementById(canvasId);
+                if(!el) return;
+                if(healthChartsObj[canvasId]) healthChartsObj[canvasId].destroy();
+                const data = sorted.map(r => parseFloat(r[key]) || 0);
+                healthChartsObj[canvasId] = new Chart(el.getContext('2d'), {
+                    type: 'line',
+                    data: { labels, datasets: [{ data, borderColor:'#2563eb', backgroundColor:'#2563eb', borderWidth:1.5, pointRadius:3, tension:0 }] },
+                    options: {
+                        responsive:true, maintainAspectRatio:false,
+                        layout:{ padding:{ top:14, left:8, right:8 } },
+                        plugins:{ legend:{ display:false } },
+                        scales:{ x:{ display:false }, y:{ display:false } }
+                    },
+                    plugins: [{
+                        id: 'lbl-'+canvasId,
+                        afterDatasetsDraw(chart){
+                            const ctx = chart.ctx;
+                            chart.getDatasetMeta(0).data.forEach((p,i)=>{
+                                ctx.fillStyle='#374151'; ctx.font='bold 9px Sarabun'; ctx.textAlign='center';
+                                ctx.fillText(data[i], p.x, p.y-6);
+                            });
+                        }
+                    }]
+                });
+            }
+            draw('chart-weight','weight');
+            draw('chart-fat','fat');
+            draw('chart-visceral','visceral');
+            draw('chart-muscle','muscle');
+            draw('chart-bodyage','bodyAge');
+            draw('chart-bmr','bmr');
+        }
+</script>
 </body>
 </html>
