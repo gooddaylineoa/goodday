@@ -485,38 +485,43 @@
             </div>
         </div>
 
-        <div id="page-www-wizard" class="page-section bg-gray-900 min-h-screen text-white pb-24">
+        <!-- ========================================== -->
+        <!-- 🚀 หน้าสมัครเข้าโครงการ WWW (Onboarding Wizard) -->
+        <!-- ========================================== -->
+        <div id="page-www-wizard" class="page-section bg-gray-50 min-h-screen text-gray-800 pb-24">
             
+            <!-- Step 1 -->
             <div id="wiz-step-1" class="p-4 pt-8">
                 <div class="flex items-center mb-6">
-                    <button onclick="showPage('profile')" class="w-8 h-8 bg-gray-800 rounded-full text-gray-400 mr-3"><i class="fa-solid fa-arrow-left"></i></button>
+                    <button onclick="showPage('profile')" class="w-8 h-8 bg-white rounded-full text-gray-600 mr-3 shadow-sm border border-gray-200"><i class="fa-solid fa-arrow-left"></i></button>
                     <div>
-                        <h2 class="text-xl font-bold text-white">ตั้งเป้าหมายสุขภาพ</h2>
-                        <p class="text-xs text-gray-400">เลือกเป้าหมายที่ตรงกับคุณ (เลือกได้มากกว่า 1 ข้อ)</p>
+                        <h2 class="text-xl font-bold text-amber-600">ตั้งเป้าหมายสุขภาพ</h2>
+                        <p class="text-xs text-gray-500">เลือกเป้าหมายที่ตรงกับคุณ (เลือกได้มากกว่า 1 ข้อ)</p>
                     </div>
                 </div>
-                <div id="wizard-goals-container" class="space-y-6"></div>
-                <div class="fixed bottom-0 left-0 right-0 max-w-md mx-auto p-4 bg-gradient-to-t from-gray-900 via-gray-900 to-transparent">
-                    <button onclick="nextWiz(2)" class="w-full bg-amber-500 text-gray-900 py-3.5 rounded-xl font-bold shadow-lg hover:bg-amber-400 transition">สรุปเป้าหมาย</button>
+                <div id="wizard-goals-container" class="space-y-4"></div>
+                <div class="fixed bottom-0 left-0 right-0 max-w-md mx-auto p-4 bg-white border-t border-gray-100">
+                    <button onclick="nextWiz(2)" class="w-full bg-amber-500 text-white py-3.5 rounded-xl font-bold shadow-md hover:bg-amber-600 transition">สรุปเป้าหมาย</button>
                 </div>
             </div>
 
+            <!-- Step 2 -->
             <div id="wiz-step-2" class="p-4 pt-8 hidden">
                 <div class="flex items-center mb-6">
-                    <button onclick="prevWiz(1)" class="w-8 h-8 bg-gray-800 rounded-full text-gray-400 mr-3"><i class="fa-solid fa-arrow-left"></i></button>
-                    <h2 class="text-xl font-bold text-white">สรุปเป้าหมายของคุณ</h2>
+                    <button onclick="prevWiz(1)" class="w-8 h-8 bg-white rounded-full text-gray-600 mr-3 shadow-sm border border-gray-200"><i class="fa-solid fa-arrow-left"></i></button>
+                    <h2 class="text-xl font-bold text-amber-600">สรุปเป้าหมายของคุณ</h2>
                 </div>
-                <div class="bg-gray-800 rounded-2xl p-4 mb-6 border border-gray-700">
-                    <h3 class="text-sm font-bold text-amber-400 mb-3"><i class="fa-solid fa-bullseye mr-1"></i> หมวดหมู่และเป้าหมายที่เลือก</h3>
+                <div class="bg-white rounded-2xl p-4 mb-6 border border-gray-200 shadow-sm">
+                    <h3 class="text-sm font-bold text-amber-600 mb-3"><i class="fa-solid fa-bullseye mr-1"></i> หมวดหมู่และเป้าหมายที่เลือก</h3>
                     <div id="wizard-summary-content" class="space-y-3"></div>
                 </div>
-                <div class="bg-gray-800 rounded-2xl p-4 mb-10 border border-gray-700">
-                    <label class="text-sm font-bold text-amber-400 mb-2 block"><i class="fa-solid fa-pen mr-1"></i> เป้าหมายสุขภาวะที่ดีประจำเดือน</label>
-                    <p class="text-[10px] text-gray-400 mb-2">เขียนคำมั่นสัญญา หรือเป้าหมายที่คุณอยากทำให้สำเร็จในเดือนนี้</p>
-                    <textarea id="wiz-monthly-goal" rows="3" class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-sm text-white focus:border-amber-500 outline-none" placeholder="เช่น เดือนนี้ฉันจะนอนให้ครบ 8 ชม. ทุกวัน..."></textarea>
+                <div class="bg-white rounded-2xl p-4 mb-10 border border-gray-200 shadow-sm">
+                    <label class="text-sm font-bold text-amber-600 mb-2 block"><i class="fa-solid fa-pen mr-1"></i> เป้าหมายสุขภาวะที่ดีประจำเดือน</label>
+                    <p class="text-[10px] text-gray-500 mb-2">เขียนเป้าหมายที่คุณอยากทำให้สำเร็จในเดือนนี้</p>
+                    <textarea id="wiz-monthly-goal" rows="3" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm text-gray-800 focus:border-amber-500 outline-none" placeholder="เช่น เดือนนี้ฉันจะนอนให้ครบ 8 ชม. ทุกวัน..."></textarea>
                 </div>
-                <div class="fixed bottom-0 left-0 right-0 max-w-md mx-auto p-4 bg-gray-900">
-                    <button onclick="nextWiz(3)" class="w-full bg-amber-500 text-gray-900 py-3.5 rounded-xl font-bold shadow-lg hover:bg-amber-400 transition">ไปขั้นตอนต่อไป</button>
+                <div class="fixed bottom-0 left-0 right-0 max-w-md mx-auto p-4 bg-white border-t border-gray-100">
+                    <button onclick="nextWiz(3)" class="w-full bg-amber-500 text-white py-3.5 rounded-xl font-bold shadow-md hover:bg-amber-600 transition">ไปขั้นตอนต่อไป</button>
                 </div>
             </div>
 
@@ -540,7 +545,7 @@
                         <div><label class="text-[11px] font-bold text-gray-500 mb-1 block">อายุร่างกาย (ปี)</label><input type="number" id="wiz-bodyage" class="form-input"></div>
                         <div><label class="text-[11px] font-bold text-gray-500 mb-1 block">BMR (Kcal)</label><input type="number" id="wiz-bmr" class="form-input"></div>
                     </div>
-                    <div><label class="text-xs font-bold text-gray-500 mb-1 block">ยุวทูตสายสุขภาพที่ท่านสังกัด *</label><input type="text" id="wiz-ambassador" class="form-input" placeholder="ชื่อ-นามสกุล คนดูแล"></div>
+                    <div><label class="text-xs font-bold text-gray-500 mb-1 block">ยุวทูตสายสุขภาพที่ท่านสังกัด *</label><input type="text" id="wiz-ambassador" class="form-input" placeholder="ชื่อ-นามสกุล ผู้ดูแล"></div>
                 </div>
                 <div class="fixed bottom-0 left-0 right-0 max-w-md mx-auto p-4 bg-white border-t border-gray-100">
                     <button onclick="nextWiz(4)" class="w-full bg-amber-500 text-white py-3.5 rounded-xl font-bold shadow-lg hover:bg-amber-600 transition">บันทึกข้อมูลร่างกาย</button>
@@ -892,7 +897,7 @@
 
             const pdpa = document.getElementById('reg-pdpa');
             if(pdpa && !pdpa.checked) {
-                err.innerText = "กรุณายืนยันการยอมรับนโยบาย PDPA ก่อนสมัครสมาชิกครับ"; 
+                err.innerText = "กรุณายืนยันการยอมรับนโยบาย PDPA ก่อนสมัครสมาชิก"; 
                 err.classList.remove('hidden'); 
                 return; 
             }
@@ -1010,7 +1015,7 @@
             const res = await callAPI("joinWasteMoney", wmAddress);
             if(res.success) {
                 currentUser.wasteMoney = "ใช่"; localStorage.setItem('gooddaySession', JSON.stringify(currentUser));
-                alert("เข้าร่วมโครงการสำเร็จ! พาทีมงานมาชั่งขยะเพื่อสะสมแต้มได้เลยครับ"); renderProfile();
+                alert("เข้าร่วมโครงการสำเร็จ! พาทีมงานมาชั่งขยะเพื่อสะสมแต้มได้เลย"); renderProfile();
             } else {
                 alert("เกิดข้อผิดพลาด: " + res.message); btn.disabled = false; btn.innerText = "ยืนยันเข้าร่วมโครงการ";
             }
@@ -1356,13 +1361,13 @@
             
             const container = document.getElementById('wizard-goals-container');
             container.innerHTML = wwwGoalsMaster.map(cat => `
-                <div class="mb-4">
-                    <h3 class="text-sm font-bold text-white mb-3"><i class="fa-solid ${cat.icon} ${cat.color} mr-1"></i> ${cat.title}</h3>
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                    <h3 class="text-sm font-bold text-gray-800 mb-3"><i class="fa-solid ${cat.icon} ${cat.color} mr-1"></i> ${cat.title}</h3>
                     <div class="flex flex-wrap gap-2">
                         ${cat.tags.map(tag => `
                             <label class="cursor-pointer">
                                 <input type="checkbox" value="${cat.title}|${tag}" class="peer hidden wiz-goal-cb">
-                                <div class="px-4 py-2 rounded-xl bg-gray-800 text-gray-400 text-[11px] font-medium transition-all peer-checked:bg-white peer-checked:text-gray-900 peer-checked:font-bold select-none border border-gray-700 peer-checked:border-white shadow-sm">${tag}</div>
+                                <div class="px-4 py-2 rounded-xl bg-gray-50 text-gray-600 text-[11px] font-medium transition-all peer-checked:bg-amber-500 peer-checked:text-white peer-checked:font-bold select-none border border-gray-200 peer-checked:border-amber-500 shadow-sm">${tag}</div>
                             </label>`).join('')}
                     </div>
                 </div>
@@ -1375,13 +1380,13 @@
                 const checkedBoxes = document.querySelectorAll('.wiz-goal-cb:checked');
                 if (checkedBoxes.length === 0) { alert("กรุณาเลือกเป้าหมายอย่างน้อย 1 ข้อครับ"); return; }
                 let summaryObj = {}; checkedBoxes.forEach(cb => { let parts = cb.value.split('|'); let cat = parts[0]; let tag = parts[1]; if(!summaryObj[cat]) summaryObj[cat] = []; summaryObj[cat].push(tag); });
-                let sumHtml = ''; for (const [category, tags] of Object.entries(summaryObj)) { sumHtml += `<div class="mb-3 pb-3 border-b border-gray-700 last:border-0 last:pb-0"><h4 class="text-xs font-bold text-white mb-1">${category}</h4><ul class="list-disc pl-4 text-[11px] text-gray-300">${tags.map(t => `<li>${t}</li>`).join('')}</ul></div>`; }
+                let sumHtml = ''; for (const [category, tags] of Object.entries(summaryObj)) { sumHtml += `<div class="mb-3 pb-3 border-b border-gray-100 last:border-0 last:pb-0"><h4 class="text-xs font-bold text-gray-800 mb-1">${category}</h4><ul class="list-disc pl-4 text-[11px] text-gray-500">${tags.map(t => `<li>${t}</li>`).join('')}</ul></div>`; }
                 document.getElementById('wizard-summary-content').innerHTML = sumHtml;
             }
             if (stepNum === 3) { const msg = document.getElementById('wiz-monthly-goal').value.trim(); if(!msg) { alert("กรุณาเขียนเป้าหมายประจำเดือนของคุณสักนิดนะครับ"); return; } }
             if (stepNum === 4) {
                 const w = document.getElementById('wiz-weight').value; const amb = document.getElementById('wiz-ambassador').value.trim();
-                if (!w || !amb) { alert("กรุณากรอกน้ำหนัก และ ยุวทูตสายสุขภาพที่ดูแลให้ครบถ้วนครับ"); return; }
+                if (!w || !amb) { alert("กรุณากรอกน้ำหนัก และ ยุวทูตสายสุขภาพที่ดูแลให้ครบถ้วน"); return; }
                 if(currentUser && currentUser.email && currentUser.email !== "-") { document.getElementById('wiz-email').value = currentUser.email; }
             }
             document.querySelectorAll('[id^="wiz-step-"]').forEach(el => el.classList.add('hidden')); document.getElementById('wiz-step-' + stepNum).classList.remove('hidden'); window.scrollTo(0, 0);
@@ -1400,7 +1405,7 @@
             const payload = { memberId: currentUser.memberId, lineUid: currentLineUid, email: emailInput, goals: selectedGoals, monthlyGoalText: monthlyGoal, ambassador: amb, weight: w, fat: fat, visceral: vis, muscle: mus, ecw: ecw, bodyAge: bAge, bmr: bmr };
             const res = await callAPI("registerWWWProject", payload);
             if(res.success) {
-                alert("ยินดีต้อนรับเข้าสู่โครงการ Well Well Well! เช็คอีเมลเพื่อรับลิงก์ Zoom ได้เลยครับ");
+                alert("ยินดีต้อนรับเข้าสู่โครงการ Well Well Well!");
                 currentUser.wellProject = "ใช่"; currentUser.email = emailInput; localStorage.setItem('gooddaySession', JSON.stringify(currentUser)); renderProfile(); showPage('www-dashboard');
             } else { alert("เกิดข้อผิดพลาด: " + res.message); btn.disabled = false; btn.innerText = "Check-in & เข้าสู่ระบบ WWW"; }
         }
@@ -1507,7 +1512,7 @@
         }
 
         async function saveSleepLog(btn) {
-            if(!currentUser) return; const mood = document.getElementById('sleep-mood').value; if(mood === "0") { alert("กรุณาเลือกอารมณ์การตื่นนอนเช้านี้ครับ"); return; }
+            if(!currentUser) return; const mood = document.getElementById('sleep-mood').value; if(mood === "0") { alert("กรุณาเลือกอารมณ์การตื่นนอนเช้านี้"); return; }
             const selectedSymptoms = Array.from(document.querySelectorAll('.sleep-symptom-cb:checked')).map(cb => cb.value);
             btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> บันทึก...';
             const res = await callAPI("saveSleepRecord", { memberId: currentUser.memberId, mood: mood, symptoms: selectedSymptoms.join(', ') });
