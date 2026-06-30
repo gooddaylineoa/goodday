@@ -977,16 +977,22 @@
             }
 
             // 🌟 เช็คสถานะเข้าร่วมโครงการ Well Well Well!
-            if(currentUser.wellProject === "ใช่") {
+            // 🌟 เช็คสถานะโครงการ Well Well Well! (โชว์/ซ่อนตามสเตป)
+            if (currentUser.wellProject === "ใช่") {
+                // สเตป 3: สมัครจบแล้ว -> โชว์กล่อง Dashboard (ซ่อนอันอื่น)
                 document.getElementById('box-active-www').classList.remove('hidden');
-                if(document.getElementById('box-join-www')) {
-                    document.getElementById('box-join-www').classList.add('hidden'); 
-                }
-            } else {
+                if(document.getElementById('box-join-www')) document.getElementById('box-join-www').classList.add('hidden');
+                if(document.getElementById('www-optin-box')) document.getElementById('www-optin-box').classList.add('hidden');
+            } else if (currentUser.wellProject === "รอตั้งเป้าหมาย") {
+                // สเตป 2: ติ๊กเข้าโครงการจากสมุดสีฟ้าแล้ว แต่ยังไม่ตั้งเป้าหมาย -> โชว์กล่องสีเหลืองให้กดเข้า Wizard
                 document.getElementById('box-active-www').classList.add('hidden');
-                if(document.getElementById('box-join-www')) {
-                    document.getElementById('box-join-www').classList.remove('hidden'); 
-                }
+                if(document.getElementById('box-join-www')) document.getElementById('box-join-www').classList.remove('hidden');
+                if(document.getElementById('www-optin-box')) document.getElementById('www-optin-box').classList.add('hidden');
+            } else {
+                // สเตป 1: เข้ามาครั้งแรกสุด -> ซ่อนกล่องสีเหลืองทั้งหมด โชว์แค่ช่องติ๊กถูกในสมุดสีฟ้า
+                document.getElementById('box-active-www').classList.add('hidden');
+                if(document.getElementById('box-join-www')) document.getElementById('box-join-www').classList.add('hidden');
+                if(document.getElementById('www-optin-box')) document.getElementById('www-optin-box').classList.remove('hidden');
             }
 
             const a = currentUser.address;
@@ -1284,9 +1290,10 @@
             const nickname = document.getElementById('hr-nickname').value.trim(); const gender = document.getElementById('hr-gender').value; const height = document.getElementById('hr-height').value; const weight = document.getElementById('hr-weight').value;
             if(!nickname || !gender || !height || !weight) { alert("กรุณากรอก ชื่อเล่น, เพศ, ส่วนสูง และ น้ำหนัก ให้ครบถ้วน"); return; }
 
+            const wantToJoinWWW = document.getElementById('join-www').checked;
+
             btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> บันทึกข้อมูล...';
             
-            // 🌟 แก้ตรงบรรทัดสุดท้าย joinWWW ให้เช็คว่าเขาเป็นสมาชิกโปรเจกต์ WWW หรือยัง (ถ้าเป็นแล้ว ข้อมูลจะวิ่งไปเข้ากราฟ WWW ด้วย)
             const payload = { 
                 memberId: currentUser.memberId, phone: currentUser.phone, nickname: nickname, gender: gender, height: height, 
                 waist: document.getElementById('hr-waist').value, disease: document.getElementById('hr-disease').value, 
@@ -1295,13 +1302,25 @@
                 muscle: document.getElementById('hr-muscle').value, bodyAge: document.getElementById('hr-bodyage').value, 
                 bmr: document.getElementById('hr-bmr').value, sys: document.getElementById('hr-sys').value, dia: document.getElementById('hr-dia').value, 
                 tdee: document.getElementById('display-tdee-form').innerText, cvRisk: document.getElementById('cv-score').innerText, 
-                joinWWW: (currentUser && currentUser.wellProject === "ใช่") 
+                joinWWW: wantToJoinWWW || (currentUser.wellProject === "ใช่")
             };
-            
+
             const res = await callAPI("saveHealthAndWellRecord", payload);
             if(res.success) {
-                alert("บันทึกข้อมูลสุขภาพสำเร็จ!"); currentUser.gender = payload.gender; currentUser.nickname = payload.nickname;
-                localStorage.setItem('gooddaySession', JSON.stringify(currentUser)); renderProfile(); showPage('profile');
+                currentUser.gender = payload.gender; 
+                currentUser.nickname = payload.nickname;
+                
+                // ตรวจสอบว่าเขาติ๊กเข้าร่วมไหม ถ้ายอมติ๊ก จะเปลี่ยนสเตปให้กล่องเหลืองเด้ง!
+                if (wantToJoinWWW && currentUser.wellProject !== "ใช่") {
+                    currentUser.wellProject = "รอตั้งเป้าหมาย";
+                    alert("บันทึกข้อมูลสำเร็จ! คุณได้ปลดล็อกโครงการ Well Well Well! แล้ว");
+                } else {
+                    alert("บันทึกข้อมูลสุขภาพสำเร็จ!");
+                }
+
+                localStorage.setItem('gooddaySession', JSON.stringify(currentUser)); 
+                renderProfile(); 
+                showPage('profile');
             } else { alert("เกิดข้อผิดพลาด: " + res.message); }
             btn.disabled = false; btn.innerText = "บันทึกข้อมูลเข้าสู่ระบบ";
         }
