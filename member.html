@@ -48,6 +48,7 @@
             </div>
         </div>
 
+        <!-- หน้าเข้าสู่ระบบ -->
         <div id="page-login" class="page-section p-4 pt-10">
             <div class="text-center mb-8">
                 <div class="w-16 h-16 bg-pink-50 text-pink-500 rounded-full flex items-center justify-center text-3xl mx-auto mb-4"><i class="fa-solid fa-user-lock"></i></div>
@@ -72,6 +73,7 @@
             </div>
         </div>
 
+        <!-- หน้าสมัครสมาชิก 1 -->
         <div id="page-reg-1" class="page-section p-4 pt-6">
             <div class="flex items-center mb-6">
                 <button onclick="showPage('login')" class="w-8 h-8 bg-gray-100 rounded-full text-gray-600 mr-3"><i class="fa-solid fa-arrow-left"></i></button>
@@ -113,6 +115,7 @@
             </div>
         </div>
 
+        <!-- หน้าสมัครสมาชิก 2 -->
         <div id="page-reg-2" class="page-section p-4 pt-6">
             <div class="flex items-center mb-6">
                 <button onclick="showPage('reg-1')" class="w-8 h-8 bg-gray-100 rounded-full text-gray-600 mr-3"><i class="fa-solid fa-arrow-left"></i></button>
@@ -162,6 +165,7 @@
             </div>
         </div>
 
+        <!-- หน้าโปรไฟล์หลัก -->
         <div id="page-profile" class="page-section p-4 pt-6">
             <div class="bg-gradient-to-r from-pink-500 to-rose-500 rounded-xl p-5 text-white shadow-sm mb-6 relative overflow-hidden">
                 <div class="absolute right-[-10px] top-[-10px] opacity-20 text-8xl"><i class="fa-solid fa-address-card"></i></div>
@@ -199,6 +203,7 @@
                 <i class="fa-solid fa-clock-rotate-left text-lg opacity-50"></i>
             </div>
 
+            <!-- กล่อง WWW จะโชว์ Dashboard ถ้าสมัครแล้ว, โชว์ Wizard ถ้าตั้งเป้าหมาย, และซ่อนถ้ายังไม่กดติ๊กถูกจากสมุดสีฟ้า -->
             <div id="box-active-www" onclick="showPage('www-dashboard')" class="bg-gradient-to-br from-yellow-400 to-amber-500 rounded-xl p-4 mb-4 text-white flex items-center justify-between cursor-pointer shadow-sm hidden">
                 <div class="flex items-center gap-3">
                     <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center text-2xl shadow-inner">
@@ -218,8 +223,8 @@
                         <i class="fa-solid fa-ranking-star text-yellow-100"></i>
                     </div>
                     <div>
-                        <h3 class="font-bold text-base leading-tight">เข้าร่วมโครงการ Well Well Well!</h3>
-                        <p class="text-yellow-100 text-[10px] mt-0.5">ตั้งเป้าหมายสุขภาพ และรับสิทธิประโยชน์</p>
+                        <h3 class="font-bold text-base leading-tight">ตั้งเป้าหมาย Well Well Well!</h3>
+                        <p class="text-yellow-100 text-[10px] mt-0.5">คลิกเพื่อระบุเป้าหมาย และเข้าใช้งานโปรเจกต์</p>
                     </div>
                 </div>
                 <i class="fa-solid fa-chevron-right text-lg opacity-50"></i>
@@ -260,6 +265,7 @@
             <button onclick="doLogout()" class="w-full text-gray-400 font-semibold py-3 text-xs hover:text-red-500 transition"><i class="fa-solid fa-power-off mr-1"></i> ออกจากระบบ</button>
         </div>
 
+        <!-- หน้าแก้ไขที่อยู่ -->
         <div id="page-edit-address" class="page-section p-4 pt-6">
             <div class="flex items-center mb-6">
                 <button onclick="showPage('profile')" class="w-8 h-8 bg-white rounded-full text-gray-600 mr-3"><i class="fa-solid fa-arrow-left"></i></button>
@@ -274,6 +280,7 @@
             </div>
         </div>
 
+        <!-- หน้า Waste For Wealth -->
         <div id="page-waste-logbook" class="page-section p-4 pt-6 bg-gray-50 min-h-screen">
             <div class="flex items-center mb-4">
                 <button onclick="showPage('profile')" class="w-8 h-8 bg-white rounded-full text-gray-600 mr-3 shadow-sm border border-gray-200"><i class="fa-solid fa-arrow-left"></i></button>
@@ -328,6 +335,7 @@
             <button onclick="confirmWasteMoney(this)" class="w-full bg-emerald-500 text-white py-3.5 rounded-xl font-semibold shadow-md hover:bg-emerald-600 transition text-sm">ยืนยันเข้าร่วมโครงการ</button>
         </div>
 
+        <!-- หน้าฟอร์มกรอกข้อมูลสุขภาพ (สมุดสีฟ้า) -->
         <div id="page-health-form" class="page-section p-4 pt-6 bg-gray-50 min-h-screen">
             <div class="flex items-center mb-4">
                 <button onclick="showPage('profile')" class="w-8 h-8 bg-white rounded-full text-gray-600 mr-3 shadow-sm border border-gray-200"><i class="fa-solid fa-arrow-left"></i></button>
@@ -402,6 +410,17 @@
                     </div>
                 </div>
             </div>
+            
+            <div id="www-optin-box" class="bg-gradient-to-br from-yellow-100 to-amber-100 p-4 rounded-xl shadow-sm border border-amber-200 mb-6 hidden">
+                <div class="flex items-start gap-3">
+                    <input type="checkbox" id="join-www" class="w-5 h-5 mt-1 text-amber-600 rounded border-amber-300 focus:ring-amber-500">
+                    <div>
+                        <h4 class="font-bold text-amber-800 text-sm">เข้าร่วมโครงการ Well Well Well!</h4>
+                        <p class="text-[11px] text-amber-700 leading-tight mt-0.5">นำข้อมูลของคุณไปสร้างกราฟติดตามผลโภชนาการ และปลดล็อคฟีเจอร์พิเศษ</p>
+                    </div>
+                </div>
+            </div>
+
             <button onclick="submitHealthRecord(this)" class="w-full bg-blue-600 text-white py-3.5 rounded-xl font-semibold shadow-md hover:bg-blue-700 transition text-sm">บันทึกข้อมูลเข้าสู่ระบบ</button>
         </div>
 
@@ -485,11 +504,8 @@
             </div>
         </div>
 
-        <!-- ========================================== -->
         <!-- 🚀 หน้าสมัครเข้าโครงการ WWW (Onboarding Wizard) -->
-        <!-- ========================================== -->
         <div id="page-www-wizard" class="page-section bg-gray-50 min-h-screen text-gray-800 pb-24">
-            
             <div id="wiz-step-1" class="p-4 pt-8">
                 <div class="flex items-center mb-6">
                     <button onclick="showPage('profile')" class="w-8 h-8 bg-white rounded-full text-gray-600 mr-3 shadow-sm border border-gray-200"><i class="fa-solid fa-arrow-left"></i></button>
@@ -522,25 +538,6 @@
                     <button onclick="nextWiz(3)" class="w-full bg-amber-500 text-white py-3.5 rounded-xl font-bold shadow-md hover:bg-amber-600 transition">ไปขั้นตอนต่อไป</button>
                 </div>
             </div>
-            <!-- Step 2 -->
-            <div id="wiz-step-2" class="p-4 pt-8 hidden">
-                <div class="flex items-center mb-6">
-                    <button onclick="prevWiz(1)" class="w-8 h-8 bg-white rounded-full text-gray-600 mr-3 shadow-sm border border-gray-200"><i class="fa-solid fa-arrow-left"></i></button>
-                    <h2 class="text-xl font-bold text-amber-600">สรุปเป้าหมายของคุณ</h2>
-                </div>
-                <div class="bg-white rounded-2xl p-4 mb-6 border border-gray-200 shadow-sm">
-                    <h3 class="text-sm font-bold text-amber-600 mb-3"><i class="fa-solid fa-bullseye mr-1"></i> หมวดหมู่และเป้าหมายที่เลือก</h3>
-                    <div id="wizard-summary-content" class="space-y-3"></div>
-                </div>
-                <div class="bg-white rounded-2xl p-4 mb-10 border border-gray-200 shadow-sm">
-                    <label class="text-sm font-bold text-amber-600 mb-2 block"><i class="fa-solid fa-pen mr-1"></i> เป้าหมายสุขภาวะที่ดีประจำเดือน</label>
-                    <p class="text-[10px] text-gray-500 mb-2">เขียนเป้าหมายที่คุณอยากทำให้สำเร็จในเดือนนี้</p>
-                    <textarea id="wiz-monthly-goal" rows="3" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm text-gray-800 focus:border-amber-500 outline-none" placeholder="เช่น เดือนนี้ฉันจะนอนให้ครบ 8 ชม. ทุกวัน..."></textarea>
-                </div>
-                <div class="fixed bottom-0 left-0 right-0 max-w-md mx-auto p-4 bg-white border-t border-gray-100">
-                    <button onclick="nextWiz(3)" class="w-full bg-amber-500 text-white py-3.5 rounded-xl font-bold shadow-md hover:bg-amber-600 transition">ไปขั้นตอนต่อไป</button>
-                </div>
-            </div>
 
             <div id="wiz-step-3" class="p-4 pt-8 hidden bg-white min-h-screen text-gray-800">
                 <div class="flex items-center mb-6">
@@ -562,7 +559,7 @@
                         <div><label class="text-[11px] font-bold text-gray-500 mb-1 block">อายุร่างกาย (ปี)</label><input type="number" id="wiz-bodyage" class="form-input"></div>
                         <div><label class="text-[11px] font-bold text-gray-500 mb-1 block">BMR (Kcal)</label><input type="number" id="wiz-bmr" class="form-input"></div>
                     </div>
-                    <div><label class="text-xs font-bold text-gray-500 mb-1 block">ยุวทูตสายสุขภาพที่ท่านสังกัด *</label><input type="text" id="wiz-ambassador" class="form-input" placeholder="ชื่อ-นามสกุล ผู้ดูแล"></div>
+                    <div><label class="text-xs font-bold text-gray-500 mb-1 block">ยุวทูตสายสุขภาพที่ท่านสังกัด *</label><input type="text" id="wiz-ambassador" class="form-input" placeholder="ชื่อ-นามสกุล คนดูแล"></div>
                 </div>
                 <div class="fixed bottom-0 left-0 right-0 max-w-md mx-auto p-4 bg-white border-t border-gray-100">
                     <button onclick="nextWiz(4)" class="w-full bg-amber-500 text-white py-3.5 rounded-xl font-bold shadow-lg hover:bg-amber-600 transition">บันทึกข้อมูลร่างกาย</button>
@@ -725,11 +722,70 @@
             <button onclick="saveSleepLog(this)" class="w-full bg-indigo-600 text-white py-3.5 rounded-xl font-semibold shadow-md hover:bg-indigo-700 transition text-sm">บันทึกข้อมูลการนอน</button>
         </div>
 
+        <div id="page-www-form" class="page-section p-4 pt-6 bg-white min-h-screen">
+            <div class="flex items-center mb-4">
+                <button onclick="showPage('www-dashboard')" class="w-8 h-8 bg-gray-100 rounded-full text-gray-600 mr-3 shadow-sm"><i class="fa-solid fa-arrow-left"></i></button>
+                <h2 class="text-lg font-bold text-amber-600">บันทึกข้อมูล (Omron)</h2>
+            </div>
+            <div class="space-y-4">
+                <div><label class="text-xs font-bold text-gray-500 mb-1 block">น้ำหนัก (kg)</label><input type="number" step="0.1" id="www-weight" class="form-input bg-yellow-50 font-bold text-lg text-amber-700"></div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div><label class="text-[11px] font-bold text-gray-500 mb-1 block">ไขมันในร่างกาย (%)</label><input type="number" step="0.1" id="www-fat" class="form-input border-amber-200 focus:border-amber-500"></div>
+                    <div><label class="text-[11px] font-bold text-gray-500 mb-1 block">ไขมันช่องท้อง</label><input type="number" step="0.1" id="www-visceral" class="form-input border-amber-200 focus:border-amber-500"></div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div><label class="text-[11px] font-bold text-gray-500 mb-1 block">มวลกล้ามเนื้อ (kg)</label><input type="number" step="0.1" id="www-muscle" class="form-input border-amber-200 focus:border-amber-500"></div>
+                    <div><label class="text-[11px] font-bold text-gray-500 mb-1 block text-amber-600">อัตราส่วน ECW</label><input type="number" step="0.001" id="www-ecw" class="form-input border-amber-400 bg-amber-50 focus:border-amber-600"></div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div><label class="text-[11px] font-bold text-gray-500 mb-1 block">อายุร่างกาย (ปี)</label><input type="number" id="www-bodyage" class="form-input border-amber-200 focus:border-amber-500"></div>
+                    <div><label class="text-[11px] font-bold text-gray-500 mb-1 block">BMR (Kcal)</label><input type="number" id="www-bmr" class="form-input border-amber-200 focus:border-amber-500"></div>
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-gray-500 mb-1 block">ยุวทูตสายสุขภาพที่ท่านสังกัด *</label>
+                    <input type="text" id="www-ambassador" class="form-input" placeholder="ชื่อ-นามสกุล คนดูแล">
+                </div>
+                <div class="mt-4 p-3 bg-amber-50 rounded-xl border border-amber-200">
+                    <label class="flex items-center cursor-pointer">
+                        <input type="checkbox" id="www-confirm" class="w-5 h-5 text-amber-600 rounded border-gray-300">
+                        <span class="ml-2 text-xs font-bold text-amber-800">ข้าพเจ้าตรวจสอบข้อมูลถูกต้องครบถ้วนแล้ว เพื่อใช้แสดงผลในโครงการ Well Well Well!</span>
+                    </label>
+                </div>
+                <button onclick="submitWWWRecord(this)" class="w-full bg-amber-500 text-white py-3.5 rounded-xl font-semibold shadow-md hover:bg-amber-600 transition mt-4">บันทึกและอัปเดตสมุดสุขภาพ</button>
+            </div>
+        </div>
+
+        <div id="page-www-history" class="page-section p-4 pt-6 bg-gray-50 min-h-screen">
+            <div class="flex items-center mb-4">
+                <button onclick="showPage('www-dashboard')" class="w-8 h-8 bg-white rounded-full text-gray-600 mr-3 shadow-sm border"><i class="fa-solid fa-arrow-left"></i></button>
+                <h2 class="text-lg font-bold text-amber-700">ประวัติองค์ประกอบร่างกาย</h2>
+            </div>
+            <div id="www-history-loading" class="text-center py-12">
+                <i class="fa-solid fa-spinner fa-spin text-3xl text-amber-500 mb-3"></i>
+                <p class="text-gray-500 font-bold text-sm">กำลังโหลดกราฟ...</p>
+            </div>
+            <div id="www-history-no-data" class="hidden text-center py-12 bg-white rounded-xl shadow-sm border border-gray-100 mt-4">
+                <div class="text-4xl text-gray-200 mb-3"><i class="fa-solid fa-chart-pie"></i></div>
+                <p class="text-gray-500 font-bold text-sm mb-1">ยังไม่มีประวัติโภชนาการ</p>
+                <p class="text-gray-400 text-[11px] mb-4 px-4">กรุณาอัปเดตข้อมูล Omron อย่างน้อย 1 ครั้ง เพื่อให้ระบบสร้างกราฟประมวลผลครับ</p>
+                <button onclick="openWWWForm()" class="bg-amber-500 text-white px-4 py-2 rounded-lg text-xs font-bold shadow-sm">อัปเดตข้อมูล Omron</button>
+            </div>
+            <div id="www-history-content" class="hidden">
+                <div class="bg-white p-3 rounded-xl shadow-sm border border-gray-200 mb-4 flex gap-4 justify-center">
+                    <label class="inline-flex items-center cursor-pointer"><input type="radio" name="wwwChartMode" value="current" onchange="loadWWWCharts()" class="w-4 h-4 text-amber-600"><span class="ml-2 text-xs font-bold text-gray-700">ล่าสุด</span></label>
+                    <label class="inline-flex items-center cursor-pointer"><input type="radio" name="wwwChartMode" value="all" onchange="loadWWWCharts()" class="w-4 h-4 text-amber-600" checked><span class="ml-2 text-xs font-bold text-gray-700">รวมสะสม</span></label>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-300 overflow-hidden mb-10 relative">
+                    <div class="p-2 border-b border-gray-200 flex items-center bg-gray-50"><div class="w-20 text-[10px] font-bold text-gray-600">น้ำหนัก (kg)</div><div class="flex-1 relative h-16"><canvas id="chart-www-w"></canvas></div></div>
+                    <div class="p-2 border-b border-gray-200 flex items-center bg-gray-50"><div class="w-20 text-[10px] font-bold text-gray-600">มวลกล้ามเนื้อ<br>โครงร่าง (kg)</div><div class="flex-1 relative h-16"><canvas id="chart-www-m"></canvas></div></div>
+                    <div class="p-2 border-b border-gray-200 flex items-center bg-gray-50"><div class="w-20 text-[10px] font-bold text-gray-600">เปอร์เซ็นต์<br>ไขมัน (%)</div><div class="flex-1 relative h-16"><canvas id="chart-www-f"></canvas></div></div>
+                    <div class="p-2 flex items-center bg-gray-50"><div class="w-20 text-[10px] font-bold text-gray-600">อัตราส่วน ECW</div><div class="flex-1 relative h-20"><canvas id="chart-www-e"></canvas></div></div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
-<!-- ======================= -->
-    <!-- เริ่มต้นส่วนของ JavaScript -->
-    <!-- ======================= -->
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbwPGR0J7K5yMYQfE5R6DzfNHQB9V4STEP3N15OJPqlq12WhsNf0mFJk1TWBAVmww7fP/exec";
         const LIFF_ID = "2009970638-dqNKJ4CJ"; 
@@ -914,7 +970,7 @@
 
             const pdpa = document.getElementById('reg-pdpa');
             if(pdpa && !pdpa.checked) {
-                err.innerText = "กรุณายืนยันการยอมรับนโยบาย PDPA ก่อนสมัครสมาชิก"; 
+                err.innerText = "กรุณายืนยันการยอมรับนโยบาย PDPA ก่อนสมัครสมาชิกครับ"; 
                 err.classList.remove('hidden'); 
                 return; 
             }
@@ -976,20 +1032,15 @@
                 document.getElementById('box-active-waste').classList.add('hidden');
             }
 
-            // 🌟 เช็คสถานะเข้าร่วมโครงการ Well Well Well!
-            // 🌟 เช็คสถานะโครงการ Well Well Well! (โชว์/ซ่อนตามสเตป)
-            if (currentUser.wellProject === "ใช่") {
-                // สเตป 3: สมัครจบแล้ว -> โชว์กล่อง Dashboard (ซ่อนอันอื่น)
+            if(currentUser.wellProject === "ใช่") {
                 document.getElementById('box-active-www').classList.remove('hidden');
                 if(document.getElementById('box-join-www')) document.getElementById('box-join-www').classList.add('hidden');
                 if(document.getElementById('www-optin-box')) document.getElementById('www-optin-box').classList.add('hidden');
             } else if (currentUser.wellProject === "รอตั้งเป้าหมาย") {
-                // สเตป 2: ติ๊กเข้าโครงการจากสมุดสีฟ้าแล้ว แต่ยังไม่ตั้งเป้าหมาย -> โชว์กล่องสีเหลืองให้กดเข้า Wizard
                 document.getElementById('box-active-www').classList.add('hidden');
                 if(document.getElementById('box-join-www')) document.getElementById('box-join-www').classList.remove('hidden');
                 if(document.getElementById('www-optin-box')) document.getElementById('www-optin-box').classList.add('hidden');
             } else {
-                // สเตป 1: เข้ามาครั้งแรกสุด -> ซ่อนกล่องสีเหลืองทั้งหมด โชว์แค่ช่องติ๊กถูกในสมุดสีฟ้า
                 document.getElementById('box-active-www').classList.add('hidden');
                 if(document.getElementById('box-join-www')) document.getElementById('box-join-www').classList.add('hidden');
                 if(document.getElementById('www-optin-box')) document.getElementById('www-optin-box').classList.remove('hidden');
@@ -1038,7 +1089,7 @@
             const res = await callAPI("joinWasteMoney", wmAddress);
             if(res.success) {
                 currentUser.wasteMoney = "ใช่"; localStorage.setItem('gooddaySession', JSON.stringify(currentUser));
-                alert("เข้าร่วมโครงการสำเร็จ! พาทีมงานมาชั่งขยะเพื่อสะสมแต้มได้เลย"); renderProfile();
+                alert("เข้าร่วมโครงการสำเร็จ! พาทีมงานมาชั่งขยะเพื่อสะสมแต้มได้เลยครับ"); renderProfile();
             } else {
                 alert("เกิดข้อผิดพลาด: " + res.message); btn.disabled = false; btn.innerText = "ยืนยันเข้าร่วมโครงการ";
             }
@@ -1290,7 +1341,7 @@
             const nickname = document.getElementById('hr-nickname').value.trim(); const gender = document.getElementById('hr-gender').value; const height = document.getElementById('hr-height').value; const weight = document.getElementById('hr-weight').value;
             if(!nickname || !gender || !height || !weight) { alert("กรุณากรอก ชื่อเล่น, เพศ, ส่วนสูง และ น้ำหนัก ให้ครบถ้วน"); return; }
 
-            const wantToJoinWWW = document.getElementById('join-www').checked;
+            const wantToJoinWWW = document.getElementById('join-www') ? document.getElementById('join-www').checked : false;
 
             btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> บันทึกข้อมูล...';
             
@@ -1310,10 +1361,9 @@
                 currentUser.gender = payload.gender; 
                 currentUser.nickname = payload.nickname;
                 
-                // ตรวจสอบว่าเขาติ๊กเข้าร่วมไหม ถ้ายอมติ๊ก จะเปลี่ยนสเตปให้กล่องเหลืองเด้ง!
                 if (wantToJoinWWW && currentUser.wellProject !== "ใช่") {
                     currentUser.wellProject = "รอตั้งเป้าหมาย";
-                    alert("บันทึกข้อมูลสำเร็จ! คุณได้ปลดล็อกโครงการ Well Well Well! แล้ว");
+                    alert("บันทึกข้อมูลสำเร็จ! ปลดล็อกโครงการ Well Well Well! แล้ว กรุณากดกล่องสีเหลืองในหน้าหลักเพื่อตั้งเป้าหมายครับ");
                 } else {
                     alert("บันทึกข้อมูลสุขภาพสำเร็จ!");
                 }
@@ -1419,7 +1469,6 @@
                 </div>
             `).join('');
 
-            // 🌟 เพิ่มการดูดข้อมูลจาก "สมุดสีฟ้า" มาเติมให้อัตโนมัติ (ไม่ต้องพิมพ์ซ้ำ)
             if (globalHealthRecords && globalHealthRecords.length > 0) {
                 const latest = globalHealthRecords[0];
                 document.getElementById('wiz-weight').value = latest.weight || "";
@@ -1445,7 +1494,7 @@
             if (stepNum === 3) { const msg = document.getElementById('wiz-monthly-goal').value.trim(); if(!msg) { alert("กรุณาเขียนเป้าหมายประจำเดือนของคุณสักนิดนะครับ"); return; } }
             if (stepNum === 4) {
                 const w = document.getElementById('wiz-weight').value; const amb = document.getElementById('wiz-ambassador').value.trim();
-                if (!w || !amb) { alert("กรุณากรอกน้ำหนัก และ ยุวทูตสายสุขภาพที่ดูแลให้ครบถ้วน"); return; }
+                if (!w || !amb) { alert("กรุณากรอกน้ำหนัก และ ยุวทูตสายสุขภาพที่ดูแลให้ครบถ้วนครับ"); return; }
                 if(currentUser && currentUser.email && currentUser.email !== "-") { document.getElementById('wiz-email').value = currentUser.email; }
             }
             document.querySelectorAll('[id^="wiz-step-"]').forEach(el => el.classList.add('hidden')); document.getElementById('wiz-step-' + stepNum).classList.remove('hidden'); window.scrollTo(0, 0);
@@ -1464,7 +1513,7 @@
             const payload = { memberId: currentUser.memberId, lineUid: currentLineUid, email: emailInput, goals: selectedGoals, monthlyGoalText: monthlyGoal, ambassador: amb, weight: w, fat: fat, visceral: vis, muscle: mus, ecw: ecw, bodyAge: bAge, bmr: bmr };
             const res = await callAPI("registerWWWProject", payload);
             if(res.success) {
-                alert("ยินดีต้อนรับเข้าสู่โครงการ Well Well Well!");
+                alert("ยินดีต้อนรับเข้าสู่โครงการ Well Well Well! เช็คอีเมลเพื่อรับลิงก์ Zoom ได้เลยครับ");
                 currentUser.wellProject = "ใช่"; currentUser.email = emailInput; localStorage.setItem('gooddaySession', JSON.stringify(currentUser)); renderProfile(); showPage('www-dashboard');
             } else { alert("เกิดข้อผิดพลาด: " + res.message); btn.disabled = false; btn.innerText = "Check-in & เข้าสู่ระบบ WWW"; }
         }
@@ -1571,7 +1620,7 @@
         }
 
         async function saveSleepLog(btn) {
-            if(!currentUser) return; const mood = document.getElementById('sleep-mood').value; if(mood === "0") { alert("กรุณาเลือกอารมณ์การตื่นนอนเช้านี้"); return; }
+            if(!currentUser) return; const mood = document.getElementById('sleep-mood').value; if(mood === "0") { alert("กรุณาเลือกอารมณ์การตื่นนอนเช้านี้ครับ"); return; }
             const selectedSymptoms = Array.from(document.querySelectorAll('.sleep-symptom-cb:checked')).map(cb => cb.value);
             btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> บันทึก...';
             const res = await callAPI("saveSleepRecord", { memberId: currentUser.memberId, mood: mood, symptoms: selectedSymptoms.join(', ') });
