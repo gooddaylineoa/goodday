@@ -490,7 +490,6 @@
         <!-- ========================================== -->
         <div id="page-www-wizard" class="page-section bg-gray-50 min-h-screen text-gray-800 pb-24">
             
-            <!-- Step 1 -->
             <div id="wiz-step-1" class="p-4 pt-8">
                 <div class="flex items-center mb-6">
                     <button onclick="showPage('profile')" class="w-8 h-8 bg-white rounded-full text-gray-600 mr-3 shadow-sm border border-gray-200"><i class="fa-solid fa-arrow-left"></i></button>
@@ -505,6 +504,24 @@
                 </div>
             </div>
 
+            <div id="wiz-step-2" class="p-4 pt-8 hidden">
+                <div class="flex items-center mb-6">
+                    <button onclick="prevWiz(1)" class="w-8 h-8 bg-white rounded-full text-gray-600 mr-3 shadow-sm border border-gray-200"><i class="fa-solid fa-arrow-left"></i></button>
+                    <h2 class="text-xl font-bold text-amber-600">สรุปเป้าหมายของคุณ</h2>
+                </div>
+                <div class="bg-white rounded-2xl p-4 mb-6 border border-gray-200 shadow-sm">
+                    <h3 class="text-sm font-bold text-amber-600 mb-3"><i class="fa-solid fa-bullseye mr-1"></i> หมวดหมู่และเป้าหมายที่เลือก</h3>
+                    <div id="wizard-summary-content" class="space-y-3"></div>
+                </div>
+                <div class="bg-white rounded-2xl p-4 mb-10 border border-gray-200 shadow-sm">
+                    <label class="text-sm font-bold text-amber-600 mb-2 block"><i class="fa-solid fa-pen mr-1"></i> เป้าหมายสุขภาวะที่ดีประจำเดือน</label>
+                    <p class="text-[10px] text-gray-500 mb-2">เขียนคำมั่นสัญญา หรือเป้าหมายที่คุณอยากทำให้สำเร็จในเดือนนี้</p>
+                    <textarea id="wiz-monthly-goal" rows="3" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm text-gray-800 focus:border-amber-500 outline-none" placeholder="เช่น เดือนนี้ฉันจะนอนให้ครบ 8 ชม. ทุกวัน..."></textarea>
+                </div>
+                <div class="fixed bottom-0 left-0 right-0 max-w-md mx-auto p-4 bg-white border-t border-gray-100">
+                    <button onclick="nextWiz(3)" class="w-full bg-amber-500 text-white py-3.5 rounded-xl font-bold shadow-md hover:bg-amber-600 transition">ไปขั้นตอนต่อไป</button>
+                </div>
+            </div>
             <!-- Step 2 -->
             <div id="wiz-step-2" class="p-4 pt-8 hidden">
                 <div class="flex items-center mb-6">
@@ -1269,8 +1286,18 @@
 
             btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> บันทึกข้อมูล...';
             
-            const payload = { memberId: currentUser.memberId, phone: currentUser.phone, nickname: nickname, gender: gender, height: height, waist: document.getElementById('hr-waist').value, disease: document.getElementById('hr-disease').value, diabetes: document.getElementById('hr-diabetes').checked ? "เป็น" : "ไม่เป็น", smoking: document.getElementById('hr-smoking').checked ? "สูบ" : "ไม่สูบ", weight: weight, fat: document.getElementById('hr-fat').value, visceral: document.getElementById('hr-visceral').value, muscle: document.getElementById('hr-muscle').value, bodyAge: document.getElementById('hr-bodyage').value, bmr: document.getElementById('hr-bmr').value, sys: document.getElementById('hr-sys').value, dia: document.getElementById('hr-dia').value, tdee: document.getElementById('display-tdee-form').innerText, cvRisk: document.getElementById('cv-score').innerText, joinWWW: false };
-
+            // 🌟 แก้ตรงบรรทัดสุดท้าย joinWWW ให้เช็คว่าเขาเป็นสมาชิกโปรเจกต์ WWW หรือยัง (ถ้าเป็นแล้ว ข้อมูลจะวิ่งไปเข้ากราฟ WWW ด้วย)
+            const payload = { 
+                memberId: currentUser.memberId, phone: currentUser.phone, nickname: nickname, gender: gender, height: height, 
+                waist: document.getElementById('hr-waist').value, disease: document.getElementById('hr-disease').value, 
+                diabetes: document.getElementById('hr-diabetes').checked ? "เป็น" : "ไม่เป็น", smoking: document.getElementById('hr-smoking').checked ? "สูบ" : "ไม่สูบ", 
+                weight: weight, fat: document.getElementById('hr-fat').value, visceral: document.getElementById('hr-visceral').value, 
+                muscle: document.getElementById('hr-muscle').value, bodyAge: document.getElementById('hr-bodyage').value, 
+                bmr: document.getElementById('hr-bmr').value, sys: document.getElementById('hr-sys').value, dia: document.getElementById('hr-dia').value, 
+                tdee: document.getElementById('display-tdee-form').innerText, cvRisk: document.getElementById('cv-score').innerText, 
+                joinWWW: (currentUser && currentUser.wellProject === "ใช่") 
+            };
+            
             const res = await callAPI("saveHealthAndWellRecord", payload);
             if(res.success) {
                 alert("บันทึกข้อมูลสุขภาพสำเร็จ!"); currentUser.gender = payload.gender; currentUser.nickname = payload.nickname;
@@ -1372,7 +1399,20 @@
                     </div>
                 </div>
             `).join('');
-            document.querySelectorAll('[id^="wiz-step-"]').forEach(el => el.classList.add('hidden')); document.getElementById('wiz-step-1').classList.remove('hidden');
+
+            // 🌟 เพิ่มการดูดข้อมูลจาก "สมุดสีฟ้า" มาเติมให้อัตโนมัติ (ไม่ต้องพิมพ์ซ้ำ)
+            if (globalHealthRecords && globalHealthRecords.length > 0) {
+                const latest = globalHealthRecords[0];
+                document.getElementById('wiz-weight').value = latest.weight || "";
+                document.getElementById('wiz-fat').value = latest.fat || "";
+                document.getElementById('wiz-visceral').value = latest.visceral || "";
+                document.getElementById('wiz-muscle').value = latest.muscle || "";
+                document.getElementById('wiz-bodyage').value = latest.bodyAge || "";
+                document.getElementById('wiz-bmr').value = latest.bmr || "";
+            }
+
+            document.querySelectorAll('[id^="wiz-step-"]').forEach(el => el.classList.add('hidden')); 
+            document.getElementById('wiz-step-1').classList.remove('hidden');
         }
 
         function nextWiz(stepNum) {
