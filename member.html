@@ -1,5 +1,3 @@
-LINE OA Members (GitHub)
-
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -208,7 +206,20 @@ LINE OA Members (GitHub)
                     </div>
                     <div>
                         <h3 class="font-bold text-base leading-tight">Well Well Well!</h3>
-                        <p class="text-yellow-100 text-[10px] mt-0.5">ตรวจสอบประวัติและกราฟโภชนาการ</p>
+                        <p class="text-yellow-100 text-[10px] mt-0.5">ตรวจสอบประวัติและโปรไฟล์ร่างกาย</p>
+                    </div>
+                </div>
+                <i class="fa-solid fa-chevron-right text-lg opacity-50"></i>
+            </div>
+
+            <div id="box-join-www" onclick="openWWWWizard()" class="bg-gradient-to-br from-yellow-400 to-amber-500 rounded-xl p-4 mb-4 text-white flex items-center justify-between cursor-pointer shadow-sm hidden">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center text-2xl shadow-inner">
+                        <i class="fa-solid fa-ranking-star text-yellow-100"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-base leading-tight">เข้าร่วมโครงการ Well Well Well!</h3>
+                        <p class="text-yellow-100 text-[10px] mt-0.5">ตั้งเป้าหมายสุขภาพ และรับสิทธิประโยชน์</p>
                     </div>
                 </div>
                 <i class="fa-solid fa-chevron-right text-lg opacity-50"></i>
@@ -226,6 +237,7 @@ LINE OA Members (GitHub)
                 </div>
                 <i class="fa-solid fa-circle-plus text-xl opacity-75"></i>
             </div>
+            
             <div id="box-active-waste" onclick="openWasteLogbook()" class="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl p-4 mb-4 text-white flex items-center justify-between cursor-pointer shadow-sm hidden">
                 <div class="flex items-center gap-3">
                     <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center text-2xl shadow-inner">
@@ -390,15 +402,6 @@ LINE OA Members (GitHub)
                     </div>
                 </div>
             </div>
-            <div id="www-optin-box" class="bg-gradient-to-br from-yellow-100 to-amber-100 p-4 rounded-xl shadow-sm border border-amber-200 mb-6 hidden">
-                <div class="flex items-start gap-3">
-                    <input type="checkbox" id="join-www" class="w-5 h-5 mt-1 text-amber-600 rounded border-amber-300 focus:ring-amber-500">
-                    <div>
-                        <h4 class="font-bold text-amber-800 text-sm">เข้าร่วมโครงการ Well Well Well!</h4>
-                        <p class="text-[11px] text-amber-700 leading-tight mt-0.5">นำข้อมูลของคุณไปสร้างกราฟติดตามผลโภชนาการ และปลดล็อคฟีเจอร์พิเศษ</p>
-                    </div>
-                </div>
-            </div>
             <button onclick="submitHealthRecord(this)" class="w-full bg-blue-600 text-white py-3.5 rounded-xl font-semibold shadow-md hover:bg-blue-700 transition text-sm">บันทึกข้อมูลเข้าสู่ระบบ</button>
         </div>
 
@@ -480,6 +483,112 @@ LINE OA Members (GitHub)
                     <div id="part5-list" class="space-y-2"></div>
                 </div>
             </div>
+        </div>
+
+        <div id="page-www-wizard" class="page-section bg-gray-900 min-h-screen text-white pb-24">
+            
+            <div id="wiz-step-1" class="p-4 pt-8">
+                <div class="flex items-center mb-6">
+                    <button onclick="showPage('profile')" class="w-8 h-8 bg-gray-800 rounded-full text-gray-400 mr-3"><i class="fa-solid fa-arrow-left"></i></button>
+                    <div>
+                        <h2 class="text-xl font-bold text-white">ตั้งเป้าหมายสุขภาพ</h2>
+                        <p class="text-xs text-gray-400">เลือกเป้าหมายที่ตรงกับคุณ (เลือกได้มากกว่า 1 ข้อ)</p>
+                    </div>
+                </div>
+                <div id="wizard-goals-container" class="space-y-6"></div>
+                <div class="fixed bottom-0 left-0 right-0 max-w-md mx-auto p-4 bg-gradient-to-t from-gray-900 via-gray-900 to-transparent">
+                    <button onclick="nextWiz(2)" class="w-full bg-amber-500 text-gray-900 py-3.5 rounded-xl font-bold shadow-lg hover:bg-amber-400 transition">สรุปเป้าหมาย</button>
+                </div>
+            </div>
+
+            <div id="wiz-step-2" class="p-4 pt-8 hidden">
+                <div class="flex items-center mb-6">
+                    <button onclick="prevWiz(1)" class="w-8 h-8 bg-gray-800 rounded-full text-gray-400 mr-3"><i class="fa-solid fa-arrow-left"></i></button>
+                    <h2 class="text-xl font-bold text-white">สรุปเป้าหมายของคุณ</h2>
+                </div>
+                <div class="bg-gray-800 rounded-2xl p-4 mb-6 border border-gray-700">
+                    <h3 class="text-sm font-bold text-amber-400 mb-3"><i class="fa-solid fa-bullseye mr-1"></i> หมวดหมู่และเป้าหมายที่เลือก</h3>
+                    <div id="wizard-summary-content" class="space-y-3"></div>
+                </div>
+                <div class="bg-gray-800 rounded-2xl p-4 mb-10 border border-gray-700">
+                    <label class="text-sm font-bold text-amber-400 mb-2 block"><i class="fa-solid fa-pen mr-1"></i> เป้าหมายสุขภาวะที่ดีประจำเดือน</label>
+                    <p class="text-[10px] text-gray-400 mb-2">เขียนคำมั่นสัญญา หรือเป้าหมายที่คุณอยากทำให้สำเร็จในเดือนนี้</p>
+                    <textarea id="wiz-monthly-goal" rows="3" class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-sm text-white focus:border-amber-500 outline-none" placeholder="เช่น เดือนนี้ฉันจะนอนให้ครบ 8 ชม. ทุกวัน..."></textarea>
+                </div>
+                <div class="fixed bottom-0 left-0 right-0 max-w-md mx-auto p-4 bg-gray-900">
+                    <button onclick="nextWiz(3)" class="w-full bg-amber-500 text-gray-900 py-3.5 rounded-xl font-bold shadow-lg hover:bg-amber-400 transition">ไปขั้นตอนต่อไป</button>
+                </div>
+            </div>
+
+            <div id="wiz-step-3" class="p-4 pt-8 hidden bg-white min-h-screen text-gray-800">
+                <div class="flex items-center mb-6">
+                    <button onclick="prevWiz(2)" class="w-8 h-8 bg-gray-100 rounded-full text-gray-600 mr-3"><i class="fa-solid fa-arrow-left"></i></button>
+                    <h2 class="text-xl font-bold text-amber-600">ข้อมูลชั่งน้ำหนัก (Omron)</h2>
+                </div>
+                <p class="text-xs text-gray-500 mb-4 px-1">กรอกข้อมูลร่างกายเริ่มต้นเพื่อใช้ติดตามผลในโครงการ</p>
+                <div class="space-y-4">
+                    <div><label class="text-xs font-bold text-gray-500 mb-1 block">น้ำหนัก (kg) *</label><input type="number" step="0.1" id="wiz-weight" class="form-input bg-yellow-50 font-bold text-lg text-amber-700"></div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div><label class="text-[11px] font-bold text-gray-500 mb-1 block">ไขมันในร่างกาย (%)</label><input type="number" step="0.1" id="wiz-fat" class="form-input"></div>
+                        <div><label class="text-[11px] font-bold text-gray-500 mb-1 block">ไขมันช่องท้อง</label><input type="number" step="0.1" id="wiz-visceral" class="form-input"></div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div><label class="text-[11px] font-bold text-gray-500 mb-1 block">มวลกล้ามเนื้อ (kg)</label><input type="number" step="0.1" id="wiz-muscle" class="form-input"></div>
+                        <div><label class="text-[11px] font-bold text-gray-500 mb-1 block text-amber-600">อัตราส่วน ECW</label><input type="number" step="0.001" id="wiz-ecw" class="form-input bg-amber-50"></div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div><label class="text-[11px] font-bold text-gray-500 mb-1 block">อายุร่างกาย (ปี)</label><input type="number" id="wiz-bodyage" class="form-input"></div>
+                        <div><label class="text-[11px] font-bold text-gray-500 mb-1 block">BMR (Kcal)</label><input type="number" id="wiz-bmr" class="form-input"></div>
+                    </div>
+                    <div><label class="text-xs font-bold text-gray-500 mb-1 block">ยุวทูตสายสุขภาพที่ท่านสังกัด *</label><input type="text" id="wiz-ambassador" class="form-input" placeholder="ชื่อ-นามสกุล คนดูแล"></div>
+                </div>
+                <div class="fixed bottom-0 left-0 right-0 max-w-md mx-auto p-4 bg-white border-t border-gray-100">
+                    <button onclick="nextWiz(4)" class="w-full bg-amber-500 text-white py-3.5 rounded-xl font-bold shadow-lg hover:bg-amber-600 transition">บันทึกข้อมูลร่างกาย</button>
+                </div>
+            </div>
+
+            <div id="wiz-step-4" class="p-4 pt-8 hidden bg-gray-50 min-h-screen text-gray-800">
+                <h2 class="text-2xl font-black text-center text-indigo-800 mb-2">🎉 กิจกรรมพิเศษ!</h2>
+                <p class="text-center text-xs text-gray-500 mb-6">ขอเชิญเข้าร่วมกิจกรรมเปิดตัว และติดตามข่าวสาร</p>
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden mb-5">
+                    <div class="bg-blue-600 p-4 text-center text-white">
+                        <i class="fa-brands fa-facebook text-4xl mb-2"></i>
+                        <h3 class="font-bold">ติดตามเพจหลักของเรา</h3>
+                    </div>
+                    <div class="p-4 text-center">
+                        <p class="text-xs text-gray-500 mb-3">อัปเดตความรู้สุขภาพ ทริคการกิน และกิจกรรมรับของรางวัลมากมาย!</p>
+                        <button onclick="window.open('https://facebook.com', '_blank')" class="bg-blue-600 text-white px-6 py-2 rounded-full text-xs font-bold shadow-sm hover:bg-blue-700">กดติดตาม Page</button>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden mb-20">
+                    <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=600&q=80" class="w-full h-40 object-cover" alt="Event Poster">
+                    <div class="p-4 text-center">
+                        <h3 class="font-bold text-gray-800 mb-1">กิจกรรม Onsite ประจำเดือน</h3>
+                        <p class="text-[11px] text-gray-500 mb-4">มาพบปะยุวทูตสุขภาพ และรับฟังบรรยายสดจากผู้เชี่ยวชาญแบบใกล้ชิด</p>
+                        <button onclick="window.open('#', '_blank')" class="w-full bg-amber-500 text-white py-3 rounded-xl font-bold shadow-sm hover:bg-amber-600 mb-2">ลงทะเบียนเข้าร่วมงาน Onsite</button>
+                        <button onclick="nextWiz(5)" class="w-full bg-gray-100 text-gray-500 py-3 rounded-xl font-bold text-xs hover:bg-gray-200">ไม่สะดวกเข้าร่วม / ไปขั้นตอนต่อไป</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="wiz-step-5" class="p-6 pt-12 hidden bg-white min-h-screen text-gray-800 flex flex-col items-center">
+                <div class="w-24 h-24 bg-green-100 text-green-500 rounded-full flex items-center justify-center text-5xl mb-6 shadow-inner"><i class="fa-solid fa-check"></i></div>
+                <h2 class="text-2xl font-black text-center text-gray-800 mb-2">เกือบเสร็จแล้ว!</h2>
+                <p class="text-center text-sm text-gray-500 mb-6 leading-relaxed">
+                    ขั้นตอนสุดท้ายสำหรับ Check-in เข้าโครงการ<br>เราจะจัดกิจกรรมออนไลน์ผ่าน <strong class="text-blue-600">Zoom</strong><br>กรุณายืนยันอีเมลเพื่อรับลิงก์เข้าร่วมกิจกรรม
+                </p>
+                <div class="w-full bg-gray-50 p-4 rounded-2xl border border-gray-200 mb-6">
+                    <label class="text-xs font-bold text-gray-700 mb-1 block">อีเมลของคุณ *</label>
+                    <input type="email" id="wiz-email" class="form-input bg-white border-gray-300" placeholder="example@gmail.com">
+                    <p class="text-[10px] text-red-500 mt-1 hidden" id="wiz-email-error">กรุณาระบุอีเมลที่ถูกต้อง</p>
+                </div>
+                <div class="w-full mt-auto mb-10">
+                    <button onclick="submitWWWRegistration(this)" class="w-full bg-green-500 text-white py-4 rounded-2xl font-bold shadow-lg hover:bg-green-600 transition text-lg">
+                        Check-in & เข้าสู่ระบบ WWW
+                    </button>
+                </div>
+            </div>
+
         </div>
 
         <div id="page-www-dashboard" class="page-section p-4 pt-6 bg-yellow-50 min-h-screen">
@@ -594,70 +703,11 @@ LINE OA Members (GitHub)
             <button onclick="saveSleepLog(this)" class="w-full bg-indigo-600 text-white py-3.5 rounded-xl font-semibold shadow-md hover:bg-indigo-700 transition text-sm">บันทึกข้อมูลการนอน</button>
         </div>
 
-        <div id="page-www-form" class="page-section p-4 pt-6 bg-white min-h-screen">
-            <div class="flex items-center mb-4">
-                <button onclick="showPage('www-dashboard')" class="w-8 h-8 bg-gray-100 rounded-full text-gray-600 mr-3 shadow-sm"><i class="fa-solid fa-arrow-left"></i></button>
-                <h2 class="text-lg font-bold text-amber-600">บันทึกข้อมูล (Omron)</h2>
-            </div>
-            <div class="space-y-4">
-                <div><label class="text-xs font-bold text-gray-500 mb-1 block">น้ำหนัก (kg)</label><input type="number" step="0.1" id="www-weight" class="form-input bg-yellow-50 font-bold text-lg text-amber-700"></div>
-                <div class="grid grid-cols-2 gap-3">
-                    <div><label class="text-[11px] font-bold text-gray-500 mb-1 block">ไขมันในร่างกาย (%)</label><input type="number" step="0.1" id="www-fat" class="form-input border-amber-200 focus:border-amber-500"></div>
-                    <div><label class="text-[11px] font-bold text-gray-500 mb-1 block">ไขมันช่องท้อง</label><input type="number" step="0.1" id="www-visceral" class="form-input border-amber-200 focus:border-amber-500"></div>
-                </div>
-                <div class="grid grid-cols-2 gap-3">
-                    <div><label class="text-[11px] font-bold text-gray-500 mb-1 block">มวลกล้ามเนื้อ (kg)</label><input type="number" step="0.1" id="www-muscle" class="form-input border-amber-200 focus:border-amber-500"></div>
-                    <div><label class="text-[11px] font-bold text-gray-500 mb-1 block text-amber-600">อัตราส่วน ECW</label><input type="number" step="0.001" id="www-ecw" class="form-input border-amber-400 bg-amber-50 focus:border-amber-600"></div>
-                </div>
-                <div class="grid grid-cols-2 gap-3">
-                    <div><label class="text-[11px] font-bold text-gray-500 mb-1 block">อายุร่างกาย (ปี)</label><input type="number" id="www-bodyage" class="form-input border-amber-200 focus:border-amber-500"></div>
-                    <div><label class="text-[11px] font-bold text-gray-500 mb-1 block">BMR (Kcal)</label><input type="number" id="www-bmr" class="form-input border-amber-200 focus:border-amber-500"></div>
-                </div>
-                <div>
-                    <label class="text-xs font-bold text-gray-500 mb-1 block">ยุวทูตสายสุขภาพที่ท่านสังกัด *</label>
-                    <input type="text" id="www-ambassador" class="form-input" placeholder="ชื่อ-นามสกุล คนดูแล">
-                </div>
-                <div class="mt-4 p-3 bg-amber-50 rounded-xl border border-amber-200">
-                    <label class="flex items-center cursor-pointer">
-                        <input type="checkbox" id="www-confirm" class="w-5 h-5 text-amber-600 rounded border-gray-300">
-                        <span class="ml-2 text-xs font-bold text-amber-800">ข้าพเจ้าตรวจสอบข้อมูลถูกต้องครบถ้วนแล้ว เพื่อใช้แสดงผลในโครงการ Well Well Well!</span>
-                    </label>
-                </div>
-                <button onclick="submitWWWRecord(this)" class="w-full bg-amber-500 text-white py-3.5 rounded-xl font-semibold shadow-md hover:bg-amber-600 transition mt-4">บันทึกและอัปเดตสมุดสุขภาพ</button>
-            </div>
-        </div>
-
-        <div id="page-www-history" class="page-section p-4 pt-6 bg-gray-50 min-h-screen">
-            <div class="flex items-center mb-4">
-                <button onclick="showPage('www-dashboard')" class="w-8 h-8 bg-white rounded-full text-gray-600 mr-3 shadow-sm border"><i class="fa-solid fa-arrow-left"></i></button>
-                <h2 class="text-lg font-bold text-amber-700">ประวัติองค์ประกอบร่างกาย</h2>
-            </div>
-            <div id="www-history-loading" class="text-center py-12">
-                <i class="fa-solid fa-spinner fa-spin text-3xl text-amber-500 mb-3"></i>
-                <p class="text-gray-500 font-bold text-sm">กำลังโหลดกราฟ...</p>
-            </div>
-            <div id="www-history-no-data" class="hidden text-center py-12 bg-white rounded-xl shadow-sm border border-gray-100 mt-4">
-                <div class="text-4xl text-gray-200 mb-3"><i class="fa-solid fa-chart-pie"></i></div>
-                <p class="text-gray-500 font-bold text-sm mb-1">ยังไม่มีประวัติโภชนาการ</p>
-                <p class="text-gray-400 text-[11px] mb-4 px-4">กรุณาอัปเดตข้อมูล Omron อย่างน้อย 1 ครั้ง เพื่อให้ระบบสร้างกราฟประมวลผล</p>
-                <button onclick="openWWWForm()" class="bg-amber-500 text-white px-4 py-2 rounded-lg text-xs font-bold shadow-sm">อัปเดตข้อมูล Omron</button>
-            </div>
-            <div id="www-history-content" class="hidden">
-                <div class="bg-white p-3 rounded-xl shadow-sm border border-gray-200 mb-4 flex gap-4 justify-center">
-                    <label class="inline-flex items-center cursor-pointer"><input type="radio" name="wwwChartMode" value="current" onchange="loadWWWCharts()" class="w-4 h-4 text-amber-600"><span class="ml-2 text-xs font-bold text-gray-700">ล่าสุด</span></label>
-                    <label class="inline-flex items-center cursor-pointer"><input type="radio" name="wwwChartMode" value="all" onchange="loadWWWCharts()" class="w-4 h-4 text-amber-600" checked><span class="ml-2 text-xs font-bold text-gray-700">รวมสะสม</span></label>
-                </div>
-                <div class="bg-white rounded-xl shadow-sm border border-gray-300 overflow-hidden mb-10 relative">
-                    <div class="p-2 border-b border-gray-200 flex items-center bg-gray-50"><div class="w-20 text-[10px] font-bold text-gray-600">น้ำหนัก (kg)</div><div class="flex-1 relative h-16"><canvas id="chart-www-w"></canvas></div></div>
-                    <div class="p-2 border-b border-gray-200 flex items-center bg-gray-50"><div class="w-20 text-[10px] font-bold text-gray-600">มวลกล้ามเนื้อ<br>โครงร่าง (kg)</div><div class="flex-1 relative h-16"><canvas id="chart-www-m"></canvas></div></div>
-                    <div class="p-2 border-b border-gray-200 flex items-center bg-gray-50"><div class="w-20 text-[10px] font-bold text-gray-600">เปอร์เซ็นต์<br>ไขมัน (%)</div><div class="flex-1 relative h-16"><canvas id="chart-www-f"></canvas></div></div>
-                    <div class="p-2 flex items-center bg-gray-50"><div class="w-20 text-[10px] font-bold text-gray-600">อัตราส่วน ECW</div><div class="flex-1 relative h-20"><canvas id="chart-www-e"></canvas></div></div>
-                </div>
-            </div>
-        </div>
-
     </div>
 
+<!-- ======================= -->
+    <!-- เริ่มต้นส่วนของ JavaScript -->
+    <!-- ======================= -->
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbwPGR0J7K5yMYQfE5R6DzfNHQB9V4STEP3N15OJPqlq12WhsNf0mFJk1TWBAVmww7fP/exec";
         const LIFF_ID = "2009970638-dqNKJ4CJ"; 
@@ -743,7 +793,6 @@ LINE OA Members (GitHub)
             }
         }
 
-        const originalShowPage = showPage;
         function showPage(pageId) {
             document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
             const targetPage = document.getElementById('page-' + pageId);
@@ -843,7 +892,7 @@ LINE OA Members (GitHub)
 
             const pdpa = document.getElementById('reg-pdpa');
             if(pdpa && !pdpa.checked) {
-                err.innerText = "กรุณายืนยันการยอมรับนโยบาย PDPA ก่อนสมัครสมาชิก"; 
+                err.innerText = "กรุณายืนยันการยอมรับนโยบาย PDPA ก่อนสมัครสมาชิกครับ"; 
                 err.classList.remove('hidden'); 
                 return; 
             }
@@ -905,12 +954,17 @@ LINE OA Members (GitHub)
                 document.getElementById('box-active-waste').classList.add('hidden');
             }
 
+            // 🌟 เช็คสถานะเข้าร่วมโครงการ Well Well Well!
             if(currentUser.wellProject === "ใช่") {
                 document.getElementById('box-active-www').classList.remove('hidden');
-                document.getElementById('www-optin-box').classList.add('hidden');
+                if(document.getElementById('box-join-www')) {
+                    document.getElementById('box-join-www').classList.add('hidden'); 
+                }
             } else {
                 document.getElementById('box-active-www').classList.add('hidden');
-                document.getElementById('www-optin-box').classList.remove('hidden');
+                if(document.getElementById('box-join-www')) {
+                    document.getElementById('box-join-www').classList.remove('hidden'); 
+                }
             }
 
             const a = currentUser.address;
@@ -956,7 +1010,7 @@ LINE OA Members (GitHub)
             const res = await callAPI("joinWasteMoney", wmAddress);
             if(res.success) {
                 currentUser.wasteMoney = "ใช่"; localStorage.setItem('gooddaySession', JSON.stringify(currentUser));
-                alert("เข้าร่วมโครงการสำเร็จ! พาทีมงานมาชั่งขยะเพื่อสะสมแต้มได้เลย"); renderProfile();
+                alert("เข้าร่วมโครงการสำเร็จ! พาทีมงานมาชั่งขยะเพื่อสะสมแต้มได้เลยครับ"); renderProfile();
             } else {
                 alert("เกิดข้อผิดพลาด: " + res.message); btn.disabled = false; btn.innerText = "ยืนยันเข้าร่วมโครงการ";
             }
@@ -1017,7 +1071,7 @@ LINE OA Members (GitHub)
                 callAPI("getProjectHealthData", { memberId: currentUser.memberId })
             ]);
             
-            if(resProject && resProject.length > 0) {
+            if(Array.isArray(resProject) && resProject.length > 0) {
                 document.getElementById('health-part5-container').classList.remove('hidden');
                 let p5Html = resProject.map(p => `
                     <div class="bg-white p-3 rounded-lg border border-indigo-100">
@@ -1030,7 +1084,7 @@ LINE OA Members (GitHub)
                 document.getElementById('part5-list').innerHTML = p5Html;
             }
 
-            if(!resHealth || resHealth.length === 0) {
+            if(!Array.isArray(resHealth) || resHealth.length === 0) {
                 document.getElementById('health-no-data').classList.remove('hidden');
                 return;
             }
@@ -1050,83 +1104,40 @@ LINE OA Members (GitHub)
 
             document.getElementById('risk-bp').innerText = latest.bp || "-";
             document.getElementById('risk-waist').innerText = latest.waist || "-";
-            document.getElementById('risk-cv').innerText = latest.cvRisk ? latest.cvRisk.toFixed(1) : "-";
+            if(parseFloat(latest.cvRisk)) {
+                document.getElementById('risk-cv').innerText = parseFloat(latest.cvRisk).toFixed(1);
+            } else {
+                document.getElementById('risk-cv').innerText = "-";
+            }
+            
             calculateTDEEOnDisplay(); 
 
-            // 🌟 สร้างสรุปสถานะความเสี่ยงปัจจุบัน (ส่วนที่ 5 ด้านล่างสุดของสมุดสุขภาพ)
-            let currW = parseFloat(latest.weight)||0;
-            let currH = parseFloat(latest.height)||160;
-            let currFat = parseFloat(latest.fat)||0;
-            let currMus = parseFloat(latest.muscle)||0;
-            let currVis = parseFloat(latest.visceral)||0;
-            let currAge = parseInt(currentUser.age)||0;
-            let currBodyAge = parseFloat(latest.bodyAge)||0;
-            let gender = currentUser.gender || 'female';
-
-            let stdW = gender === 'male' ? currH - 105 : currH - 110;
-            let diffW = currW - stdW;
-            let wColor = "bg-green-100 text-green-700"; let wText = "ปกติสมส่วน";
-            if(Math.abs(diffW) > 10) { wColor = "bg-red-100 text-red-700"; wText = "มีความเสี่ยง"; }
-            else if(diffW > 5) { wColor = "bg-yellow-100 text-yellow-700"; wText = "เริ่มอ้วน"; }
-            else if(diffW < -5) { wColor = "bg-yellow-100 text-yellow-700"; wText = "เริ่มผอม"; }
-
-            let bmi = (currW / Math.pow(currH/100, 2)).toFixed(1);
-            let bmiColor = "bg-green-100 text-green-700"; let bmiText = "ปกติ";
-            if(bmi >= 25) { bmiColor = "bg-red-100 text-red-700"; bmiText = "อ้วน"; }
-            else if(bmi >= 23) { bmiColor = "bg-yellow-100 text-yellow-700"; bmiText = "น้ำหนักเกิน"; }
-            else if(bmi < 18.5) { bmiColor = "bg-yellow-100 text-yellow-700"; bmiText = "ผอมเกินไป"; }
-
+            let currW = parseFloat(latest.weight)||0; let currH = parseFloat(latest.height)||160; let currFat = parseFloat(latest.fat)||0; let currMus = parseFloat(latest.muscle)||0; let currVis = parseFloat(latest.visceral)||0; let currAge = parseInt(currentUser.age)||0; let currBodyAge = parseFloat(latest.bodyAge)||0; let gender = currentUser.gender || 'female';
+            let stdW = gender === 'male' ? currH - 105 : currH - 110; let diffW = currW - stdW; let wColor = "bg-green-100 text-green-700"; let wText = "ปกติสมส่วน";
+            if(Math.abs(diffW) > 10) { wColor = "bg-red-100 text-red-700"; wText = "มีความเสี่ยง"; } else if(diffW > 5) { wColor = "bg-yellow-100 text-yellow-700"; wText = "เริ่มอ้วน"; } else if(diffW < -5) { wColor = "bg-yellow-100 text-yellow-700"; wText = "เริ่มผอม"; }
+            let bmi = (currW / Math.pow(currH/100, 2)).toFixed(1); let bmiColor = "bg-green-100 text-green-700"; let bmiText = "ปกติ";
+            if(bmi >= 25) { bmiColor = "bg-red-100 text-red-700"; bmiText = "อ้วน"; } else if(bmi >= 23) { bmiColor = "bg-yellow-100 text-yellow-700"; bmiText = "น้ำหนักเกิน"; } else if(bmi < 18.5) { bmiColor = "bg-yellow-100 text-yellow-700"; bmiText = "ผอมเกินไป"; }
+            
             let fColor = "bg-green-100 text-green-700"; let fText = "ปกติ";
-            if(gender === 'male') {
-                if(currFat >= 25) { fColor = "bg-red-100 text-red-700"; fText = "อ้วน"; }
-                else if(currFat >= 20) { fColor = "bg-yellow-100 text-yellow-700"; fText = "เริ่มอ้วน"; }
-                else if(currFat < 10) { fColor = "bg-yellow-100 text-yellow-700"; fText = "ต่ำไป"; }
-            } else {
-                if(currFat >= 35) { fColor = "bg-red-100 text-red-700"; fText = "อ้วน"; }
-                else if(currFat >= 30) { fColor = "bg-yellow-100 text-yellow-700"; fText = "เริ่มอ้วน"; }
-                else if(currFat < 20) { fColor = "bg-yellow-100 text-yellow-700"; fText = "ต่ำไป"; }
-            }
-
+            if(gender === 'male') { if(currFat >= 25) { fColor = "bg-red-100 text-red-700"; fText = "อ้วน"; } else if(currFat >= 20) { fColor = "bg-yellow-100 text-yellow-700"; fText = "เริ่มอ้วน"; } else if(currFat < 10) { fColor = "bg-yellow-100 text-yellow-700"; fText = "ต่ำไป"; } } 
+            else { if(currFat >= 35) { fColor = "bg-red-100 text-red-700"; fText = "อ้วน"; } else if(currFat >= 30) { fColor = "bg-yellow-100 text-yellow-700"; fText = "เริ่มอ้วน"; } else if(currFat < 20) { fColor = "bg-yellow-100 text-yellow-700"; fText = "ต่ำไป"; } }
+            
             let mColor = "bg-green-100 text-green-700"; let mText = "ปกติ";
-            if(gender === 'male') {
-                if(currMus < 20) { mColor = "bg-red-100 text-red-700"; mText = "ต่ำ"; }
-                else if(currMus < 30) { mColor = "bg-yellow-100 text-yellow-700"; mText = "เริ่มต่ำ"; }
-            } else {
-                if(currMus < 15) { mColor = "bg-red-100 text-red-700"; mText = "ต่ำ"; }
-                else if(currMus < 25) { mColor = "bg-yellow-100 text-yellow-700"; mText = "เริ่มต่ำ"; }
-            }
-
+            if(gender === 'male') { if(currMus < 20) { mColor = "bg-red-100 text-red-700"; mText = "ต่ำ"; } else if(currMus < 30) { mColor = "bg-yellow-100 text-yellow-700"; mText = "เริ่มต่ำ"; } } 
+            else { if(currMus < 15) { mColor = "bg-red-100 text-red-700"; mText = "ต่ำ"; } else if(currMus < 25) { mColor = "bg-yellow-100 text-yellow-700"; mText = "เริ่มต่ำ"; } }
+            
             let vColor = "bg-green-100 text-green-700"; let vText = "สุขภาพดี";
-            if(currVis >= 10) { vColor = "bg-red-100 text-red-700"; vText = "อันตราย"; }
-            else if(currVis >= 6) { vColor = "bg-yellow-100 text-yellow-700"; vText = "ค่อนข้างสูง"; }
-
-            let aColor = "bg-green-100 text-green-700"; let aText = "ดีเยี่ยม";
-            let diffAge = currBodyAge - currAge;
-            if(diffAge >= 10) { aColor = "bg-red-100 text-red-700"; aText = "มีความเสี่ยง"; }
-            else if(diffAge >= 5) { aColor = "bg-yellow-100 text-yellow-700"; aText = "ควรดูแลสุขภาพ"; }
+            if(currVis >= 10) { vColor = "bg-red-100 text-red-700"; vText = "อันตราย"; } else if(currVis >= 6) { vColor = "bg-yellow-100 text-yellow-700"; vText = "ค่อนข้างสูง"; }
+            
+            let aColor = "bg-green-100 text-green-700"; let aText = "ดีเยี่ยม"; let diffAge = currBodyAge - currAge;
+            if(diffAge >= 10) { aColor = "bg-red-100 text-red-700"; aText = "มีความเสี่ยง"; } else if(diffAge >= 5) { aColor = "bg-yellow-100 text-yellow-700"; aText = "ควรดูแลสุขภาพ"; }
 
             let summaryHtml = `
-                <div class="flex justify-between items-center border-b border-gray-50 pb-2">
-                    <span class="text-xs font-medium text-gray-600">น้ำหนัก / BMI</span>
-                    <div class="flex gap-1"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${wColor}">${wText}</span><span class="px-2 py-0.5 rounded text-[10px] font-bold ${bmiColor}">BMI: ${bmiText}</span></div>
-                </div>
-                <div class="flex justify-between items-center border-b border-gray-50 pb-2 pt-2">
-                    <span class="text-xs font-medium text-gray-600">ไขมันในร่างกาย</span>
-                    <span class="px-2 py-0.5 rounded text-[10px] font-bold ${fColor}">${fText}</span>
-                </div>
-                <div class="flex justify-between items-center border-b border-gray-50 pb-2 pt-2">
-                    <span class="text-xs font-medium text-gray-600">ไขมันช่องท้อง</span>
-                    <span class="px-2 py-0.5 rounded text-[10px] font-bold ${vColor}">${vText}</span>
-                </div>
-                <div class="flex justify-between items-center border-b border-gray-50 pb-2 pt-2">
-                    <span class="text-xs font-medium text-gray-600">มวลกล้ามเนื้อโครงร่าง</span>
-                    <span class="px-2 py-0.5 rounded text-[10px] font-bold ${mColor}">${mText}</span>
-                </div>
-                <div class="flex justify-between items-center pt-2">
-                    <span class="text-xs font-medium text-gray-600">อายุร่างกาย</span>
-                    <span class="px-2 py-0.5 rounded text-[10px] font-bold ${aColor}">${aText}</span>
-                </div>
-            `;
+                <div class="flex justify-between items-center border-b border-gray-50 pb-2"><span class="text-xs font-medium text-gray-600">น้ำหนัก / BMI</span><div class="flex gap-1"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${wColor}">${wText}</span><span class="px-2 py-0.5 rounded text-[10px] font-bold ${bmiColor}">BMI: ${bmiText}</span></div></div>
+                <div class="flex justify-between items-center border-b border-gray-50 pb-2 pt-2"><span class="text-xs font-medium text-gray-600">ไขมันในร่างกาย</span><span class="px-2 py-0.5 rounded text-[10px] font-bold ${fColor}">${fText}</span></div>
+                <div class="flex justify-between items-center border-b border-gray-50 pb-2 pt-2"><span class="text-xs font-medium text-gray-600">ไขมันช่องท้อง</span><span class="px-2 py-0.5 rounded text-[10px] font-bold ${vColor}">${vText}</span></div>
+                <div class="flex justify-between items-center border-b border-gray-50 pb-2 pt-2"><span class="text-xs font-medium text-gray-600">มวลกล้ามเนื้อโครงร่าง</span><span class="px-2 py-0.5 rounded text-[10px] font-bold ${mColor}">${mText}</span></div>
+                <div class="flex justify-between items-center pt-2"><span class="text-xs font-medium text-gray-600">อายุร่างกาย</span><span class="px-2 py-0.5 rounded text-[10px] font-bold ${aColor}">${aText}</span></div>`;
             document.getElementById('current-risk-summary').innerHTML = summaryHtml;
         }
 
@@ -1139,109 +1150,40 @@ LINE OA Members (GitHub)
 
         function renderOmronCards(records, user) {
             const container = document.getElementById('omron-carousel');
-            let html = "";
-            let gender = user.gender || 'female';
-            let age = parseInt(user.age) || 0;
-            let height = parseFloat(records[0].height) || 160;
+            let html = ""; let gender = user.gender || 'female'; let age = parseInt(user.age) || 0; let height = parseFloat(records[0].height) || 160;
 
             records.forEach((r, idx) => {
-                let w = parseFloat(r.weight)||0;
-                let fat = parseFloat(r.fat)||0;
-                let vis = parseFloat(r.visceral)||0;
-                let mus = parseFloat(r.muscle)||0;
-                let bAge = parseFloat(r.bodyAge)||0;
-                let bmr = parseFloat(r.bmr)||0;
+                let w = parseFloat(r.weight)||0; let fat = parseFloat(r.fat)||0; let vis = parseFloat(r.visceral)||0; let mus = parseFloat(r.muscle)||0; let bAge = parseFloat(r.bodyAge)||0; let bmr = parseFloat(r.bmr)||0;
+                let stdW = gender === 'male' ? height - 105 : height - 110; let diffW = w - stdW; let wColor = "bg-green-100 text-green-700"; let wText = "ปกติและสมส่วน";
+                if(diffW > 10 || diffW < -10) { wColor = "bg-red-100 text-red-700"; wText = "เริ่มมีความเสี่ยง"; } else if(diffW > 5) { wColor = "bg-yellow-100 text-yellow-700"; wText = "เริ่มอ้วน"; } else if(diffW < -5) { wColor = "bg-yellow-100 text-yellow-700"; wText = "เริ่มผอม"; }
                 
-                let stdW = gender === 'male' ? height - 105 : height - 110;
-                let diffW = w - stdW;
-                let wColor = "bg-green-100 text-green-700"; let wText = "ปกติและสมส่วน";
-                if(diffW > 10 || diffW < -10) { wColor = "bg-red-100 text-red-700"; wText = "เริ่มมีความเสี่ยง"; }
-                else if(diffW > 5) { wColor = "bg-yellow-100 text-yellow-700"; wText = "เริ่มอ้วน"; }
-                else if(diffW < -5) { wColor = "bg-yellow-100 text-yellow-700"; wText = "เริ่มผอม"; }
-
-                let bmi = (w / Math.pow(height/100, 2)).toFixed(1);
-
                 let fColor = "bg-green-100 text-green-700"; let fText = "ปกติ";
-                if(gender === 'male') {
-                    if(fat >= 25) { fColor = "bg-red-100 text-red-700"; fText = "อ้วน"; }
-                    else if(fat >= 20 || fat < 10) { fColor = "bg-yellow-100 text-yellow-700"; fText = fat < 10 ? "ต่ำ" : "เริ่มอ้วน"; }
-                } else {
-                    if(fat >= 35) { fColor = "bg-red-100 text-red-700"; fText = "อ้วน"; }
-                    else if(fat >= 30 || fat < 20) { fColor = "bg-yellow-100 text-yellow-700"; fText = fat < 20 ? "ต่ำ" : "เริ่มอ้วน"; }
-                }
-
+                if(gender === 'male') { if(fat >= 25) { fColor = "bg-red-100 text-red-700"; fText = "อ้วน"; } else if(fat >= 20 || fat < 10) { fColor = "bg-yellow-100 text-yellow-700"; fText = fat < 10 ? "ต่ำ" : "เริ่มอ้วน"; } } 
+                else { if(fat >= 35) { fColor = "bg-red-100 text-red-700"; fText = "อ้วน"; } else if(fat >= 30 || fat < 20) { fColor = "bg-yellow-100 text-yellow-700"; fText = fat < 20 ? "ต่ำ" : "เริ่มอ้วน"; } }
+                
                 let vColor = "bg-green-100 text-green-700"; let vText = "สุขภาพดี";
-                if(vis >= 10) { vColor = "bg-red-100 text-red-700"; vText = "อันตราย"; }
-                else if(vis >= 6) { vColor = "bg-yellow-100 text-yellow-700"; vText = "ค่อนข้างสูง"; }
-
+                if(vis >= 10) { vColor = "bg-red-100 text-red-700"; vText = "อันตราย"; } else if(vis >= 6) { vColor = "bg-yellow-100 text-yellow-700"; vText = "ค่อนข้างสูง"; }
+                
                 let mColor = "bg-green-100 text-green-700"; let mText = "ปกติ";
-                if(gender === 'male') {
-                    if(mus < 20) { mColor = "bg-red-100 text-red-700"; mText = "ต่ำ"; }
-                    else if(mus < 30) { mColor = "bg-yellow-100 text-yellow-700"; mText = "เริ่มต่ำ"; }
-                } else {
-                    if(mus < 15) { mColor = "bg-red-100 text-red-700"; mText = "ต่ำ"; }
-                    else if(mus < 25) { mColor = "bg-yellow-100 text-yellow-700"; mText = "เริ่มต่ำ"; }
-                }
-
-                let aColor = "bg-green-100 text-green-700"; let aText = "ดีเยี่ยม";
-                let diffAge = bAge - age;
-                if(diffAge >= 10) { aColor = "bg-red-100 text-red-700"; aText = "มีความเสี่ยง"; }
-                else if(diffAge >= 5) { aColor = "bg-yellow-100 text-yellow-700"; aText = "ควรดูแลสุขภาพ"; }
-
-                let stdBMR = gender === 'male' ? (10 * w) + (6.25 * height) - (5 * age) + 5 : (10 * w) + (6.25 * height) - (5 * age) - 161;
-                let diffBMR = stdBMR - bmr;
-                let bmrColor = "bg-green-100 text-green-700"; let bmrText = "ปกติ";
-                if(diffBMR > 200) { bmrColor = "bg-red-100 text-red-700"; bmrText = "มีความเสี่ยง"; }
-                else if(diffBMR > 0) { bmrColor = "bg-yellow-100 text-yellow-700"; bmrText = "เริ่มอ้วน"; }
+                if(gender === 'male') { if(mus < 20) { mColor = "bg-red-100 text-red-700"; mText = "ต่ำ"; } else if(mus < 30) { mColor = "bg-yellow-100 text-yellow-700"; mText = "เริ่มต่ำ"; } } 
+                else { if(mus < 15) { mColor = "bg-red-100 text-red-700"; mText = "ต่ำ"; } else if(mus < 25) { mColor = "bg-yellow-100 text-yellow-700"; mText = "เริ่มต่ำ"; } }
+                
+                let aColor = "bg-green-100 text-green-700"; let aText = "ดีเยี่ยม"; let diffAge = bAge - age;
+                if(diffAge >= 10) { aColor = "bg-red-100 text-red-700"; aText = "มีความเสี่ยง"; } else if(diffAge >= 5) { aColor = "bg-yellow-100 text-yellow-700"; aText = "ควรดูแลสุขภาพ"; }
+                
+                let stdBMR = gender === 'male' ? (10 * w) + (6.25 * height) - (5 * age) + 5 : (10 * w) + (6.25 * height) - (5 * age) - 161; let diffBMR = stdBMR - bmr; let bmrColor = "bg-green-100 text-green-700"; let bmrText = "ปกติ";
+                if(diffBMR > 200) { bmrColor = "bg-red-100 text-red-700"; bmrText = "มีความเสี่ยง"; } else if(diffBMR > 0) { bmrColor = "bg-yellow-100 text-yellow-700"; bmrText = "เริ่มอ้วน"; }
 
                 html += `
                 <div class="min-w-[280px] bg-white rounded-xl shadow-sm border border-gray-200 snap-center shrink-0">
-                    <div class="bg-blue-50 px-4 py-2 border-b border-blue-100 rounded-t-xl">
-                        <span class="font-bold text-blue-800 text-xs"><i class="fa-regular fa-calendar-check mr-1"></i> ข้อมูลวันที่ ${r.date}</span>
-                    </div>
+                    <div class="bg-blue-50 px-4 py-2 border-b border-blue-100 rounded-t-xl"><span class="font-bold text-blue-800 text-xs"><i class="fa-regular fa-calendar-check mr-1"></i> ข้อมูลวันที่ ${r.date}</span></div>
                     <div class="p-3 space-y-2 text-xs">
-                        <div class="flex justify-between items-center border-b border-gray-50 pb-2">
-                            <span class="text-gray-500 font-bold">น้ำหนัก <br><span class="text-[9px] font-normal">(มาตรฐาน ${stdW.toFixed(1)})</span></span>
-                            <div class="text-right">
-                                <span class="font-black text-gray-800 text-sm">${w}</span> <span class="text-[10px]">kg</span>
-                                <div class="mt-1 ${wColor} text-[9px] font-bold px-1.5 py-0.5 rounded">${wText}</div>
-                            </div>
-                        </div>
-                        <div class="flex justify-between items-center border-b border-gray-50 pb-2">
-                            <span class="text-gray-500 font-bold">ไขมัน (Fat)</span>
-                            <div class="text-right">
-                                <span class="font-black text-gray-800 text-sm">${fat}</span> <span class="text-[10px]">%</span>
-                                <div class="mt-1 ${fColor} text-[9px] font-bold px-1.5 py-0.5 rounded">${fText}</div>
-                            </div>
-                        </div>
-                        <div class="flex justify-between items-center border-b border-gray-50 pb-2">
-                            <span class="text-gray-500 font-bold">ไขมันช่องท้อง</span>
-                            <div class="text-right">
-                                <span class="font-black text-gray-800 text-sm">${vis}</span>
-                                <div class="mt-1 ${vColor} text-[9px] font-bold px-1.5 py-0.5 rounded">${vText}</div>
-                            </div>
-                        </div>
-                        <div class="flex justify-between items-center border-b border-gray-50 pb-2">
-                            <span class="text-gray-500 font-bold">มวลกล้ามเนื้อ</span>
-                            <div class="text-right">
-                                <span class="font-black text-gray-800 text-sm">${mus}</span> <span class="text-[10px]">%</span>
-                                <div class="mt-1 ${mColor} text-[9px] font-bold px-1.5 py-0.5 rounded">${mText}</div>
-                            </div>
-                        </div>
-                        <div class="flex justify-between items-center border-b border-gray-50 pb-2">
-                            <span class="text-gray-500 font-bold">อายุร่างกาย <br><span class="text-[9px] font-normal">(จริง ${age})</span></span>
-                            <div class="text-right">
-                                <span class="font-black text-gray-800 text-sm">${bAge}</span> <span class="text-[10px]">ปี</span>
-                                <div class="mt-1 ${aColor} text-[9px] font-bold px-1.5 py-0.5 rounded">${aText}</div>
-                            </div>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-500 font-bold">BMR <br><span class="text-[9px] font-normal">(มาตรฐาน ${Math.round(stdBMR)})</span></span>
-                            <div class="text-right">
-                                <span class="font-black text-gray-800 text-sm">${bmr}</span> <span class="text-[10px]">Kcal</span>
-                                <div class="mt-1 ${bmrColor} text-[9px] font-bold px-1.5 py-0.5 rounded">${bmrText}</div>
-                            </div>
-                        </div>
+                        <div class="flex justify-between items-center border-b border-gray-50 pb-2"><span class="text-gray-500 font-bold">น้ำหนัก <br><span class="text-[9px] font-normal">(มาตรฐาน ${stdW.toFixed(1)})</span></span><div class="text-right"><span class="font-black text-gray-800 text-sm">${w}</span> <span class="text-[10px]">kg</span><div class="mt-1 ${wColor} text-[9px] font-bold px-1.5 py-0.5 rounded">${wText}</div></div></div>
+                        <div class="flex justify-between items-center border-b border-gray-50 pb-2"><span class="text-gray-500 font-bold">ไขมัน (Fat)</span><div class="text-right"><span class="font-black text-gray-800 text-sm">${fat}</span> <span class="text-[10px]">%</span><div class="mt-1 ${fColor} text-[9px] font-bold px-1.5 py-0.5 rounded">${fText}</div></div></div>
+                        <div class="flex justify-between items-center border-b border-gray-50 pb-2"><span class="text-gray-500 font-bold">ไขมันช่องท้อง</span><div class="text-right"><span class="font-black text-gray-800 text-sm">${vis}</span><div class="mt-1 ${vColor} text-[9px] font-bold px-1.5 py-0.5 rounded">${vText}</div></div></div>
+                        <div class="flex justify-between items-center border-b border-gray-50 pb-2"><span class="text-gray-500 font-bold">มวลกล้ามเนื้อ</span><div class="text-right"><span class="font-black text-gray-800 text-sm">${mus}</span> <span class="text-[10px]">%</span><div class="mt-1 ${mColor} text-[9px] font-bold px-1.5 py-0.5 rounded">${mText}</div></div></div>
+                        <div class="flex justify-between items-center border-b border-gray-50 pb-2"><span class="text-gray-500 font-bold">อายุร่างกาย <br><span class="text-[9px] font-normal">(จริง ${age})</span></span><div class="text-right"><span class="font-black text-gray-800 text-sm">${bAge}</span> <span class="text-[10px]">ปี</span><div class="mt-1 ${aColor} text-[9px] font-bold px-1.5 py-0.5 rounded">${aText}</div></div></div>
+                        <div class="flex justify-between items-center"><span class="text-gray-500 font-bold">BMR <br><span class="text-[9px] font-normal">(มาตรฐาน ${Math.round(stdBMR)})</span></span><div class="text-right"><span class="font-black text-gray-800 text-sm">${bmr}</span> <span class="text-[10px]">Kcal</span><div class="mt-1 ${bmrColor} text-[9px] font-bold px-1.5 py-0.5 rounded">${bmrText}</div></div></div>
                     </div>
                 </div>`;
             });
@@ -1250,119 +1192,66 @@ LINE OA Members (GitHub)
 
         function calculateRealtime() {
             if(!currentUser) return;
-            
-            let age = currentUser.age || 0;
-            let gender = document.getElementById('hr-gender').value; 
-            
-            let h = parseFloat(document.getElementById('hr-height').value) || 0;
-            let w = parseFloat(document.getElementById('hr-weight').value) || 0;
-            let waist = parseFloat(document.getElementById('hr-waist').value) || 0;
-            let visceral = parseFloat(document.getElementById('hr-visceral').value) || 0;
-            let bodyAge = parseFloat(document.getElementById('hr-bodyage').value) || 0;
-            let bmr = parseFloat(document.getElementById('hr-bmr').value) || 0;
-            let sys = parseFloat(document.getElementById('hr-sys').value) || 0;
-            let fat = parseFloat(document.getElementById('hr-fat').value) || 0;
-            let mus = parseFloat(document.getElementById('hr-muscle').value) || 0;
+            let age = currentUser.age || 0; let gender = document.getElementById('hr-gender').value; 
+            let h = parseFloat(document.getElementById('hr-height').value) || 0; let w = parseFloat(document.getElementById('hr-weight').value) || 0; let waist = parseFloat(document.getElementById('hr-waist').value) || 0; let visceral = parseFloat(document.getElementById('hr-visceral').value) || 0; let bodyAge = parseFloat(document.getElementById('hr-bodyage').value) || 0; let bmr = parseFloat(document.getElementById('hr-bmr').value) || 0; let sys = parseFloat(document.getElementById('hr-sys').value) || 0; let fat = parseFloat(document.getElementById('hr-fat').value) || 0; let mus = parseFloat(document.getElementById('hr-muscle').value) || 0;
             
             if(h > 0 && w > 0) {
-                if(!gender) {
-                    document.getElementById('res-weight').innerHTML = '<span class="text-red-500">กรุณาเลือกเพศเพื่อประเมินผล</span>';
-                } else {
-                    let stdW = gender === 'male' ? h - 105 : h - 110;
-                    let diffW = w - stdW;
-                    let wColor = "text-green-600"; let wText = "ปกติและสมส่วน";
-                    if(Math.abs(diffW) > 10) { wColor = "text-red-600"; wText = "เริ่มมีความเสี่ยง"; }
-                    else if(diffW >= 5) { wColor = "text-yellow-600"; wText = "เริ่มอ้วน"; }
-                    else if(diffW <= -5) { wColor = "text-yellow-600"; wText = "เริ่มผอม"; }
+                if(!gender) { document.getElementById('res-weight').innerHTML = '<span class="text-red-500">กรุณาเลือกเพศเพื่อประเมินผล</span>'; } 
+                else {
+                    let stdW = gender === 'male' ? h - 105 : h - 110; let diffW = w - stdW; let wColor = "text-green-600"; let wText = "ปกติและสมส่วน";
+                    if(Math.abs(diffW) > 10) { wColor = "text-red-600"; wText = "เริ่มมีความเสี่ยง"; } else if(diffW > 5) { wColor = "text-yellow-600"; wText = "เริ่มอ้วน"; } else if(diffW <= -5) { wColor = "text-yellow-600"; wText = "เริ่มผอม"; }
                     document.getElementById('res-weight').innerHTML = `ค่ามาตรฐาน: <strong class="text-blue-600">${stdW.toFixed(1)} kg</strong> <br><span class="${wColor}">(${wText})</span>`;
                 }
                 document.getElementById('res-bmi').innerText = (w / Math.pow(h/100, 2)).toFixed(1);
             }
 
-            // 🌟 เพิ่มประเมินค่าไขมัน
             if(fat > 0) {
-                if(!gender) {
-                    document.getElementById('res-fat').innerHTML = '<span class="text-red-500">เลือกเพศก่อน</span>';
-                } else {
+                if(!gender) { document.getElementById('res-fat').innerHTML = '<span class="text-red-500">เลือกเพศก่อน</span>'; } 
+                else {
                     let fColor = "text-green-600"; let fText = "ปกติ";
-                    if(gender === 'male') {
-                        if(fat >= 25) { fColor = "text-red-600"; fText = "อ้วน"; }
-                        else if(fat >= 20) { fColor = "text-yellow-600"; fText = "เริ่มอ้วน"; }
-                        else if(fat < 10) { fColor = "text-yellow-600"; fText = "ต่ำไป"; }
-                    } else {
-                        if(fat >= 35) { fColor = "text-red-600"; fText = "อ้วน"; }
-                        else if(fat >= 30) { fColor = "text-yellow-600"; fText = "เริ่มอ้วน"; }
-                        else if(fat < 20) { fColor = "text-yellow-600"; fText = "ต่ำไป"; }
-                    }
+                    if(gender === 'male') { if(fat >= 25) { fColor = "text-red-600"; fText = "อ้วน"; } else if(fat >= 20) { fColor = "text-yellow-600"; fText = "เริ่มอ้วน"; } else if(fat < 10) { fColor = "text-yellow-600"; fText = "ต่ำไป"; } } 
+                    else { if(fat >= 35) { fColor = "text-red-600"; fText = "อ้วน"; } else if(fat >= 30) { fColor = "text-yellow-600"; fText = "เริ่มอ้วน"; } else if(fat < 20) { fColor = "text-yellow-600"; fText = "ต่ำไป"; } }
                     document.getElementById('res-fat').innerHTML = `<span class="${fColor}">(${fText})</span>`;
                 }
             } else if(document.getElementById('res-fat')) { document.getElementById('res-fat').innerHTML = ''; }
 
-            // 🌟 เพิ่มประเมินค่ามวลกล้ามเนื้อ
             if(mus > 0) {
-                if(!gender) {
-                    document.getElementById('res-muscle').innerHTML = '<span class="text-red-500">เลือกเพศก่อน</span>';
-                } else {
+                if(!gender) { document.getElementById('res-muscle').innerHTML = '<span class="text-red-500">เลือกเพศก่อน</span>'; } 
+                else {
                     let mColor = "text-green-600"; let mText = "ปกติ";
-                    if(gender === 'male') {
-                        if(mus < 20) { mColor = "text-red-600"; mText = "ต่ำ"; }
-                        else if(mus < 30) { mColor = "text-yellow-600"; mText = "เริ่มต่ำ"; }
-                    } else {
-                        if(mus < 15) { mColor = "text-red-600"; mText = "ต่ำ"; }
-                        else if(mus < 25) { mColor = "text-yellow-600"; mText = "เริ่มต่ำ"; }
-                    }
+                    if(gender === 'male') { if(mus < 20) { mColor = "text-red-600"; mText = "ต่ำ"; } else if(mus < 30) { mColor = "text-yellow-600"; mText = "เริ่มต่ำ"; } } 
+                    else { if(mus < 15) { mColor = "text-red-600"; mText = "ต่ำ"; } else if(mus < 25) { mColor = "text-yellow-600"; mText = "เริ่มต่ำ"; } }
                     document.getElementById('res-muscle').innerHTML = `<span class="${mColor}">(${mText})</span>`;
                 }
             } else if(document.getElementById('res-muscle')) { document.getElementById('res-muscle').innerHTML = ''; }
 
-            if(bmr > 0 && document.getElementById('hr-activity')) {
-                let actMultiplier = parseFloat(document.getElementById('hr-activity').value);
-                document.getElementById('res-tdee').innerText = Math.round(bmr * actMultiplier);
-            }
-
-            if(h > 0 && w > 0 && age > 0) {
-                if(!gender) {
-                    document.getElementById('res-bmr').innerHTML = '<span class="text-red-500">กรุณาเลือกเพศเพื่อประเมินผล</span>';
-                } else {
-                    let stdBMR = gender === 'male' ? (10 * w) + (6.25 * h) - (5 * age) + 5 : (10 * w) + (6.25 * h) - (5 * age) - 161;
-                    let diffBMR = stdBMR - bmr;
-                    let bmrColor = "text-green-600"; let bmrText = "ระดับปกติ";
-                    if(diffBMR > 200) { bmrColor = "text-red-600"; bmrText = "เริ่มมีความเสี่ยง"; }
-                    else if(diffBMR > 0) { bmrColor = "text-yellow-600"; bmrText = "เริ่มอ้วน"; }
-                    document.getElementById('res-bmr').innerHTML = `ค่ามาตรฐาน: <strong class="text-blue-600">${Math.round(stdBMR)} Kcal</strong> <br><span class="${bmrColor}">(${bmrText})</span>`;
-                }
+            if(bmr > 0 && document.getElementById('hr-activity-form')) {
+                let actMultiplier = parseFloat(document.getElementById('hr-activity-form').value);
+                document.getElementById('display-tdee-form').innerText = Math.round(bmr * actMultiplier);
             }
 
             if(visceral > 0) {
                 let vColor = "text-green-600"; let vText = "สุขภาพดี";
-                if(visceral >= 10) { vColor = "text-red-600"; vText = "ระดับอันตราย"; }
-                else if(visceral > 5) { vColor = "text-yellow-600"; vText = "ค่อนข้างสูง"; }
+                if(visceral >= 10) { vColor = "text-red-600"; vText = "ระดับอันตราย"; } else if(visceral > 5) { vColor = "text-yellow-600"; vText = "ค่อนข้างสูง"; }
                 document.getElementById('res-visceral').innerHTML = `<span class="${vColor}">${vText}</span>`;
             }
 
             if(bodyAge > 0 && age > 0) {
-                let diffAge = bodyAge - age;
-                let aColor = "text-green-600"; let aText = "ระดับดีเยี่ยม";
-                if(diffAge >= 10) { aColor = "text-red-600"; aText = "เริ่มมีความเสี่ยง"; }
-                else if(diffAge >= 5) { aColor = "text-yellow-600"; aText = "ควรเริ่มดูแลสุขภาพ"; }
+                let diffAge = bodyAge - age; let aColor = "text-green-600"; let aText = "ระดับดีเยี่ยม";
+                if(diffAge >= 10) { aColor = "text-red-600"; aText = "เริ่มมีความเสี่ยง"; } else if(diffAge >= 5) { aColor = "text-yellow-600"; aText = "ควรเริ่มดูแลสุขภาพ"; }
                 document.getElementById('res-bodyage').innerHTML = `<span class="${aColor}">${aText}</span>`;
             }
 
-            // เอา && waist > 0 ออกจากเงื่อนไขหลัก
             if(age > 0 && sys > 0 && h > 0) {
-                let isDiabetes = document.getElementById('hr-diabetes').checked;
-                let isSmoking = document.getElementById('hr-smoking').checked;
-                let baseScore = (age * 0.1) + (sys > 140 ? 5 : 0) + (isSmoking ? 5 : 0) + (isDiabetes ? 6 : 0);
+                let isDiabetes = document.getElementById('hr-diabetes').checked; 
+                let isSmoking = document.getElementById('hr-smoking').checked; 
+                let baseScore = (age * 0.1) + (sys > 140 ? 5 : 0) + (isSmoking ? 5 : 0) + (isDiabetes ? 6 : 0); 
                 
-                // ค่อยมาเช็คข้างในว่า ถ้าระบุรอบเอวมา และรอบเอวเกินมาตรฐาน ค่อยบวก 3
-                if(waist > 0 && (waist / h) > 0.5) {
-                    baseScore += 3;
-                }
+                if(waist > 0 && (waist / h) > 0.5) { baseScore += 3; }
                 
-                document.getElementById('res-cv').classList.remove('hidden');
+                document.getElementById('res-cv').classList.remove('hidden'); 
                 document.getElementById('cv-score').innerText = baseScore.toFixed(1);
             } else {
-                // ถ้ายังกรอกข้อมูลหลัก (อายุ, ความดัน, ส่วนสูง) ไม่ครบ ให้ซ่อนและล้างค่า
                 const cvEl = document.getElementById('res-cv');
                 if(cvEl) cvEl.classList.add('hidden');
                 document.getElementById('cv-score').innerText = "-";
@@ -1370,67 +1259,150 @@ LINE OA Members (GitHub)
         }
 
         async function submitHealthRecord(btn) {
-            const nickname = document.getElementById('hr-nickname').value.trim();
-            const gender = document.getElementById('hr-gender').value;
-            const height = document.getElementById('hr-height').value;
-            const weight = document.getElementById('hr-weight').value;
-            
-            if(!nickname || !gender || !height || !weight) {
-                alert("กรุณากรอก ชื่อเล่น, เพศ, ส่วนสูง และ น้ำหนัก ให้ครบถ้วน");
-                return;
-            }
+            const nickname = document.getElementById('hr-nickname').value.trim(); const gender = document.getElementById('hr-gender').value; const height = document.getElementById('hr-height').value; const weight = document.getElementById('hr-weight').value;
+            if(!nickname || !gender || !height || !weight) { alert("กรุณากรอก ชื่อเล่น, เพศ, ส่วนสูง และ น้ำหนัก ให้ครบถ้วน"); return; }
 
             btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> บันทึกข้อมูล...';
             
-            const payload = {
-                memberId: currentUser.memberId,
-                phone: currentUser.phone,
-                nickname: nickname, 
-                gender: gender,
-                height: height,
-                waist: document.getElementById('hr-waist').value, // ไม่บังคับกรอกแล้ว แต่ส่งค่าไปด้วย
-                disease: document.getElementById('hr-disease').value,
-                diabetes: document.getElementById('hr-diabetes').checked ? "เป็น" : "ไม่เป็น",
-                smoking: document.getElementById('hr-smoking').checked ? "สูบ" : "ไม่สูบ",
-                weight: weight,
-                fat: document.getElementById('hr-fat').value,
-                visceral: document.getElementById('hr-visceral').value,
-                muscle: document.getElementById('hr-muscle').value,
-                bodyAge: document.getElementById('hr-bodyage').value,
-                bmr: document.getElementById('hr-bmr').value,
-                sys: document.getElementById('hr-sys').value,
-                dia: document.getElementById('hr-dia').value,
-                tdee: document.getElementById('res-tdee').innerText,
-                cvRisk: document.getElementById('cv-score').innerText,
-                joinWWW: document.getElementById('join-www').checked
-            };
+            const payload = { memberId: currentUser.memberId, phone: currentUser.phone, nickname: nickname, gender: gender, height: height, waist: document.getElementById('hr-waist').value, disease: document.getElementById('hr-disease').value, diabetes: document.getElementById('hr-diabetes').checked ? "เป็น" : "ไม่เป็น", smoking: document.getElementById('hr-smoking').checked ? "สูบ" : "ไม่สูบ", weight: weight, fat: document.getElementById('hr-fat').value, visceral: document.getElementById('hr-visceral').value, muscle: document.getElementById('hr-muscle').value, bodyAge: document.getElementById('hr-bodyage').value, bmr: document.getElementById('hr-bmr').value, sys: document.getElementById('hr-sys').value, dia: document.getElementById('hr-dia').value, tdee: document.getElementById('display-tdee-form').innerText, cvRisk: document.getElementById('cv-score').innerText, joinWWW: false };
 
             const res = await callAPI("saveHealthAndWellRecord", payload);
-            
             if(res.success) {
-                alert("บันทึกข้อมูลสุขภาพสำเร็จ!");
-                currentUser.gender = payload.gender; 
-                currentUser.nickname = payload.nickname; 
-                if(payload.joinWWW) {
-                    currentUser.wellProject = "ใช่";
-                }
-                localStorage.setItem('gooddaySession', JSON.stringify(currentUser));
-                renderProfile();
-                showPage('profile');
-            } else {
-                alert("เกิดข้อผิดพลาด: " + res.message);
-            }
+                alert("บันทึกข้อมูลสุขภาพสำเร็จ!"); currentUser.gender = payload.gender; currentUser.nickname = payload.nickname;
+                localStorage.setItem('gooddaySession', JSON.stringify(currentUser)); renderProfile(); showPage('profile');
+            } else { alert("เกิดข้อผิดพลาด: " + res.message); }
             btn.disabled = false; btn.innerText = "บันทึกข้อมูลเข้าสู่ระบบ";
         }
 
         function openHealthForm() {
-            if(currentUser && currentUser.gender && currentUser.gender !== "ไม่ระบุ") {
-                document.getElementById('hr-gender').value = currentUser.gender;
-            }
-            if(currentUser && currentUser.nickname) {
-                document.getElementById('hr-nickname').value = currentUser.nickname;
-            }
+            if(currentUser && currentUser.gender && currentUser.gender !== "ไม่ระบุ") { document.getElementById('hr-gender').value = currentUser.gender; }
+            if(currentUser && currentUser.nickname) { document.getElementById('hr-nickname').value = currentUser.nickname; }
             showPage('health-form');
+        }
+
+        let healthChartsObj = {};
+        function renderHealthCharts(records, user) {
+            const sorted = [...records].reverse(); 
+            const labels = sorted.map(r => r.date);
+            const wData = sorted.map(r => parseFloat(r.weight) || 0);
+            const fatData = sorted.map(r => parseFloat(r.fat) || 0);
+            const visData = sorted.map(r => parseFloat(r.visceral) || 0);
+            const musData = sorted.map(r => parseFloat(r.muscle) || 0);
+            const bAgeData = sorted.map(r => parseFloat(r.bodyAge) || 0);
+            const bmrData = sorted.map(r => parseFloat(r.bmr) || 0);
+
+            let gender = user.gender || 'female'; let age = parseInt(user.age) || 30; let currentH = parseFloat(records[0].height) || 160; let currentW = parseFloat(records[0].weight) || 50;
+            let stdW = gender === 'male' ? currentH - 105 : currentH - 110; let stdBMR = gender === 'male' ? (10 * currentW) + (6.25 * currentH) - (5 * age) + 5 : (10 * currentW) + (6.25 * currentH) - (5 * age) - 161;
+
+            const cG = 'rgba(34, 197, 94, 0.15)'; const cY = 'rgba(234, 179, 8, 0.15)'; const cR = 'rgba(239, 68, 68, 0.15)';
+
+            const annW = { drawTime: 'beforeDatasetsDraw', annotations: { boxR1: { type: 'box', yMin: 0, yMax: stdW - 10, backgroundColor: cR, borderWidth: 0 }, boxY1: { type: 'box', yMin: stdW - 10, yMax: stdW - 5, backgroundColor: cY, borderWidth: 0 }, boxG: { type: 'box', yMin: stdW - 5, yMax: stdW + 5, backgroundColor: cG, borderWidth: 0 }, boxY2: { type: 'box', yMin: stdW + 5, yMax: stdW + 10, backgroundColor: cY, borderWidth: 0 }, boxR2: { type: 'box', yMin: stdW + 10, yMax: 300, backgroundColor: cR, borderWidth: 0 } } };
+            const annFat = { drawTime: 'beforeDatasetsDraw', annotations: gender === 'male' ? { boxY1: { type: 'box', yMin: 0, yMax: 10, backgroundColor: cY, borderWidth: 0 }, boxG: { type: 'box', yMin: 10, yMax: 20, backgroundColor: cG, borderWidth: 0 }, boxY2: { type: 'box', yMin: 20, yMax: 25, backgroundColor: cY, borderWidth: 0 }, boxR: { type: 'box', yMin: 25, yMax: 100, backgroundColor: cR, borderWidth: 0 } } : { boxY1: { type: 'box', yMin: 0, yMax: 20, backgroundColor: cY, borderWidth: 0 }, boxG: { type: 'box', yMin: 20, yMax: 30, backgroundColor: cG, borderWidth: 0 }, boxY2: { type: 'box', yMin: 30, yMax: 35, backgroundColor: cY, borderWidth: 0 }, boxR: { type: 'box', yMin: 35, yMax: 100, backgroundColor: cR, borderWidth: 0 } } };
+            const annVis = { drawTime: 'beforeDatasetsDraw', annotations: { boxG: { type: 'box', yMin: 0, yMax: 5, backgroundColor: cG, borderWidth: 0 }, boxY: { type: 'box', yMin: 5, yMax: 10, backgroundColor: cY, borderWidth: 0 }, boxR: { type: 'box', yMin: 10, yMax: 50, backgroundColor: cR, borderWidth: 0 } } };
+            const annMus = { drawTime: 'beforeDatasetsDraw', annotations: gender === 'male' ? { boxR: { type: 'box', yMin: 0, yMax: 20, backgroundColor: cR, borderWidth: 0 }, boxY: { type: 'box', yMin: 20, yMax: 30, backgroundColor: cY, borderWidth: 0 }, boxG: { type: 'box', yMin: 30, yMax: 100, backgroundColor: cG, borderWidth: 0 } } : { boxR: { type: 'box', yMin: 0, yMax: 15, backgroundColor: cR, borderWidth: 0 }, boxY: { type: 'box', yMin: 15, yMax: 25, backgroundColor: cY, borderWidth: 0 }, boxG: { type: 'box', yMin: 25, yMax: 100, backgroundColor: cG, borderWidth: 0 } } };
+            const annAge = { drawTime: 'beforeDatasetsDraw', annotations: { boxG: { type: 'box', yMin: 0, yMax: age, backgroundColor: cG, borderWidth: 0 }, boxY: { type: 'box', yMin: age, yMax: age + 5, backgroundColor: cY, borderWidth: 0 }, boxR: { type: 'box', yMin: age + 5, yMax: 150, backgroundColor: cR, borderWidth: 0 } } };
+            const annBMR = { drawTime: 'beforeDatasetsDraw', annotations: { boxR: { type: 'box', yMin: 0, yMax: stdBMR - 200, backgroundColor: cR, borderWidth: 0 }, boxY: { type: 'box', yMin: stdBMR - 200, yMax: stdBMR, backgroundColor: cY, borderWidth: 0 }, boxG: { type: 'box', yMin: stdBMR, yMax: 5000, backgroundColor: cG, borderWidth: 0 } } };
+
+            function createMiniChart(canvasId, dataArr, annotationConfig, showX) {
+                let chartElement = document.getElementById(canvasId);
+                if(!chartElement) return;
+
+                if (healthChartsObj[canvasId]) { healthChartsObj[canvasId].destroy(); } 
+                
+                const ctx = chartElement.getContext('2d');
+                healthChartsObj[canvasId] = new Chart(ctx, {
+                    type: 'line',
+                    data: { labels: labels, datasets: [{ data: dataArr, borderColor: '#374151', backgroundColor: '#1f2937', borderWidth: 1.5, pointRadius: 3, pointBackgroundColor: '#1f2937', tension: 0, datalabels: { display: true, align: 'top', font: { size: 9 }, color: '#374151' } }] },
+                    options: {
+                        responsive: true, maintainAspectRatio: false, layout: { padding: { top: 15, bottom: showX ? 0 : 5, left: 10, right: 10 } },
+                        plugins: { legend: { display: false }, tooltip: { enabled: false }, annotation: annotationConfig },
+                        scales: { x: { display: showX, grid: { display: true, color: '#e5e7eb' }, ticks: { font: { size: 9 }, maxRotation: 0 } }, y: { display: false } }
+                    },
+                    plugins: [{ 
+                        id: 'customDataLabels',
+                        afterDatasetsDraw(chart) {
+                            const ctx = chart.ctx;
+                            chart.data.datasets.forEach((dataset, i) => {
+                                const meta = chart.getDatasetMeta(i);
+                                meta.data.forEach((bar, index) => {
+                                    const dataVal = dataset.data[index];
+                                    ctx.fillStyle = '#374151'; ctx.font = 'bold 9px Sarabun'; ctx.textAlign = 'center'; ctx.fillText(dataVal, bar.x, bar.y - 6);
+                                });
+                            });
+                        }
+                    }]
+                });
+            }
+
+            createMiniChart('chart-weight', wData, annW, false); createMiniChart('chart-fat', fatData, annFat, false); createMiniChart('chart-visceral', visData, annVis, false); createMiniChart('chart-muscle', musData, annMus, false); createMiniChart('chart-bodyage', bAgeData, annAge, false); createMiniChart('chart-bmr', bmrData, annBMR, true); 
+        }
+
+        // ==========================================
+        // 🚀 ระบบ Onboarding Well Well Well!
+        // ==========================================
+        const wwwGoalsMaster = [
+            { id: 'c1', title: '1. การนอน', icon: 'fa-moon', color: 'text-indigo-400', tags: ['ร้อนวูบวาบกลางดึก', 'มีเหงื่อออกตามตัว (หนาว)', 'รู้สึกหนาว อุณหภูมิไม่คงที่', 'ปัสสาวะบ่อยตอนกลางคืน', 'เล่นโทรศัพท์ก่อนนอน', 'นอนไม่หลับ สมองไม่ชัตดาวน์', 'คิดวนเวียน วิตกกังวล', 'หงุดหงิด อารมณ์แปรปรวน', 'หลับตื้นและตื่นง่าย', 'สะดุ้งตื่นกลางดึก', 'มีอาการกรน', 'มีอาการฝัน', 'ภาวะกรดไหลย้อน', 'ท้องอืด แน่นท้อง'] },
+            { id: 'c2', title: '2. น้ำหนัก (รูปร่าง)', icon: 'fa-weight-scale', color: 'text-emerald-400', tags: ['ลดสัดส่วน', 'ลดน้ำหนัก', 'เพิ่มกล้ามเนื้อ'] },
+            { id: 'c3', title: '3. โรค', icon: 'fa-viruses', color: 'text-red-400', tags: ['ภูมิคุ้มกันดีขึ้น', 'อาการออฟฟิศซินโดรมลดลง', 'ความถี่ในการปวดไมเกรนลดลง'] },
+            { id: 'c4', title: '4. ค่าเลือด', icon: 'fa-droplet', color: 'text-rose-400', tags: ['ระดับไขมันในเลือด', 'การทำงานของไต', 'การทำงานของตับ'] },
+            { id: 'c5', title: '5. การขับถ่าย', icon: 'fa-toilet', color: 'text-amber-600', tags: ['ลดอาการท้องผูก', 'ลดอาการท้องเสีย', 'รู้สึกถ่ายง่ายขึ้น', 'ถ่ายเป็นกิจวัตรมากขึ้น', 'ไม่ปวดบิดเมื่อถ่าย'] },
+            { id: 'c6', title: '6. ผิวพรรณ', icon: 'fa-sparkles', color: 'text-pink-400', tags: ['ผิวหมองคล้ำ', 'ผิวแห้งลอก', 'ผิวมัน', 'ผิวไหม้จากแดด', 'ผิวแพ้ง่าย', 'เป็นสิว', 'เป็นกระ ฝ้า', 'ริ้วรอย', 'หย่อนคล้อย'] },
+            { id: 'c7', title: '7. พลังงานใจ', icon: 'fa-heart-circle-bolt', color: 'text-orange-400', tags: ['รู้สึกเครียดน้อยลง', 'จัดการความเครียดได้ดีมากขึ้น', 'รู้สึกมีแรงบันดาลใจมากขึ้น', 'มีมุมมองใหม่กับชีวิต'] },
+            { id: 'c8', title: '8. ความแข็งแรง', icon: 'fa-dumbbell', color: 'text-blue-400', tags: ['รู้สึกแข็งแรงมากขึ้น', 'รู้สึกไม่เหนื่อยง่าย', 'ร่างกายต้านทานแรงได้ดีมากขึ้น เช่น เดิน วิ่ง ในระยะไกลได้มากขึ้น'] }
+        ];
+
+        function openWWWWizard() {
+            showPage('www-wizard');
+            
+            const container = document.getElementById('wizard-goals-container');
+            container.innerHTML = wwwGoalsMaster.map(cat => `
+                <div class="mb-4">
+                    <h3 class="text-sm font-bold text-white mb-3"><i class="fa-solid ${cat.icon} ${cat.color} mr-1"></i> ${cat.title}</h3>
+                    <div class="flex flex-wrap gap-2">
+                        ${cat.tags.map(tag => `
+                            <label class="cursor-pointer">
+                                <input type="checkbox" value="${cat.title}|${tag}" class="peer hidden wiz-goal-cb">
+                                <div class="px-4 py-2 rounded-xl bg-gray-800 text-gray-400 text-[11px] font-medium transition-all peer-checked:bg-white peer-checked:text-gray-900 peer-checked:font-bold select-none border border-gray-700 peer-checked:border-white shadow-sm">${tag}</div>
+                            </label>`).join('')}
+                    </div>
+                </div>
+            `).join('');
+            document.querySelectorAll('[id^="wiz-step-"]').forEach(el => el.classList.add('hidden')); document.getElementById('wiz-step-1').classList.remove('hidden');
+        }
+
+        function nextWiz(stepNum) {
+            if (stepNum === 2) {
+                const checkedBoxes = document.querySelectorAll('.wiz-goal-cb:checked');
+                if (checkedBoxes.length === 0) { alert("กรุณาเลือกเป้าหมายอย่างน้อย 1 ข้อครับ"); return; }
+                let summaryObj = {}; checkedBoxes.forEach(cb => { let parts = cb.value.split('|'); let cat = parts[0]; let tag = parts[1]; if(!summaryObj[cat]) summaryObj[cat] = []; summaryObj[cat].push(tag); });
+                let sumHtml = ''; for (const [category, tags] of Object.entries(summaryObj)) { sumHtml += `<div class="mb-3 pb-3 border-b border-gray-700 last:border-0 last:pb-0"><h4 class="text-xs font-bold text-white mb-1">${category}</h4><ul class="list-disc pl-4 text-[11px] text-gray-300">${tags.map(t => `<li>${t}</li>`).join('')}</ul></div>`; }
+                document.getElementById('wizard-summary-content').innerHTML = sumHtml;
+            }
+            if (stepNum === 3) { const msg = document.getElementById('wiz-monthly-goal').value.trim(); if(!msg) { alert("กรุณาเขียนเป้าหมายประจำเดือนของคุณสักนิดนะครับ"); return; } }
+            if (stepNum === 4) {
+                const w = document.getElementById('wiz-weight').value; const amb = document.getElementById('wiz-ambassador').value.trim();
+                if (!w || !amb) { alert("กรุณากรอกน้ำหนัก และ ยุวทูตสายสุขภาพที่ดูแลให้ครบถ้วนครับ"); return; }
+                if(currentUser && currentUser.email && currentUser.email !== "-") { document.getElementById('wiz-email').value = currentUser.email; }
+            }
+            document.querySelectorAll('[id^="wiz-step-"]').forEach(el => el.classList.add('hidden')); document.getElementById('wiz-step-' + stepNum).classList.remove('hidden'); window.scrollTo(0, 0);
+        }
+
+        function prevWiz(stepNum) {
+            document.querySelectorAll('[id^="wiz-step-"]').forEach(el => el.classList.add('hidden')); document.getElementById('wiz-step-' + stepNum).classList.remove('hidden'); window.scrollTo(0, 0);
+        }
+
+        async function submitWWWRegistration(btn) {
+            const emailInput = document.getElementById('wiz-email').value.trim(); const errEl = document.getElementById('wiz-email-error');
+            if(!emailInput || !emailInput.includes('@')) { errEl.classList.remove('hidden'); return; } else { errEl.classList.add('hidden'); }
+            const selectedGoals = Array.from(document.querySelectorAll('.wiz-goal-cb:checked')).map(cb => cb.value).join(', '); const monthlyGoal = document.getElementById('wiz-monthly-goal').value.trim();
+            const w = parseFloat(document.getElementById('wiz-weight').value)||0; const fat = parseFloat(document.getElementById('wiz-fat').value)||0; const vis = parseFloat(document.getElementById('wiz-visceral').value)||0; const mus = parseFloat(document.getElementById('wiz-muscle').value)||0; const ecw = parseFloat(document.getElementById('wiz-ecw').value)||0; const bAge = parseFloat(document.getElementById('wiz-bodyage').value)||0; const bmr = parseFloat(document.getElementById('wiz-bmr').value)||0; const amb = document.getElementById('wiz-ambassador').value.trim();
+            btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลัง Check-in...';
+            const payload = { memberId: currentUser.memberId, lineUid: currentLineUid, email: emailInput, goals: selectedGoals, monthlyGoalText: monthlyGoal, ambassador: amb, weight: w, fat: fat, visceral: vis, muscle: mus, ecw: ecw, bodyAge: bAge, bmr: bmr };
+            const res = await callAPI("registerWWWProject", payload);
+            if(res.success) {
+                alert("ยินดีต้อนรับเข้าสู่โครงการ Well Well Well! เช็คอีเมลเพื่อรับลิงก์ Zoom ได้เลยครับ");
+                currentUser.wellProject = "ใช่"; currentUser.email = emailInput; localStorage.setItem('gooddaySession', JSON.stringify(currentUser)); renderProfile(); showPage('www-dashboard');
+            } else { alert("เกิดข้อผิดพลาด: " + res.message); btn.disabled = false; btn.innerText = "Check-in & เข้าสู่ระบบ WWW"; }
         }
 
         // ==========================================
@@ -1438,370 +1410,120 @@ LINE OA Members (GitHub)
         // ==========================================
         async function openFoodDirectory() {
             showPage('www-food');
-            const container = document.getElementById('food-list');
-            container.innerHTML = '<div class="text-center py-10 text-gray-400"><i class="fa-solid fa-spinner fa-spin text-xl text-orange-500 mb-2 block"></i>กำลังโหลดทำเนียบร้านอาหาร...</div>';
-            
+            const container = document.getElementById('food-list'); container.innerHTML = '<div class="text-center py-10 text-gray-400"><i class="fa-solid fa-spinner fa-spin text-xl text-orange-500 mb-2 block"></i>กำลังโหลดทำเนียบร้านอาหาร...</div>';
             const res = await callAPI("getFoodDirectory", {});
-            
             if(res && res.length > 0) {
-                container.innerHTML = res.map(f => `
-                    <div class="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
-                        <img src="${f.image}" class="w-full h-32 object-cover" alt="${f.name}">
-                        <div class="p-4">
-                            <h3 class="font-bold text-gray-800">${f.name}</h3>
-                            <p class="text-[11px] text-gray-500 mt-1 mb-2"><strong>คอนเซปต์:</strong> ${f.concept}</p>
-                            <p class="text-[11px] text-gray-500 mb-3"><strong>เมนูแนะนำ:</strong> ${f.recommend}</p>
-                            <button onclick="window.open('${f.link}', '_blank')" class="w-full bg-green-500 text-white text-xs font-bold py-2.5 rounded-lg hover:bg-green-600 transition"><i class="fa-solid fa-motorcycle mr-1"></i> สั่งผ่าน Grab / ดูเมนู</button>
-                        </div>
-                    </div>
-                `).join('');
-            } else {
-                container.innerHTML = `
-                    <div class="text-center py-10 bg-white rounded-xl shadow-sm border border-gray-100">
-                        <div class="text-4xl text-gray-200 mb-3"><i class="fa-solid fa-store-slash"></i></div>
-                        <p class="text-gray-400 font-bold text-sm">ยังไม่มีข้อมูลร้านอาหาร</p>
-                    </div>`;
-            }
+                container.innerHTML = res.map(f => `<div class="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100"><img src="${f.image}" class="w-full h-32 object-cover" alt="${f.name}"><div class="p-4"><h3 class="font-bold text-gray-800">${f.name}</h3><p class="text-[11px] text-gray-500 mt-1 mb-2"><strong>คอนเซปต์:</strong> ${f.concept}</p><p class="text-[11px] text-gray-500 mb-3"><strong>เมนูแนะนำ:</strong> ${f.recommend}</p><button onclick="window.open('${f.link}', '_blank')" class="w-full bg-green-500 text-white text-xs font-bold py-2.5 rounded-lg hover:bg-green-600 transition"><i class="fa-solid fa-motorcycle mr-1"></i> สั่งผ่าน Grab / ดูเมนู</button></div></div>`).join('');
+            } else { container.innerHTML = `<div class="text-center py-10 bg-white rounded-xl shadow-sm border border-gray-100"><div class="text-4xl text-gray-200 mb-3"><i class="fa-solid fa-store-slash"></i></div><p class="text-gray-400 font-bold text-sm">ยังไม่มีข้อมูลร้านอาหาร</p></div>`; }
         }
 
         // ==========================================
-        // 🏃‍♂️ ฟังก์ชันควบคุมโครงการ Well Well Well!
+        // 🏃‍♂️ ฟังก์ชันควบคุมโครงการ Well Well Well! (Omron)
         // ==========================================
-        
         function openWWWForm() {
-            document.querySelectorAll('#page-www-form input').forEach(inp => inp.value = '');
-            showPage('www-form');
+            document.querySelectorAll('#page-www-form input').forEach(inp => inp.value = ''); showPage('www-form');
         }
 
         async function submitWWWRecord(btn) {
-            const w = parseFloat(document.getElementById('www-weight').value)||0;
-            const bmr = parseFloat(document.getElementById('www-bmr').value)||0;
-            
+            const w = parseFloat(document.getElementById('www-weight').value)||0; const bmr = parseFloat(document.getElementById('www-bmr').value)||0;
             const isConfirmed = document.getElementById('www-confirm').checked;
             if(!isConfirmed) { alert("กรุณากดยืนยันความถูกต้องของข้อมูลก่อนส่ง"); return; }
-            
             const amb = document.getElementById('www-ambassador').value.trim();
             if(!amb) { alert("กรุณาระบุชื่อยุวทูตสายสุขภาพที่สังกัด"); return; }
-
             if(!w) { alert("กรุณาระบุน้ำหนักปัจจุบัน"); return; }
-            
             btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังบันทึก...';
-            
-            const payload = {
-                memberId: currentUser.memberId,
-                weight: w,
-                fat: document.getElementById('www-fat').value,
-                visceral: document.getElementById('www-visceral').value,
-                muscle: document.getElementById('www-muscle').value,
-                ecw: document.getElementById('www-ecw').value,
-                bodyAge: document.getElementById('www-bodyage').value,
-                bmr: bmr,
-                tdee: 0, // ไม่ได้คำนวณ TDEE ในหน้านี้แล้ว
-                ambassador: amb
-            };
-
+            const payload = { memberId: currentUser.memberId, weight: w, fat: document.getElementById('www-fat').value, visceral: document.getElementById('www-visceral').value, muscle: document.getElementById('www-muscle').value, ecw: document.getElementById('www-ecw').value, bodyAge: document.getElementById('www-bodyage').value, bmr: bmr, tdee: 0, ambassador: amb };
             const res = await callAPI("saveWWWRecord", payload);
-            if(res.success) {
-                alert("บันทึกข้อมูลเรียบร้อย ข้อมูลถูกเชื่อมโยงไปยังสมุดพกสุขภาพแล้ว!");
-                showPage('www-dashboard');
-            } else {
-                alert("เกิดข้อผิดพลาด: " + res.message);
-            }
+            if(res.success) { alert("บันทึกข้อมูลเรียบร้อย ข้อมูลถูกเชื่อมโยงไปยังสมุดพกสุขภาพแล้ว!"); showPage('www-dashboard'); } 
+            else { alert("เกิดข้อผิดพลาด: " + res.message); }
             btn.disabled = false; btn.innerText = "บันทึกและอัปเดตสมุดสุขภาพ";
         }
 
-        let wwwDataArr = [];
-        let wwwChartsObj = {};
+        let wwwDataArr = []; let wwwChartsObj = {};
 
         async function openWWWHistory() {
             showPage('www-history');
-            document.getElementById('www-history-loading').classList.remove('hidden');
-            document.getElementById('www-history-no-data').classList.add('hidden');
-            document.getElementById('www-history-content').classList.add('hidden');
-
+            document.getElementById('www-history-loading').classList.remove('hidden'); document.getElementById('www-history-no-data').classList.add('hidden'); document.getElementById('www-history-content').classList.add('hidden');
             const res = await callAPI("getWellRecords", { memberId: currentUser.memberId });
             document.getElementById('www-history-loading').classList.add('hidden');
-
-            if(res.success && res.data && res.data.length > 0) {
-                wwwDataArr = res.data;
-                document.getElementById('www-history-content').classList.remove('hidden');
-                loadWWWCharts();
-            } else {
-                document.getElementById('www-history-no-data').classList.remove('hidden');
-            }
+            if(res.success && res.data && res.data.length > 0) { wwwDataArr = res.data; document.getElementById('www-history-content').classList.remove('hidden'); loadWWWCharts(); } 
+            else { document.getElementById('www-history-no-data').classList.remove('hidden'); }
         }
 
         function loadWWWCharts() {
             if(wwwDataArr.length === 0) return;
-            const mode = document.querySelector('input[name="wwwChartMode"]:checked').value;
-            const displayData = mode === 'current' ? [wwwDataArr[wwwDataArr.length - 1]] : wwwDataArr;
-
-            const labels = displayData.map(d => d.date);
-            const wData = displayData.map(d => d.weight);
-            const mData = displayData.map(d => d.muscle);
-            const fData = displayData.map(d => d.fat);
-            const eData = displayData.map(d => d.ecw);
+            const mode = document.querySelector('input[name="wwwChartMode"]:checked').value; const displayData = mode === 'current' ? [wwwDataArr[wwwDataArr.length - 1]] : wwwDataArr;
+            const labels = displayData.map(d => d.date); const wData = displayData.map(d => d.weight); const mData = displayData.map(d => d.muscle); const fData = displayData.map(d => d.fat); const eData = displayData.map(d => d.ecw);
 
             function createWWWChart(canvasId, dataArr, showX) {
-                let chartElement = document.getElementById(canvasId);
-                if(!chartElement) return;
-
-                if (wwwChartsObj[canvasId]) wwwChartsObj[canvasId].destroy();
-                const ctx = chartElement.getContext('2d');
-                wwwChartsObj[canvasId] = new Chart(ctx, {
-                    type: 'line',
-                    data: { labels: labels, datasets: [{ data: dataArr, borderColor: '#374151', backgroundColor: '#1f2937', borderWidth: 1.5, pointRadius: 3, tension: 0, datalabels: { display: true, align: 'top', font: { size: 9 }, color: '#374151' } }] },
-                    options: { responsive: true, maintainAspectRatio: false, layout: { padding: { top: 15, bottom: showX ? 0 : 5, left: 10, right: 10 } }, plugins: { legend: { display: false } }, scales: { x: { display: showX, grid: { color: '#e5e7eb' }, ticks: { font: { size: 9 }, maxRotation: 0 } }, y: { display: false } } },
-                    plugins: [{ id: 'customDataLabels', afterDatasetsDraw(chart) { const ctx = chart.ctx; chart.data.datasets.forEach((dataset, i) => { chart.getDatasetMeta(i).data.forEach((bar, index) => { ctx.fillStyle = '#374151'; ctx.font = 'bold 9px Sarabun'; ctx.textAlign = 'center'; ctx.fillText(dataset.data[index], bar.x, bar.y - 6); }); }); } }]
-                });
+                let chartElement = document.getElementById(canvasId); if(!chartElement) return;
+                if (wwwChartsObj[canvasId]) wwwChartsObj[canvasId].destroy(); const ctx = chartElement.getContext('2d');
+                wwwChartsObj[canvasId] = new Chart(ctx, { type: 'line', data: { labels: labels, datasets: [{ data: dataArr, borderColor: '#374151', backgroundColor: '#1f2937', borderWidth: 1.5, pointRadius: 3, tension: 0, datalabels: { display: true, align: 'top', font: { size: 9 }, color: '#374151' } }] }, options: { responsive: true, maintainAspectRatio: false, layout: { padding: { top: 15, bottom: showX ? 0 : 5, left: 10, right: 10 } }, plugins: { legend: { display: false } }, scales: { x: { display: showX, grid: { color: '#e5e7eb' }, ticks: { font: { size: 9 }, maxRotation: 0 } }, y: { display: false } } }, plugins: [{ id: 'customDataLabels', afterDatasetsDraw(chart) { const ctx = chart.ctx; chart.data.datasets.forEach((dataset, i) => { chart.getDatasetMeta(i).data.forEach((bar, index) => { ctx.fillStyle = '#374151'; ctx.font = 'bold 9px Sarabun'; ctx.textAlign = 'center'; ctx.fillText(dataset.data[index], bar.x, bar.y - 6); }); }); } }] });
             }
-
-            createWWWChart('chart-www-w', wData, false);
-            createWWWChart('chart-www-m', mData, false);
-            createWWWChart('chart-www-f', fData, false);
-            createWWWChart('chart-www-e', eData, true);
+            createWWWChart('chart-www-w', wData, false); createWWWChart('chart-www-m', mData, false); createWWWChart('chart-www-f', fData, false); createWWWChart('chart-www-e', eData, true);
         }
 
         // ==========================================
         // 🚶‍♂️ The Long March (ก้าวเดิน)
         // ==========================================
         function renderMarchCalendar(records) {
-            const container = document.getElementById('march-calendar');
-            if(!container) return;
-            let html = '';
-            
-            const now = new Date();
-            const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
-            const firstDay = new Date(now.getFullYear(), now.getMonth(), 1).getDay();
-
-            let currentMonthSteps = Array(daysInMonth).fill(0);
-            let totalStepsAllTime = 0; 
-
-            if (records && records.length > 0) {
-                records.forEach(r => {
-                    totalStepsAllTime += r.steps; 
-                    let rDate = new Date(r.date);
-                    if (rDate.getMonth() === now.getMonth() && rDate.getFullYear() === now.getFullYear()) {
-                        let dayIndex = rDate.getDate() - 1; 
-                        currentMonthSteps[dayIndex] = r.steps;
-                    }
-                });
-            }
-            
-            if(document.getElementById('march-total-steps')) {
-                document.getElementById('march-total-steps').innerText = totalStepsAllTime.toLocaleString(); 
-            }
-            
-            for(let i=0; i<firstDay; i++) {
-                html += `<div class="bg-gray-50 flex flex-col items-center justify-center p-2 min-h-[50px]"></div>`;
-            }
-
-            for(let i=1; i<=daysInMonth; i++) {
-                let step = currentMonthSteps[i-1];
-                let bgClass = "bg-white text-gray-500";
-                
-                if (step >= 10000) {
-                    bgClass = "bg-emerald-500 text-white font-bold";
-                } else if (step > 0) {
-                    bgClass = "bg-emerald-50 text-emerald-700";
-                }
-
-                html += `
-                <div class="${bgClass} flex flex-col items-center justify-center p-2 min-h-[50px]">
-                    <span class="text-[9px] opacity-70">${i}</span>
-                    <span class="text-[10px] mt-1">${step > 0 ? (step/1000).toFixed(1)+'k' : '-'}</span>
-                </div>`;
-            }
+            const container = document.getElementById('march-calendar'); if(!container) return;
+            let html = ''; const now = new Date(); const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate(); const firstDay = new Date(now.getFullYear(), now.getMonth(), 1).getDay();
+            let currentMonthSteps = Array(daysInMonth).fill(0); let totalStepsAllTime = 0; 
+            if (records && records.length > 0) { records.forEach(r => { totalStepsAllTime += r.steps; let rDate = new Date(r.date); if (rDate.getMonth() === now.getMonth() && rDate.getFullYear() === now.getFullYear()) { let dayIndex = rDate.getDate() - 1; currentMonthSteps[dayIndex] = r.steps; } }); }
+            if(document.getElementById('march-total-steps')) { document.getElementById('march-total-steps').innerText = totalStepsAllTime.toLocaleString(); }
+            for(let i=0; i<firstDay; i++) { html += `<div class="bg-gray-50 flex flex-col items-center justify-center p-2 min-h-[50px]"></div>`; }
+            for(let i=1; i<=daysInMonth; i++) { let step = currentMonthSteps[i-1]; let bgClass = "bg-white text-gray-500"; if (step >= 10000) { bgClass = "bg-emerald-500 text-white font-bold"; } else if (step > 0) { bgClass = "bg-emerald-50 text-emerald-700"; } html += `<div class="${bgClass} flex flex-col items-center justify-center p-2 min-h-[50px]"><span class="text-[9px] opacity-70">${i}</span><span class="text-[10px] mt-1">${step > 0 ? (step/1000).toFixed(1)+'k' : '-'}</span></div>`; }
             container.innerHTML = html;
         }
 
         async function openMarchTracker() {
-            showPage('www-march');
-            const cal = document.getElementById('march-calendar');
+            showPage('www-march'); const cal = document.getElementById('march-calendar');
             if(cal) cal.innerHTML = '<div class="col-span-7 text-center py-10 text-gray-400"><i class="fa-solid fa-spinner fa-spin text-xl text-emerald-500 mb-2 block"></i>กำลังโหลด...</div>';
-            
-            const res = await callAPI("getMarchRecords", { memberId: currentUser.memberId });
-            renderMarchCalendar(res);
+            const res = await callAPI("getMarchRecords", { memberId: currentUser.memberId }); renderMarchCalendar(res);
         }
 
         async function saveSteps(btn) {
             const steps = document.getElementById('march-steps').value;
-            if(!steps || !currentUser) return;
-            
-            btn.disabled = true; btn.innerText = "...";
-
+            if(!steps || !currentUser) return; btn.disabled = true; btn.innerText = "...";
             const res = await callAPI("saveMarchRecord", { memberId: currentUser.memberId, steps: steps });
-            if(res.success) {
-                alert("บันทึก " + steps + " ก้าว สำหรับวันนี้เรียบร้อย! 🚶‍♂️");
-                document.getElementById('march-steps').value = '';
-                openMarchTracker(); 
-            } else {
-                alert("เกิดข้อผิดพลาด: " + res.message);
-            }
-            btn.disabled = false; btn.innerText = "บันทึก";
+            if(res.success) { alert("บันทึก " + steps + " ก้าว สำหรับวันนี้เรียบร้อย! 🚶‍♂️"); document.getElementById('march-steps').value = ''; openMarchTracker(); } 
+            else { alert("เกิดข้อผิดพลาด: " + res.message); } btn.disabled = false; btn.innerText = "บันทึก";
         }
 
         // ==========================================
         // 💤 Sleep Well (บันทึกการนอน)
         // ==========================================
-        const sleepSymptoms = [
-            "ร้อนวูบวาบกลางดึก", "มีเหงื่อออกตามตัว (หนาว)", "รู้สึกหนาว อุณหภูมิไม่คงที่",
-            "ปัสสาวะบ่อยตอนกลางคืน", "เล่นโทรศัพท์ก่อนนอน", "นอนไม่หลับ สมองไม่ชัตดาวน์",
-            "คิดวนเวียน วิตกกังวล", "หงุดหงิด อารมณ์แปรปรวน", "หลับตื้นและตื่นง่าย",
-            "สะดุ้งตื่นช่วงตี 2-4", "อาการกรน", "ฝันร้าย", "ฝันดี",
-            "ภาวะกรดไหลย้อน", "ท้องอืด แน่นท้อง", "ปวดมวนท้อง", "ตื่นมาแล้วเพลีย"
-        ];
-
+        const sleepSymptoms = [ "ร้อนวูบวาบกลางดึก", "มีเหงื่อออกตามตัว (หนาว)", "รู้สึกหนาว อุณหภูมิไม่คงที่", "ปัสสาวะบ่อยตอนกลางคืน", "เล่นโทรศัพท์ก่อนนอน", "นอนไม่หลับ สมองไม่ชัตดาวน์", "คิดวนเวียน วิตกกังวล", "หงุดหงิด อารมณ์แปรปรวน", "หลับตื้นและตื่นง่าย", "สะดุ้งตื่นช่วงตี 2-4", "อาการกรน", "ฝันร้าย", "ฝันดี", "ภาวะกรดไหลย้อน", "ท้องอืด แน่นท้อง", "ปวดมวนท้อง", "ตื่นมาแล้วเพลีย" ];
         async function openSleepTracker() {
-            showPage('www-sleep');
-            
-            const container = document.getElementById('sleep-symptoms-container');
-            if(container) {
-                container.innerHTML = sleepSymptoms.map((s, index) => `
-                    <label class="cursor-pointer">
-                        <input type="checkbox" value="${s}" class="peer hidden sleep-symptom-cb">
-                        <div class="px-3 py-1.5 rounded-full border border-indigo-200 text-[10px] text-indigo-600 font-medium transition-all peer-checked:bg-indigo-500 peer-checked:text-white peer-checked:border-indigo-500 select-none">
-                            ${s}
-                        </div>
-                    </label>
-                `).join('');
-            }
-
-            const res = await callAPI("getSleepRecords", { memberId: currentUser.memberId });
-            renderSleepChart(res);
+            showPage('www-sleep'); const container = document.getElementById('sleep-symptoms-container');
+            if(container) { container.innerHTML = sleepSymptoms.map((s, index) => `<label class="cursor-pointer"><input type="checkbox" value="${s}" class="peer hidden sleep-symptom-cb"><div class="px-3 py-1.5 rounded-full border border-indigo-200 text-[10px] text-indigo-600 font-medium transition-all peer-checked:bg-indigo-500 peer-checked:text-white peer-checked:border-indigo-500 select-none">${s}</div></label>`).join(''); }
+            const res = await callAPI("getSleepRecords", { memberId: currentUser.memberId }); renderSleepChart(res);
         }
 
         function selectMood(level, btnElement) {
-            document.getElementById('sleep-mood').value = level;
-            document.querySelectorAll('.mood-btn').forEach(btn => {
-                btn.classList.add('opacity-50');
-                btn.classList.remove('opacity-100', 'bg-gray-700', 'border-gray-600', 'border');
-            });
-            btnElement.classList.remove('opacity-50');
-            btnElement.classList.add('opacity-100', 'bg-gray-700', 'border-gray-600', 'border');
+            document.getElementById('sleep-mood').value = level; document.querySelectorAll('.mood-btn').forEach(btn => { btn.classList.add('opacity-50'); btn.classList.remove('opacity-100', 'bg-gray-700', 'border-gray-600', 'border'); });
+            btnElement.classList.remove('opacity-50'); btnElement.classList.add('opacity-100', 'bg-gray-700', 'border-gray-600', 'border');
         }
 
         async function saveSleepLog(btn) {
-            if(!currentUser) return;
-            const mood = document.getElementById('sleep-mood').value;
-            if(mood === "0") { alert("กรุณาเลือกอารมณ์การตื่นนอนเช้านี้"); return; }
-            
+            if(!currentUser) return; const mood = document.getElementById('sleep-mood').value; if(mood === "0") { alert("กรุณาเลือกอารมณ์การตื่นนอนเช้านี้ครับ"); return; }
             const selectedSymptoms = Array.from(document.querySelectorAll('.sleep-symptom-cb:checked')).map(cb => cb.value);
-            
             btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> บันทึก...';
-            
-            const res = await callAPI("saveSleepRecord", { 
-                memberId: currentUser.memberId, 
-                mood: mood, 
-                symptoms: selectedSymptoms.join(', ')
-            });
-
-            if(res.success) {
-                alert("บันทึกประวัติการนอนเช้านี้สำเร็จ!");
-                showPage('www-dashboard');
-            } else {
-                alert("เกิดข้อผิดพลาด: " + res.message);
-            }
-            btn.disabled = false; btn.innerText = "บันทึกข้อมูลการนอน";
+            const res = await callAPI("saveSleepRecord", { memberId: currentUser.memberId, mood: mood, symptoms: selectedSymptoms.join(', ') });
+            if(res.success) { alert("บันทึกประวัติการนอนเช้านี้สำเร็จ!"); showPage('www-dashboard'); } 
+            else { alert("เกิดข้อผิดพลาด: " + res.message); } btn.disabled = false; btn.innerText = "บันทึกข้อมูลการนอน";
         }
 
         let sleepChartInstance = null;
         function renderSleepChart(records) {
-            let chartElement = document.getElementById('sleepMoodChart');
-            if(!chartElement) return;
-
-            if (sleepChartInstance) sleepChartInstance.destroy();
-            const ctx = chartElement.getContext('2d');
-            
-            let chartLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-            let chartMoods = [null, null, null, null, null, null, null];
-
-            if(records && records.length > 0) {
-                const last7Days = records.slice(-7);
-                last7Days.forEach((r, i) => {
-                    chartLabels[i] = r.dayName;
-                    chartMoods[i] = r.mood;
-                });
-            }
-
-            const pointColors = chartMoods.map(m => {
-                if(m===1) return '#ef4444';
-                if(m===2) return '#fb923c';
-                if(m===3) return '#facc15';
-                if(m===4) return '#2dd4bf';
-                if(m===5) return '#4ade80';
-                return '#4b5563';
-            });
-
-            sleepChartInstance = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: chartLabels,
-                    datasets: [{
-                        data: chartMoods, borderColor: '#4b5563', borderWidth: 2,
-                        pointBackgroundColor: pointColors, pointBorderColor: pointColors,
-                        pointRadius: 6, pointHoverRadius: 8, tension: 0.3
-                    }]
-                },
-                options: {
-                    responsive: true, maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        x: { grid: { color: '#374151', drawBorder: false }, ticks: { color: '#9ca3af', font: { size: 10 } } },
-                        y: { 
-                            min: 1, max: 5, grid: { color: '#374151', drawBorder: false, borderDash: [5, 5] }, 
-                            ticks: {
-                                color: '#9ca3af', font: { size: 10 }, stepSize: 1,
-                                callback: function(value) {
-                                    if(value===1) return 'Bad';
-                                    if(value===3) return 'Neutral';
-                                    if(value===5) return 'Great';
-                                    return '';
-                                }
-                            } 
-                        }
-                    }
-                }
-            });
+            let chartElement = document.getElementById('sleepMoodChart'); if(!chartElement) return;
+            if (sleepChartInstance) sleepChartInstance.destroy(); const ctx = chartElement.getContext('2d');
+            let chartLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']; let chartMoods = [null, null, null, null, null, null, null];
+            if(records && records.length > 0) { const last7Days = records.slice(-7); last7Days.forEach((r, i) => { chartLabels[i] = r.dayName; chartMoods[i] = r.mood; }); }
+            const pointColors = chartMoods.map(m => { if(m===1) return '#ef4444'; if(m===2) return '#fb923c'; if(m===3) return '#facc15'; if(m===4) return '#2dd4bf'; if(m===5) return '#4ade80'; return '#4b5563'; });
+            sleepChartInstance = new Chart(ctx, { type: 'line', data: { labels: chartLabels, datasets: [{ data: chartMoods, borderColor: '#4b5563', borderWidth: 2, pointBackgroundColor: pointColors, pointBorderColor: pointColors, pointRadius: 6, pointHoverRadius: 8, tension: 0.3 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { color: '#374151', drawBorder: false }, ticks: { color: '#9ca3af', font: { size: 10 } } }, y: { min: 1, max: 5, grid: { color: '#374151', drawBorder: false, borderDash: [5, 5] }, ticks: { color: '#9ca3af', font: { size: 10 }, stepSize: 1, callback: function(value) { if(value===1) return 'Bad'; if(value===3) return 'Neutral'; if(value===5) return 'Great'; return ''; } } } } } });
         }
-        let healthChartsObj = {};
-        function renderHealthCharts(records, user) {
-            const sorted = [...records].reverse(); // เรียงเก่า -> ใหม่
-            const labels = sorted.map(r => r.date);
-        
-            function draw(canvasId, key) {
-                const el = document.getElementById(canvasId);
-                if(!el) return;
-                if(healthChartsObj[canvasId]) healthChartsObj[canvasId].destroy();
-                const data = sorted.map(r => parseFloat(r[key]) || 0);
-                healthChartsObj[canvasId] = new Chart(el.getContext('2d'), {
-                    type: 'line',
-                    data: { labels, datasets: [{ data, borderColor:'#2563eb', backgroundColor:'#2563eb', borderWidth:1.5, pointRadius:3, tension:0 }] },
-                    options: {
-                        responsive:true, maintainAspectRatio:false,
-                        layout:{ padding:{ top:14, left:8, right:8 } },
-                        plugins:{ legend:{ display:false } },
-                        scales:{ x:{ display:false }, y:{ display:false } }
-                    },
-                    plugins: [{
-                        id: 'lbl-'+canvasId,
-                        afterDatasetsDraw(chart){
-                            const ctx = chart.ctx;
-                            chart.getDatasetMeta(0).data.forEach((p,i)=>{
-                                ctx.fillStyle='#374151'; ctx.font='bold 9px Sarabun'; ctx.textAlign='center';
-                                ctx.fillText(data[i], p.x, p.y-6);
-                            });
-                        }
-                    }]
-                });
-            }
-            draw('chart-weight','weight');
-            draw('chart-fat','fat');
-            draw('chart-visceral','visceral');
-            draw('chart-muscle','muscle');
-            draw('chart-bodyage','bodyAge');
-            draw('chart-bmr','bmr');
-        }
-</script>
+    </script>
 </body>
 </html>
