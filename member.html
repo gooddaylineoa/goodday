@@ -27,6 +27,11 @@
         #liff-loading { position:fixed; inset:0; background:#fff; z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        @keyframes progress { from { width: 0%; } to { width: 100%; } }
+        .animate-progress { animation: progress 7s linear forwards; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fadeInUp { animation: fadeInUp 0.6s ease-out forwards; }
     </style>
 </head>
 <body class="antialiased text-gray-800 pb-20">
@@ -654,6 +659,18 @@
                 </div>
                 <i class="fa-solid fa-arrow-up-right-from-square text-sm opacity-70"></i>
             </div>
+            <!-- 🌟 ปุ่ม Well Well Well! Recap -->
+            <div onclick="checkRecapEligibility()" class="bg-gradient-to-r from-fuchsia-600 to-pink-500 rounded-xl p-4 mt-6 text-white flex items-center justify-between cursor-pointer shadow-lg relative overflow-hidden transform transition hover:scale-[1.02]">
+                <div class="absolute right-[-10px] bottom-[-10px] opacity-20 text-6xl"><i class="fa-solid fa-clock-rotate-left"></i></div>
+                <div class="flex items-center gap-3 relative z-10">
+                    <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center text-xl"><i class="fa-solid fa-star text-yellow-300"></i></div>
+                    <div>
+                        <h3 class="font-bold text-sm">Well Well Well! Recap</h3>
+                        <p class="text-pink-100 text-[10px] mt-0.5">สรุปเส้นทางการเปลี่ยนแปลงของคุณในเดือนนี้</p>
+                    </div>
+                </div>
+                <i class="fa-solid fa-play text-sm opacity-90 relative z-10"></i>
+            </div>
         </div>
 
         <div id="page-www-food" class="page-section p-4 pt-6 bg-gray-50 min-h-screen">
@@ -782,10 +799,18 @@
                     <div class="p-2 flex items-center bg-gray-50"><div class="w-20 text-[10px] font-bold text-gray-600">อัตราส่วน ECW</div><div class="flex-1 relative h-20"><canvas id="chart-www-e"></canvas></div></div>
                 </div>
             </div>
+            <div id="recap-overlay" class="fixed inset-0 bg-gray-900 z-[9999] hidden flex-col font-['Sarabun']">
+            <div class="absolute top-4 left-4 right-12 flex gap-1 z-50" id="recap-progress-container"></div>
+            <button onclick="closeRecap()" class="absolute top-2 right-2 w-10 h-10 text-white text-2xl z-50 drop-shadow-md hover:text-gray-300"><i class="fa-solid fa-xmark"></i></button>
+    
+            <div id="recap-tap-left" class="absolute inset-y-0 left-0 w-1/3 z-40 cursor-pointer" onclick="prevRecapSlide()"></div>
+            <div id="recap-tap-right" class="absolute inset-y-0 right-0 w-2/3 z-40 cursor-pointer" onclick="nextRecapSlide()"></div>
+    
+            <div id="recap-slide-content" class="w-full h-full relative overflow-hidden flex flex-col items-center justify-center p-6 text-white text-center transition-all duration-300">
+            </div>
         </div>
-
     </div>
-
+        
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbwPGR0J7K5yMYQfE5R6DzfNHQB9V4STEP3N15OJPqlq12WhsNf0mFJk1TWBAVmww7fP/exec";
         const LIFF_ID = "2009970638-dqNKJ4CJ"; 
@@ -1442,16 +1467,16 @@
         // 🚀 ระบบ Onboarding Well Well Well!
         // ==========================================
         const wwwGoalsMaster = [
-            { id: 'c1', title: '1. การนอน', icon: 'fa-moon', color: 'text-indigo-400', tags: ['ร้อนวูบวาบกลางดึก', 'มีเหงื่อออกตามตัว (หนาว)', 'รู้สึกหนาว อุณหภูมิไม่คงที่', 'ปัสสาวะบ่อยตอนกลางคืน', 'เล่นโทรศัพท์ก่อนนอน', 'นอนไม่หลับ สมองไม่ชัตดาวน์', 'คิดวนเวียน วิตกกังวล', 'หงุดหงิด อารมณ์แปรปรวน', 'หลับตื้นและตื่นง่าย', 'สะดุ้งตื่นกลางดึก', 'มีอาการกรน', 'มีอาการฝัน', 'ภาวะกรดไหลย้อน', 'ท้องอืด แน่นท้อง'] },
+            { id: 'c1', title: '1. การนอน', icon: 'fa-moon', color: 'text-indigo-400', tags: ['นอนครบวันละ 7-9 ชั่วโมง', 'ลดการสัมผัสแสงสีฟ้าก่อนนอน', 'รู้สึกผ่อนคลาย สบายตัว ไม่สะดุ้งตื่นกลางดึก', 'อาการเครียดหรือวิตกกังวลก่อนนอนลดลง', 'อาการฝันร้ายลดลง', 'ลดการดื่มเครื่องดื่มคาเฟอีน', 'รู้สึกสดชื่น ไม่เพลียระหว่างวัน'] },
             { id: 'c2', title: '2. น้ำหนัก (รูปร่าง)', icon: 'fa-weight-scale', color: 'text-emerald-400', tags: ['ลดสัดส่วน', 'ลดน้ำหนัก', 'เพิ่มกล้ามเนื้อ'] },
             { id: 'c3', title: '3. โรค', icon: 'fa-viruses', color: 'text-red-400', tags: ['ภูมิคุ้มกันดีขึ้น', 'อาการออฟฟิศซินโดรมลดลง', 'ความถี่ในการปวดไมเกรนลดลง'] },
             { id: 'c4', title: '4. ค่าเลือด', icon: 'fa-droplet', color: 'text-rose-400', tags: ['ระดับไขมันในเลือด', 'การทำงานของไต', 'การทำงานของตับ'] },
             { id: 'c5', title: '5. การขับถ่าย', icon: 'fa-toilet', color: 'text-amber-600', tags: ['ลดอาการท้องผูก', 'ลดอาการท้องเสีย', 'รู้สึกถ่ายง่ายขึ้น', 'ถ่ายเป็นกิจวัตรมากขึ้น', 'ไม่ปวดบิดเมื่อถ่าย'] },
             { id: 'c6', title: '6. ผิวพรรณ', icon: 'fa-sparkles', color: 'text-pink-400', tags: ['ผิวหมองคล้ำ', 'ผิวแห้งลอก', 'ผิวมัน', 'ผิวไหม้จากแดด', 'ผิวแพ้ง่าย', 'เป็นสิว', 'เป็นกระ ฝ้า', 'ริ้วรอย', 'หย่อนคล้อย'] },
-            { id: 'c7', title: '7. พลังงานใจ', icon: 'fa-heart-circle-bolt', color: 'text-orange-400', tags: ['รู้สึกเครียดน้อยลง', 'จัดการความเครียดได้ดีมากขึ้น', 'รู้สึกมีแรงบันดาลใจมากขึ้น', 'มีมุมมองใหม่กับชีวิต'] },
+            { id: 'c7', title: '7. พลังงานใจ', icon: 'fa-heart-circle-bolt', color: 'text-orange-400', tags: ['รู้สึกเครียดน้อยลง', 'จัดการความเครียดได้ดีมากขึ้น', 'รู้สึกมีแรงบันดาลใจมากขึ้น', 'มีมุมมองใหม่กับชีวิต', 'ลดการเสพโซเชียลระหว่างวัน'] },
             { id: 'c8', title: '8. ความแข็งแรง', icon: 'fa-dumbbell', color: 'text-blue-400', tags: ['รู้สึกแข็งแรงมากขึ้น', 'รู้สึกไม่เหนื่อยง่าย', 'ร่างกายต้านทานแรงได้ดีมากขึ้น เช่น เดิน วิ่ง ในระยะไกลได้มากขึ้น'] }
         ];
-
+        
         function openWWWWizard() {
             showPage('www-wizard');
             
@@ -1636,6 +1661,207 @@
             if(records && records.length > 0) { const last7Days = records.slice(-7); last7Days.forEach((r, i) => { chartLabels[i] = r.dayName; chartMoods[i] = r.mood; }); }
             const pointColors = chartMoods.map(m => { if(m===1) return '#ef4444'; if(m===2) return '#fb923c'; if(m===3) return '#facc15'; if(m===4) return '#2dd4bf'; if(m===5) return '#4ade80'; return '#4b5563'; });
             sleepChartInstance = new Chart(ctx, { type: 'line', data: { labels: chartLabels, datasets: [{ data: chartMoods, borderColor: '#4b5563', borderWidth: 2, pointBackgroundColor: pointColors, pointBorderColor: pointColors, pointRadius: 6, pointHoverRadius: 8, tension: 0.3 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { color: '#374151', drawBorder: false }, ticks: { color: '#9ca3af', font: { size: 10 } } }, y: { min: 1, max: 5, grid: { color: '#374151', drawBorder: false, borderDash: [5, 5] }, ticks: { color: '#9ca3af', font: { size: 10 }, stepSize: 1, callback: function(value) { if(value===1) return 'Bad'; if(value===3) return 'Neutral'; if(value===5) return 'Great'; return ''; } } } } } });
+        }
+        // ==========================================
+        // 🌟 ระบบ Well Well Well! Recap (Story UI)
+        // ==========================================
+        let currentRecapIndex = 0;
+        let recapTimer = null;
+        const RECAP_DURATION = 7000; // ตั้งเวลาเล่นออโต้ 7 วินาทีต่อหน้า
+
+        function checkRecapEligibility() {
+            // TODO: สามารถผูกเงื่อนไขวันเวลาได้ (เช่น ถ้าไม่ใช่วันที่ 28-31 ให้เปิดแจ้งเตือนนี้)
+            // alert("Coming Soon! อดใจรอชมสรุปความสำเร็จของคุณในช่วงปลายเดือนนี้นะคะ ✨");
+            // return; 
+            
+            // ตอนนี้เปิดให้เทสระบบได้เลย
+            openRecap();
+        }
+
+        function openRecap() {
+            document.getElementById('recap-overlay').classList.remove('hidden');
+            document.getElementById('recap-overlay').classList.add('flex');
+            currentRecapIndex = 0;
+            renderRecapSlide(currentRecapIndex);
+        }
+
+        function closeRecap() {
+            document.getElementById('recap-overlay').classList.add('hidden');
+            document.getElementById('recap-overlay').classList.remove('flex');
+            clearTimeout(recapTimer);
+        }
+
+        function nextRecapSlide() {
+            if (currentRecapIndex === 6) return; // ถ้าถึงหน้าแบบประเมิน ห้ามกดข้ามเอง
+            if (currentRecapIndex < 7) {
+                currentRecapIndex++;
+                renderRecapSlide(currentRecapIndex);
+            } else {
+                closeRecap(); // ถึงหน้าสุดท้ายแล้วกดขวาอีก = ปิด
+            }
+        }
+
+        function prevRecapSlide() {
+            if (currentRecapIndex === 6) return; // ถ้าถึงหน้าแบบประเมิน ห้ามกดย้อน
+            if (currentRecapIndex > 0) {
+                currentRecapIndex--;
+                renderRecapSlide(currentRecapIndex);
+            }
+        }
+
+        async function submitRecapEval(btn) {
+            const ratingEl = document.querySelector('input[name="recap-rating"]:checked');
+            const feedback = document.getElementById('recap-feedback').value.trim();
+            
+            if (!ratingEl) { 
+                alert('กรุณาเลือกการประเมินด้านบนก่อนไปต่อ ✌️'); 
+                return; 
+            }
+            
+            // เปลี่ยนปุ่มเป็นสถานะโหลด
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังส่งข้อมูล...';
+            btn.disabled = true;
+            
+            const payload = {
+                memberId: currentUser.memberId,
+                rating: ratingEl.value,
+                feedback: feedback
+            };
+            
+            // ส่งข้อมูลไปเซฟที่หลังบ้าน (Google Apps Script)
+            const res = await callAPI("saveRecapEvaluation", payload);
+
+            if(res.success) {
+                // ไปหน้าสุดท้าย (Quote) ถ้ายิง API สำเร็จ
+                currentRecapIndex++;
+                renderRecapSlide(currentRecapIndex);
+            } else {
+                alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล: " + res.message);
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        }
+
+        function renderRecapSlide(index) {
+            clearTimeout(recapTimer);
+            
+            // วาด Progress Bar
+            const totalSlides = 8;
+            let progressHtml = '';
+            for (let i = 0; i < totalSlides; i++) {
+                let bgClass = i < index ? 'bg-white' : (i === index ? 'bg-white/80' : 'bg-white/30');
+                let animClass = i === index ? 'animate-progress' : '';
+                progressHtml += `<div class="h-1 flex-1 rounded-full overflow-hidden bg-white/30"><div class="h-full ${i <= index ? 'bg-white' : ''} ${animClass}" style="width: ${i < index ? '100%' : '0%'}"></div></div>`;
+            }
+            document.getElementById('recap-progress-container').innerHTML = progressHtml;
+
+            const contentBox = document.getElementById('recap-slide-content');
+            
+            // ปิดโซนกดแตะเปลี่ยนหน้า ซ้าย-ขวา หากอยู่ในหน้าประเมิน (หน้า 6)
+            if (index === 6) {
+                document.getElementById('recap-tap-left').classList.add('hidden');
+                document.getElementById('recap-tap-right').classList.add('hidden');
+            } else {
+                document.getElementById('recap-tap-left').classList.remove('hidden');
+                document.getElementById('recap-tap-right').classList.remove('hidden');
+            }
+
+            // ข้อมูลจำลอง (เดี๋ยวพี่น้ำขิงหาเรทระยะทางมาแทนที่ได้ครับ)
+            const joinDate = currentUser && currentUser.date ? currentUser.date : "1 พฤษภาคม 2026";
+            const steps = 125400; 
+            
+            let slideHtml = '';
+            let bgStyle = '';
+
+            // --- ตั้งค่าเนื้อหาแต่ละหน้า ---
+            if (index === 0) {
+                bgStyle = 'background: linear-gradient(135deg, #FF9A9E 0%, #FECFEF 99%, #FECFEF 100%); color: #333;';
+                slideHtml = `<div class="animate-fadeInUp"><div class="text-6xl mb-6">🗓️</div><h2 class="text-2xl font-black mb-2">จุดเริ่มต้นของคุณ</h2><p class="text-lg">คุณได้ก้าวเข้ามาเป็นส่วนหนึ่งของ<br>Well Well Well!<br>เมื่อวันที่ <strong>${joinDate}</strong></p></div>`;
+            } 
+            else if (index === 1) {
+                bgStyle = 'background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); color: #fff;';
+                slideHtml = `<div class="animate-fadeInUp"><div class="text-6xl mb-6">🥗</div><h2 class="text-2xl font-black mb-4">มื้ออาหารสร้างโลก</h2><p class="text-lg leading-relaxed">คุณได้เปลี่ยนมื้ออาหาร<br>ให้ดีต่อสุขภาพมากขึ้นถึง<br><span class="text-5xl font-black text-yellow-300 mx-2">24</span> มื้อ</p><p class="text-sm mt-6 opacity-90 border-t border-white/20 pt-4 px-4">เงินทุนสนับสนุนทั้งหมดได้ถูกมอบให้<br>มูลนิธิการศึกษาเพื่อการพัฒนาที่ยั่งยืน 🌱</p></div>`;
+            } 
+            else if (index === 2) {
+                bgStyle = 'background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%); color: #1f2937;';
+                slideHtml = `<div class="animate-fadeInUp"><div class="text-6xl mb-6">👟</div><h2 class="text-2xl font-black mb-4">The Long March</h2><p class="text-lg mb-4">เดือนนี้คุณก้าวเดินไปทั้งหมด<br><span class="text-4xl font-black text-indigo-700">${steps.toLocaleString()}</span> ก้าว</p><div class="bg-white/40 p-4 rounded-2xl backdrop-blur-sm mb-4 shadow-sm"><p class="text-sm font-bold">เทียบเท่ากับการเดินจาก</p><p class="text-lg text-indigo-800 font-black mt-1">📍 กรุงเทพฯ ➡️ 📍 พัทยา</p></div><p class="text-sm">และเดินครบ 10,000 ก้าว ติดต่อกันถึง <strong class="text-lg text-indigo-700">5 วัน!</strong> 🔥</p></div>`;
+            } 
+            else if (index === 3) {
+                bgStyle = 'background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #fff;';
+                slideHtml = `<div class="animate-fadeInUp"><div class="text-6xl mb-6">🌙</div><h2 class="text-2xl font-black mb-4">Wake up Call</h2><p class="text-lg mb-6">คุณภาพการนอนและอารมณ์ตอนตื่น<br>ของคุณโดยเฉลี่ยในเดือนนี้คือ...</p><div class="w-36 h-36 mx-auto bg-white/20 rounded-full flex items-center justify-center text-7xl shadow-inner backdrop-blur-md">🤩</div><p class="text-2xl font-bold mt-6 text-green-300">"ยอดเยี่ยม (Great)"</p></div>`;
+            } 
+            else if (index === 4) {
+                bgStyle = 'background: linear-gradient(135deg, #f6d365 0%, #fda085 100%); color: #8c3a00;';
+                slideHtml = `<div class="animate-fadeInUp w-full px-2"><div class="text-5xl mb-4">📱 ➡️ 💡</div><h2 class="text-xl font-black mb-4">เวลาที่เปลี่ยนไป</h2><p class="text-sm mb-6 font-bold">คุณเปลี่ยนเวลาจากหน้าจอ ไปสร้างสรรค์สิ่งใหม่ๆ</p><div class="space-y-3 text-left"><div class="bg-white/50 p-3.5 rounded-xl backdrop-blur-sm flex items-center gap-4 shadow-sm"><i class="fa-solid fa-users text-orange-600 text-2xl w-8 text-center"></i><div><p class="text-[10px] font-bold opacity-70">เข้าร่วมกิจกรรม</p><p class="text-sm font-black text-orange-900">Onsite Workshop & Zoom</p></div></div><div class="bg-white/50 p-3.5 rounded-xl backdrop-blur-sm flex items-center gap-4 shadow-sm"><i class="fa-solid fa-book-open text-orange-600 text-2xl w-8 text-center"></i><div><p class="text-[10px] font-bold opacity-70">เวลาคุณภาพ</p><p class="text-sm font-black text-orange-900">อ่านหนังสือเล่มโปรด 2 เล่ม</p></div></div><div class="bg-white/50 p-3.5 rounded-xl backdrop-blur-sm flex items-center gap-4 shadow-sm"><i class="fa-solid fa-handshake text-orange-600 text-2xl w-8 text-center"></i><div><p class="text-[10px] font-bold opacity-70">เชื่อมต่อแรงบันดาลใจ</p><p class="text-sm font-black text-orange-900">พบปะผู้คนใหม่ๆ 15 คน</p></div></div></div></div>`;
+            } 
+            else if (index === 5) {
+                bgStyle = 'background: linear-gradient(135deg, #111827 0%, #374151 100%); color: #fff;';
+                slideHtml = `<div class="animate-fadeInUp w-full"><h2 class="text-2xl font-black mb-6 text-amber-400">✨ สรุป 1 เดือนที่ผ่านมา</h2><ul class="text-left space-y-4 text-sm bg-gray-800 p-6 rounded-2xl border border-gray-700 shadow-xl"><li class="flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-400 font-bold shrink-0">1</div> <div>เข้าร่วมโครงการ <strong class="text-amber-200">${joinDate}</strong></div></li><li class="flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-400 font-bold shrink-0">2</div> <div>อาหารสุขภาพ <strong class="text-amber-200">24 มื้อ</strong></div></li><li class="flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-400 font-bold shrink-0">3</div> <div>เดินสะสม <strong class="text-amber-200">${steps.toLocaleString()} ก้าว</strong></div></li><li class="flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-400 font-bold shrink-0">4</div> <div>อารมณ์การตื่น <strong class="text-amber-200">ยอดเยี่ยม 🤩</strong></div></li><li class="flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-400 font-bold shrink-0">5</div> <div>ใช้เวลา <strong class="text-amber-200">Social Detox สร้างสรรค์</strong></div></li></ul><p class="text-xs text-gray-400 mt-6">(แตะขวาเพื่อประเมินผลโครงการ)</p></div>`;
+            } 
+            else if (index === 6) {
+                bgStyle = 'background: #f9fafb; color: #1f2937;';
+                slideHtml = `
+                    <div class="animate-fadeInUp w-full px-2">
+                        <h2 class="text-xl font-black mb-2 text-indigo-700">ประเมินการเปลี่ยนแปลง</h2>
+                        <p class="text-xs text-gray-500 mb-6">คุณคิดว่าใน 1 เดือนนี้ คุณเข้าใกล้เป้าหมายหลักมากแค่ไหน?</p>
+                        
+                        <div class="flex justify-between gap-2 mb-6">
+                            <label class="flex-1 cursor-pointer">
+                                <input type="radio" name="recap-rating" value="น้อย" class="peer hidden">
+                                <div class="p-3 border-2 border-gray-200 rounded-xl text-center peer-checked:border-indigo-500 peer-checked:bg-indigo-50 text-gray-400 peer-checked:text-indigo-700 transition">
+                                    <i class="fa-solid fa-seedling text-2xl mb-1 block"></i><span class="text-[10px] font-bold">น้อย</span>
+                                </div>
+                            </label>
+                            <label class="flex-1 cursor-pointer">
+                                <input type="radio" name="recap-rating" value="ปานกลาง" class="peer hidden">
+                                <div class="p-3 border-2 border-gray-200 rounded-xl text-center peer-checked:border-indigo-500 peer-checked:bg-indigo-50 text-gray-400 peer-checked:text-indigo-700 transition">
+                                    <i class="fa-solid fa-tree text-2xl mb-1 block"></i><span class="text-[10px] font-bold">ปานกลาง</span>
+                                </div>
+                            </label>
+                            <label class="flex-1 cursor-pointer">
+                                <input type="radio" name="recap-rating" value="มาก" class="peer hidden">
+                                <div class="p-3 border-2 border-gray-200 rounded-xl text-center peer-checked:border-indigo-500 peer-checked:bg-indigo-50 text-gray-400 peer-checked:text-indigo-700 transition">
+                                    <i class="fa-solid fa-star text-2xl mb-1 block"></i><span class="text-[10px] font-bold">มาก</span>
+                                </div>
+                            </label>
+                        </div>
+
+                        <div class="text-left mb-6">
+                            <label class="text-xs font-bold text-gray-700 mb-2 block">บอกเล่าประสบการณ์ 1 เดือนของคุณให้เราฟังหน่อย</label>
+                            <textarea id="recap-feedback" rows="4" class="w-full border border-gray-300 rounded-xl p-3 text-sm focus:border-indigo-500 outline-none bg-white shadow-inner" placeholder="พิมพ์ข้อความที่นี่..."></textarea>
+                        </div>
+
+                        <button onclick="submitRecapEval(this)" class="w-full bg-indigo-600 text-white py-3.5 rounded-xl font-bold shadow-md hover:bg-indigo-700 transition">ส่งคำตอบและดูบทสรุป</button>
+                    </div>`;
+            }
+            else if (index === 7) {
+                bgStyle = 'background: linear-gradient(to bottom, #1e3c72 0%, #2a5298 100%); color: #fff;';
+                slideHtml = `
+                    <div class="animate-fadeInUp text-center px-4 w-full">
+                        <i class="fa-solid fa-quote-left text-4xl text-amber-400 opacity-50 mb-4 block text-left"></i>
+                        <p class="text-lg font-medium leading-relaxed italic mb-6">
+                            "การเปลี่ยนแปลงที่ยิ่งใหญ่ที่สุดของโลก ไม่ได้เริ่มต้นจากระบบหรือโครงสร้างภายนอก <br><strong class="text-amber-300">แต่เริ่มต้นจากการเปลี่ยนแปลงภายในจิตใจของมนุษย์เพียงคนเดียว</strong>"
+                        </p>
+                        <i class="fa-solid fa-quote-right text-4xl text-amber-400 opacity-50 mt-4 block text-right"></i>
+                        
+                        <div class="mt-12 border-t border-white/20 pt-6">
+                            <p class="text-sm font-bold">ขอบคุณที่เป็นส่วนหนึ่งของ</p>
+                            <p class="text-xl font-black text-amber-400 mt-1">หนึ่งเดือนที่มหัศจรรย์ ✨</p>
+                        </div>
+                        <button onclick="closeRecap()" class="mt-8 bg-white/20 hover:bg-white/30 text-white w-full py-3.5 rounded-xl font-bold text-sm backdrop-blur-md transition border border-white/30">จบการนำเสนอ</button>
+                    </div>`;
+            }
+
+            contentBox.style.cssText = bgStyle;
+            contentBox.innerHTML = slideHtml;
+
+            // ถ่ายทอดเวลา (auto advance) ถ้ายกเว้นหน้า 6 (หน้าฟอร์มประเมิน) และหน้า 7 (หน้าสุดท้าย)
+            if (index < 6) {
+                recapTimer = setTimeout(() => {
+                    nextRecapSlide();
+                }, RECAP_DURATION);
+            }
         }
     </script>
 </body>
