@@ -784,7 +784,7 @@
             <div id="www-history-no-data" class="hidden text-center py-12 bg-white rounded-xl shadow-sm border border-gray-100 mt-4">
                 <div class="text-4xl text-gray-200 mb-3"><i class="fa-solid fa-chart-pie"></i></div>
                 <p class="text-gray-500 font-bold text-sm mb-1">ยังไม่มีประวัติโภชนาการ</p>
-                <p class="text-gray-400 text-[11px] mb-4 px-4">กรุณาอัปเดตข้อมูล Omron อย่างน้อย 1 ครั้ง เพื่อให้ระบบสร้างกราฟประมวลผลครับ</p>
+                <p class="text-gray-400 text-[11px] mb-4 px-4">กรุณาอัปเดตข้อมูล Omron อย่างน้อย 1 ครั้ง เพื่อให้ระบบสร้างกราฟประมวลผล</p>
                 <button onclick="openWWWForm()" class="bg-amber-500 text-white px-4 py-2 rounded-lg text-xs font-bold shadow-sm">อัปเดตข้อมูล Omron</button>
             </div>
             <div id="www-history-content" class="hidden">
@@ -995,7 +995,7 @@
 
             const pdpa = document.getElementById('reg-pdpa');
             if(pdpa && !pdpa.checked) {
-                err.innerText = "กรุณายืนยันการยอมรับนโยบาย PDPA ก่อนสมัครสมาชิกครับ"; 
+                err.innerText = "กรุณายืนยันการยอมรับนโยบาย PDPA ก่อนสมัครสมาชิก"; 
                 err.classList.remove('hidden'); 
                 return; 
             }
@@ -1114,7 +1114,7 @@
             const res = await callAPI("joinWasteMoney", wmAddress);
             if(res.success) {
                 currentUser.wasteMoney = "ใช่"; localStorage.setItem('gooddaySession', JSON.stringify(currentUser));
-                alert("เข้าร่วมโครงการสำเร็จ! พาทีมงานมาชั่งขยะเพื่อสะสมแต้มได้เลยครับ"); renderProfile();
+                alert("เข้าร่วมโครงการสำเร็จ! พาทีมงานมาชั่งขยะเพื่อสะสมแต้มได้เลย"); renderProfile();
             } else {
                 alert("เกิดข้อผิดพลาด: " + res.message); btn.disabled = false; btn.innerText = "ยืนยันเข้าร่วมโครงการ";
             }
@@ -1388,7 +1388,7 @@
                 
                 if (wantToJoinWWW && currentUser.wellProject !== "ใช่") {
                     currentUser.wellProject = "รอตั้งเป้าหมาย";
-                    alert("บันทึกข้อมูลสำเร็จ! ปลดล็อกโครงการ Well Well Well! แล้ว กรุณากดกล่องสีเหลืองในหน้าหลักเพื่อตั้งเป้าหมายครับ");
+                    alert("บันทึกข้อมูลสำเร็จ! ปลดล็อกโครงการ Well Well Well! แล้ว กรุณากดกล่องสีเหลืองในหน้าหลักเพื่อตั้งเป้าหมาย");
                 } else {
                     alert("บันทึกข้อมูลสุขภาพสำเร็จ!");
                 }
@@ -1511,15 +1511,15 @@
         function nextWiz(stepNum) {
             if (stepNum === 2) {
                 const checkedBoxes = document.querySelectorAll('.wiz-goal-cb:checked');
-                if (checkedBoxes.length === 0) { alert("กรุณาเลือกเป้าหมายอย่างน้อย 1 ข้อครับ"); return; }
+                if (checkedBoxes.length === 0) { alert("กรุณาเลือกเป้าหมายอย่างน้อย 1 ข้อ"); return; }
                 let summaryObj = {}; checkedBoxes.forEach(cb => { let parts = cb.value.split('|'); let cat = parts[0]; let tag = parts[1]; if(!summaryObj[cat]) summaryObj[cat] = []; summaryObj[cat].push(tag); });
                 let sumHtml = ''; for (const [category, tags] of Object.entries(summaryObj)) { sumHtml += `<div class="mb-3 pb-3 border-b border-gray-100 last:border-0 last:pb-0"><h4 class="text-xs font-bold text-gray-800 mb-1">${category}</h4><ul class="list-disc pl-4 text-[11px] text-gray-500">${tags.map(t => `<li>${t}</li>`).join('')}</ul></div>`; }
                 document.getElementById('wizard-summary-content').innerHTML = sumHtml;
             }
-            if (stepNum === 3) { const msg = document.getElementById('wiz-monthly-goal').value.trim(); if(!msg) { alert("กรุณาเขียนเป้าหมายประจำเดือนของคุณสักนิดนะครับ"); return; } }
+            if (stepNum === 3) { const msg = document.getElementById('wiz-monthly-goal').value.trim(); if(!msg) { alert("กรุณาเขียนเป้าหมายประจำเดือนของคุณ"); return; } }
             if (stepNum === 4) {
                 const w = document.getElementById('wiz-weight').value; const amb = document.getElementById('wiz-ambassador').value.trim();
-                if (!w || !amb) { alert("กรุณากรอกน้ำหนัก และ ยุวทูตสายสุขภาพที่ดูแลให้ครบถ้วนครับ"); return; }
+                if (!w || !amb) { alert("กรุณากรอกน้ำหนัก และ ยุวทูตสายสุขภาพที่ดูแลให้ครบถ้วน"); return; }
                 if(currentUser && currentUser.email && currentUser.email !== "-") { document.getElementById('wiz-email').value = currentUser.email; }
             }
             document.querySelectorAll('[id^="wiz-step-"]').forEach(el => el.classList.add('hidden')); document.getElementById('wiz-step-' + stepNum).classList.remove('hidden'); window.scrollTo(0, 0);
@@ -1538,7 +1538,7 @@
             const payload = { memberId: currentUser.memberId, lineUid: currentLineUid, email: emailInput, goals: selectedGoals, monthlyGoalText: monthlyGoal, ambassador: amb, weight: w, fat: fat, visceral: vis, muscle: mus, ecw: ecw, bodyAge: bAge, bmr: bmr };
             const res = await callAPI("registerWWWProject", payload);
             if(res.success) {
-                alert("ยินดีต้อนรับเข้าสู่โครงการ Well Well Well! เช็คอีเมลเพื่อรับลิงก์ Zoom ได้เลยครับ");
+                alert("ยินดีต้อนรับเข้าสู่โครงการ Well Well Well! เช็คอีเมลเพื่อรับลิงก์ Zoom ได้เลย");
                 currentUser.wellProject = "ใช่"; currentUser.email = emailInput; localStorage.setItem('gooddaySession', JSON.stringify(currentUser)); renderProfile(); showPage('www-dashboard');
             } else { alert("เกิดข้อผิดพลาด: " + res.message); btn.disabled = false; btn.innerText = "Check-in & เข้าสู่ระบบ WWW"; }
         }
@@ -1645,7 +1645,7 @@
         }
 
         async function saveSleepLog(btn) {
-            if(!currentUser) return; const mood = document.getElementById('sleep-mood').value; if(mood === "0") { alert("กรุณาเลือกอารมณ์การตื่นนอนเช้านี้ครับ"); return; }
+            if(!currentUser) return; const mood = document.getElementById('sleep-mood').value; if(mood === "0") { alert("กรุณาเลือกอารมณ์การตื่นนอนเช้านี้"); return; }
             const selectedSymptoms = Array.from(document.querySelectorAll('.sleep-symptom-cb:checked')).map(cb => cb.value);
             btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> บันทึก...';
             const res = await callAPI("saveSleepRecord", { memberId: currentUser.memberId, mood: mood, symptoms: selectedSymptoms.join(', ') });
