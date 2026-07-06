@@ -842,26 +842,23 @@
         </div>
     </div>
 
+    <!-- ========================================== -->
+    <!-- ⚙️ JavaScript ของระบบสมาชิก -->
+    <!-- ========================================== -->
     <script>
+        // 🚨 อย่าลืมแก้ API_URL ตรงนี้ให้เป็นลิงก์ของพี่นะครับ
         const API_URL = "https://script.google.com/macros/s/AKfycbwPGR0J7K5yMYQfE5R6DzfNHQB9V4STEP3N15OJPqlq12WhsNf0mFJk1TWBAVmww7fP/exec";
         const LIFF_ID = "2009970638-dqNKJ4CJ"; 
         
         let currentUser = null;
         let currentLineUid = "";
         let globalHealthRecords = []; 
-        let wwwDataArr = []; 
-        let wwwChartsObj = {};
-        let healthChartsObj = {};
-        let sleepChartInstance = null;
-        let currentRecapIndex = 0;
-        let recapTimer = null;
-        const RECAP_DURATION = 7000;
-        let globalRecapData = null;
 
         const provinces = [
             "กรุงเทพมหานคร","กระบี่","กาญจนบุรี","กาฬสินธุ์","กำแพงเพชร","ขอนแก่น","จันทบุรี","ฉะเชิงเทรา","ชลบุรี","ชัยนาท","ชัยภูมิ","ชุมพร","เชียงราย","เชียงใหม่","ตรัง","ตราด","ตาก","นครนายก","นครปฐม","นครพนม","นครราชสีมา","นครศรีธรรมราช","นครสวรรค์","นนทบุรี","นราธิวาส","น่าน","บึงกาฬ","บุรีรัมย์","ปทุมธานี","ประจวบคีรีขันธ์","ปราจีนบุรี","ปัตตานี","พระนครศรีอยุธยา","พะเยา","พังงา","พัทลุง","พิจิตร","พิษณุโลก","เพชรบุรี","เพชรบูรณ์","แพร่","ภูเก็ต","มหาสารคาม","มุกดาหาร","แม่ฮ่องสอน","ยโสธร","ยะลา","ร้อยเอ็ด","ระนอง","ระยอง","ราชบุรี","ลพบุรี","ลำปาง","ลำพูน","เลย","ศรีสะเกษ","สกลนคร","สงขลา","สตูล","สมุทรปราการ","สมุทรสงคราม","สมุทรสาคร","สระแก้ว","สระบุรี","สิงห์บุรี","สุโขทัย","สุพรรณบุรี","สุราษฎร์ธานี","สุรินทร์","หนองคาย","หนองบัวลำภู","อ่างทอง","อำนาจเจริญ","อุดรธานี","อุตรดิตถ์","อุทัยธานี","อุบลราชธานี"
         ];
 
+        // ฟังก์ชันช่วยจัดการลิงก์ในแอป LIFF
         function openExternalLink(url) {
             if (typeof liff !== 'undefined' && liff.isLoggedIn()) {
                 liff.openWindow({ url: url, external: true });
@@ -870,35 +867,42 @@
             }
         }
 
+        // ฟังก์ชันสแกน OS และเปิดแอปแบบ Deep Link
         function openStepsApp() {
-            var userAgent = navigator.userAgent || navigator.vendor || window.opera;
-            var appOpened = false;
-        
-            function onVisibilityChange() {
-                if (document.hidden) { appOpened = true; }
-            }
-            document.addEventListener("visibilitychange", onVisibilityChange);
-        
-            if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-                window.location.href = "stepsapp://";
-                setTimeout(function() {
-                    document.removeEventListener("visibilitychange", onVisibilityChange);
-                    if (!appOpened) { openExternalLink("https://apps.apple.com/th/app/id1037595083"); }
-                }, 2000);
-            } 
-            else if (/android/i.test(userAgent)) {
-                var intentUrl = "intent://#Intent;package=com.stepsappgmbh.stepsapp;end";
-                window.location.href = intentUrl;
-                setTimeout(function() {
-                    document.removeEventListener("visibilitychange", onVisibilityChange);
-                    if (!appOpened) { openExternalLink("https://play.google.com/store/apps/details?id=com.stepsappgmbh.stepsapp"); }
-                }, 2000);
-            } 
-            else {
-                openExternalLink("https://steps.app/");
+        var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+        var appOpened = false;
+    
+        // ถ้าหน้าเว็บถูกซ่อน (ผู้ใช้สลับไปแอปอื่นสำเร็จ) ให้ตั้ง flag ไว้
+        function onVisibilityChange() {
+            if (document.hidden) {
+                appOpened = true;
             }
         }
-
+        document.addEventListener("visibilitychange", onVisibilityChange);
+    
+        if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+            window.location.href = "stepsapp://";
+            setTimeout(function() {
+                document.removeEventListener("visibilitychange", onVisibilityChange);
+                if (!appOpened) {
+                    openExternalLink("https://apps.apple.com/th/app/id1037595083");
+                }
+            }, 2000);
+        } 
+        else if (/android/i.test(userAgent)) {
+            var intentUrl = "intent://#Intent;package=com.stepsappgmbh.stepsapp;end";
+            window.location.href = intentUrl;
+            setTimeout(function() {
+                document.removeEventListener("visibilitychange", onVisibilityChange);
+                if (!appOpened) {
+                    openExternalLink("https://play.google.com/store/apps/details?id=com.stepsappgmbh.stepsapp");
+                }
+            }, 2000);
+        } 
+        else {
+            openExternalLink("https://steps.app/");
+        }
+    }
         async function callAPI(action, data = {}) {
             try {
                 const response = await fetch(API_URL, {
@@ -981,7 +985,7 @@
                 console.error("Page not found: " + pageId);
             }
             window.scrollTo(0, 0);
-            if (pageId === 'www-march') { openMarchTracker(); }
+            if (pageId === 'www-march') renderMarchCalendar();
         }
 
         function calculateAge() {
@@ -1249,6 +1253,169 @@
             }
         }
 
+        async function openHealthRecords() {
+            showPage('health');
+            if(!currentUser) return;
+            
+            document.getElementById('health-content').classList.add('hidden');
+            document.getElementById('health-no-data').classList.add('hidden');
+            document.getElementById('health-part5-container').classList.add('hidden');
+            
+            const [resHealth, resProject] = await Promise.all([
+                callAPI("getHealthRecords", { memberId: currentUser.memberId }),
+                callAPI("getProjectHealthData", { memberId: currentUser.memberId })
+            ]);
+            
+            if(Array.isArray(resProject) && resProject.length > 0) {
+                document.getElementById('health-part5-container').classList.remove('hidden');
+                let p5Html = resProject.map(p => `
+                    <div class="bg-white p-3 rounded-lg border border-indigo-100">
+                        <p class="text-[9px] text-gray-400"><i class="fa-regular fa-clock mr-1"></i> ${p.date}</p>
+                        <p class="text-xs font-bold text-indigo-800 mt-1">${p.title}</p>
+                        <p class="text-sm font-black text-gray-700">${p.result}</p>
+                        <p class="text-[10px] text-indigo-600 mt-1 bg-indigo-50 p-1.5 rounded">💡 คำแนะนำ: ${p.advice}</p>
+                    </div>
+                `).join('');
+                document.getElementById('part5-list').innerHTML = p5Html;
+            }
+
+            if(!Array.isArray(resHealth) || resHealth.length === 0) {
+                document.getElementById('health-no-data').classList.remove('hidden');
+                return;
+            }
+
+            globalHealthRecords = resHealth;
+            document.getElementById('health-content').classList.remove('hidden');
+
+            const latest = resHealth[0]; 
+            document.getElementById('hp-name').innerText = currentUser.name + (currentUser.nickname ? ` (${currentUser.nickname})` : "");
+            document.getElementById('hp-age').innerText = currentUser.age || "-";
+            document.getElementById('hp-gender').innerText = currentUser.gender === 'male' ? 'ชาย' : (currentUser.gender === 'female' ? 'หญิง' : '-');
+            document.getElementById('hp-height').innerText = latest.height || "-";
+            document.getElementById('hp-disease').innerText = latest.disease || "-";
+
+            renderOmronCards(resHealth, currentUser);
+            renderHealthCharts(resHealth, currentUser);
+
+            document.getElementById('risk-bp').innerText = latest.bp || "-";
+            document.getElementById('risk-waist').innerText = latest.waist || "-";
+            if(parseFloat(latest.cvRisk)) {
+                document.getElementById('risk-cv').innerText = parseFloat(latest.cvRisk).toFixed(1);
+            } else {
+                document.getElementById('risk-cv').innerText = "-";
+            }
+            
+            calculateTDEEOnDisplay(); 
+
+            let currW = parseFloat(latest.weight)||0; let currH = parseFloat(latest.height)||160; let currFat = parseFloat(latest.fat)||0; let currMus = parseFloat(latest.muscle)||0; let currVis = parseFloat(latest.visceral)||0; let currAge = parseInt(currentUser.age)||0; let currBodyAge = parseFloat(latest.bodyAge)||0; let gender = currentUser.gender || 'female';
+            let stdW = gender === 'male' ? currH - 105 : currH - 110; let diffW = currW - stdW; let wColor = "bg-green-100 text-green-700"; let wText = "ปกติสมส่วน";
+            if(Math.abs(diffW) > 10) { wColor = "bg-red-100 text-red-700"; wText = "มีความเสี่ยง"; } else if(diffW > 5) { wColor = "bg-yellow-100 text-yellow-700"; wText = "เริ่มอ้วน"; } else if(diffW < -5) { wColor = "bg-yellow-100 text-yellow-700"; wText = "เริ่มผอม"; }
+            let bmi = (currW / Math.pow(currH/100, 2)).toFixed(1); let bmiColor = "bg-green-100 text-green-700"; let bmiText = "ปกติ";
+            if(bmi >= 25) { bmiColor = "bg-red-100 text-red-700"; bmiText = "อ้วน"; } else if(bmi >= 23) { bmiColor = "bg-yellow-100 text-yellow-700"; bmiText = "น้ำหนักเกิน"; } else if(bmi < 18.5) { bmiColor = "bg-yellow-100 text-yellow-700"; bmiText = "ผอมเกินไป"; }
+            
+            let fColor = "bg-green-100 text-green-700"; let fText = "ปกติ";
+            if(gender === 'male') { if(currFat >= 25) { fColor = "bg-red-100 text-red-700"; fText = "อ้วน"; } else if(currFat >= 20) { fColor = "bg-yellow-100 text-yellow-700"; fText = "เริ่มอ้วน"; } else if(currFat < 10) { fColor = "bg-yellow-100 text-yellow-700"; fText = "ต่ำไป"; } } 
+            else { if(currFat >= 35) { fColor = "bg-red-100 text-red-700"; fText = "อ้วน"; } else if(currFat >= 30) { fColor = "bg-yellow-100 text-yellow-700"; fText = "เริ่มอ้วน"; } else if(currFat < 20) { fColor = "bg-yellow-100 text-yellow-700"; fText = "ต่ำไป"; } }
+            
+            let mColor = "bg-green-100 text-green-700"; let mText = "ปกติ";
+            if(gender === 'male') { if(currMus < 20) { mColor = "bg-red-100 text-red-700"; mText = "ต่ำ"; } else if(currMus < 30) { mColor = "bg-yellow-100 text-yellow-700"; mText = "เริ่มต่ำ"; } } 
+            else { if(currMus < 15) { mColor = "bg-red-100 text-red-700"; mText = "ต่ำ"; } else if(currMus < 25) { mColor = "bg-yellow-100 text-yellow-700"; mText = "เริ่มต่ำ"; } }
+            
+            let vColor = "bg-green-100 text-green-700"; let vText = "สุขภาพดี";
+            if(currVis >= 10) { vColor = "bg-red-100 text-red-700"; vText = "อันตราย"; } else if(currVis >= 6) { vColor = "bg-yellow-100 text-yellow-700"; vText = "ค่อนข้างสูง"; }
+            
+            let aColor = "bg-green-100 text-green-700"; let aText = "ดีเยี่ยม"; let diffAge = currBodyAge - currAge;
+            if(diffAge >= 10) { aColor = "bg-red-100 text-red-700"; aText = "มีความเสี่ยง"; } else if(diffAge >= 5) { aColor = "bg-yellow-100 text-yellow-700"; aText = "ควรดูแลสุขภาพ"; }
+
+            let summaryHtml = `
+                <div class="flex justify-between items-center border-b border-gray-50 pb-2"><span class="text-xs font-medium text-gray-600">น้ำหนัก / BMI</span><div class="flex gap-1"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${wColor}">${wText}</span><span class="px-2 py-0.5 rounded text-[10px] font-bold ${bmiColor}">BMI: ${bmiText}</span></div></div>
+                <div class="flex justify-between items-center border-b border-gray-50 pb-2 pt-2"><span class="text-xs font-medium text-gray-600">ไขมันในร่างกาย</span><span class="px-2 py-0.5 rounded text-[10px] font-bold ${fColor}">${fText}</span></div>
+                <div class="flex justify-between items-center border-b border-gray-50 pb-2 pt-2"><span class="text-xs font-medium text-gray-600">ไขมันช่องท้อง</span><span class="px-2 py-0.5 rounded text-[10px] font-bold ${vColor}">${vText}</span></div>
+                <div class="flex justify-between items-center border-b border-gray-50 pb-2 pt-2"><span class="text-xs font-medium text-gray-600">มวลกล้ามเนื้อโครงร่าง</span><span class="px-2 py-0.5 rounded text-[10px] font-bold ${mColor}">${mText}</span></div>
+                <div class="flex justify-between items-center pt-2"><span class="text-xs font-medium text-gray-600">อายุร่างกาย</span><span class="px-2 py-0.5 rounded text-[10px] font-bold ${aColor}">${aText}</span></div>`;
+            document.getElementById('current-risk-summary').innerHTML = summaryHtml;
+        }
+
+        function calculateTDEEOnDisplay() {
+            if(globalHealthRecords.length === 0) return;
+            let latestBMR = globalHealthRecords[0].bmr || 0;
+            let multiplier = parseFloat(document.getElementById('tdee-activity-disp').value);
+            document.getElementById('display-tdee-disp').innerText = Math.round(latestBMR * multiplier);
+        }
+
+        function renderOmronCards(records, user) {
+            const container = document.getElementById('omron-carousel');
+            let html = ""; let gender = user.gender || 'female'; let age = parseInt(user.age) || 0; let height = parseFloat(records[0].height) || 160;
+
+            records.forEach((r, idx) => {
+                let w = parseFloat(r.weight)||0; let fat = parseFloat(r.fat)||0; let vis = parseFloat(r.visceral)||0; let mus = parseFloat(r.muscle)||0; let bAge = parseFloat(r.bodyAge)||0; let bmr = parseFloat(r.bmr)||0;
+                let stdW = gender === 'male' ? height - 105 : height - 110; let diffW = w - stdW; let wColor = "bg-green-100 text-green-700"; let wText = "ปกติและสมส่วน";
+                if(diffW > 10 || diffW < -10) { wColor = "bg-red-100 text-red-700"; wText = "เริ่มมีความเสี่ยง"; } else if(diffW > 5) { wColor = "bg-yellow-100 text-yellow-700"; wText = "เริ่มอ้วน"; } else if(diffW < -5) { wColor = "bg-yellow-100 text-yellow-700"; wText = "เริ่มผอม"; }
+                
+                let fColor = "bg-green-100 text-green-700"; let fText = "ปกติ";
+                if(gender === 'male') { if(fat >= 25) { fColor = "bg-red-100 text-red-700"; fText = "อ้วน"; } else if(fat >= 20 || fat < 10) { fColor = "bg-yellow-100 text-yellow-700"; fText = fat < 10 ? "ต่ำ" : "เริ่มอ้วน"; } } 
+                else { if(fat >= 35) { fColor = "bg-red-100 text-red-700"; fText = "อ้วน"; } else if(fat >= 30 || fat < 20) { fColor = "bg-yellow-100 text-yellow-700"; fText = fat < 20 ? "ต่ำ" : "เริ่มอ้วน"; } }
+                
+                let vColor = "bg-green-100 text-green-700"; let vText = "สุขภาพดี";
+                if(vis >= 10) { vColor = "bg-red-100 text-red-700"; vText = "อันตราย"; } else if(vis >= 6) { vColor = "bg-yellow-100 text-yellow-700"; vText = "ค่อนข้างสูง"; }
+                
+                let mColor = "bg-green-100 text-green-700"; let mText = "ปกติ";
+                if(gender === 'male') { if(mus < 20) { mColor = "bg-red-100 text-red-700"; mText = "ต่ำ"; } else if(mus < 30) { mColor = "bg-yellow-100 text-yellow-700"; mText = "เริ่มต่ำ"; } } 
+                else { if(mus < 15) { mColor = "bg-red-100 text-red-700"; mText = "ต่ำ"; } else if(mus < 25) { mColor = "bg-yellow-100 text-yellow-700"; mText = "เริ่มต่ำ"; } }
+                
+                let aColor = "bg-green-100 text-green-700"; let aText = "ดีเยี่ยม"; let diffAge = bAge - age;
+                if(diffAge >= 10) { aColor = "bg-red-100 text-red-700"; aText = "มีความเสี่ยง"; } else if(diffAge >= 5) { aColor = "bg-yellow-100 text-yellow-700"; aText = "ควรดูแลสุขภาพ"; }
+                
+                let stdBMR = gender === 'male' ? (10 * w) + (6.25 * height) - (5 * age) + 5 : (10 * w) + (6.25 * height) - (5 * age) - 161; let diffBMR = stdBMR - bmr; let bmrColor = "bg-green-100 text-green-700"; let bmrText = "ปกติ";
+                if(diffBMR > 200) { bmrColor = "bg-red-100 text-red-700"; bmrText = "มีความเสี่ยง"; } else if(diffBMR > 0) { bmrColor = "bg-yellow-100 text-yellow-700"; bmrText = "เริ่มอ้วน"; }
+
+                html += `
+                <div class="min-w-[280px] bg-white rounded-xl shadow-sm border border-gray-200 snap-center shrink-0">
+                    <div class="bg-blue-50 px-4 py-2 border-b border-blue-100 rounded-t-xl"><span class="font-bold text-blue-800 text-xs"><i class="fa-regular fa-calendar-check mr-1"></i> ข้อมูลวันที่ ${r.date}</span></div>
+                    <div class="p-3 space-y-2 text-xs">
+                        <div class="flex justify-between items-center border-b border-gray-50 pb-2"><span class="text-gray-500 font-bold">น้ำหนัก <br><span class="text-[9px] font-normal">(มาตรฐาน ${stdW.toFixed(1)})</span></span><div class="text-right"><span class="font-black text-gray-800 text-sm">${w}</span> <span class="text-[10px]">kg</span><div class="mt-1 ${wColor} text-[9px] font-bold px-1.5 py-0.5 rounded">${wText}</div></div></div>
+                        <div class="flex justify-between items-center border-b border-gray-50 pb-2"><span class="text-gray-500 font-bold">ไขมัน (Fat)</span><div class="text-right"><span class="font-black text-gray-800 text-sm">${fat}</span> <span class="text-[10px]">%</span><div class="mt-1 ${fColor} text-[9px] font-bold px-1.5 py-0.5 rounded">${fText}</div></div></div>
+                        <div class="flex justify-between items-center border-b border-gray-50 pb-2"><span class="text-gray-500 font-bold">ไขมันช่องท้อง</span><div class="text-right"><span class="font-black text-gray-800 text-sm">${vis}</span><div class="mt-1 ${vColor} text-[9px] font-bold px-1.5 py-0.5 rounded">${vText}</div></div></div>
+                        <div class="flex justify-between items-center border-b border-gray-50 pb-2"><span class="text-gray-500 font-bold">มวลกล้ามเนื้อ</span><div class="text-right"><span class="font-black text-gray-800 text-sm">${mus}</span> <span class="text-[10px]">%</span><div class="mt-1 ${mColor} text-[9px] font-bold px-1.5 py-0.5 rounded">${mText}</div></div></div>
+                        <div class="flex justify-between items-center border-b border-gray-50 pb-2"><span class="text-gray-500 font-bold">อายุร่างกาย <br><span class="text-[9px] font-normal">(จริง ${age})</span></span><div class="text-right"><span class="font-black text-gray-800 text-sm">${bAge}</span> <span class="text-[10px]">ปี</span><div class="mt-1 ${aColor} text-[9px] font-bold px-1.5 py-0.5 rounded">${aText}</div></div></div>
+                        <div class="flex justify-between items-center"><span class="text-gray-500 font-bold">BMR <br><span class="text-[9px] font-normal">(มาตรฐาน ${Math.round(stdBMR)})</span></span><div class="text-right"><span class="font-black text-gray-800 text-sm">${bmr}</span> <span class="text-[10px]">Kcal</span><div class="mt-1 ${bmrColor} text-[9px] font-bold px-1.5 py-0.5 rounded">${bmrText}</div></div></div>
+                    </div>
+                </div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        function createMiniChart(canvasId, dataArr, annotationConfig, showX) {
+            let chartElement = document.getElementById(canvasId);
+            if(!chartElement) return;
+
+            if (healthChartsObj[canvasId]) { healthChartsObj[canvasId].destroy(); } 
+            
+            const ctx = chartElement.getContext('2d');
+            healthChartsObj[canvasId] = new Chart(ctx, {
+                type: 'line',
+                data: { labels: labels, datasets: [{ data: dataArr, borderColor: '#374151', backgroundColor: '#1f2937', borderWidth: 1.5, pointRadius: 3, pointBackgroundColor: '#1f2937', tension: 0, datalabels: { display: true, align: 'top', font: { size: 9 }, color: '#374151' } }] },
+                options: {
+                    responsive: true, maintainAspectRatio: false, layout: { padding: { top: 15, bottom: showX ? 0 : 5, left: 10, right: 10 } },
+                    plugins: { legend: { display: false }, tooltip: { enabled: false }, annotation: annotationConfig },
+                    scales: { x: { display: showX, grid: { display: true, color: '#e5e7eb' }, ticks: { font: { size: 9 }, maxRotation: 0 } }, y: { display: false } }
+                },
+                plugins: [{ 
+                    id: 'customDataLabels',
+                    afterDatasetsDraw(chart) {
+                        const ctx = chart.ctx;
+                        chart.data.datasets.forEach((dataset, i) => {
+                            const meta = chart.getDatasetMeta(i);
+                            meta.data.forEach((bar, index) => {
+                                const dataVal = dataset.data[index];
+                                ctx.fillStyle = '#374151'; ctx.font = 'bold 9px Sarabun'; ctx.textAlign = 'center'; ctx.fillText(dataVal, bar.x, bar.y - 6);
+                            });
+                        });
+                    }
+                }]
+            });
+        }
+
         // ==========================================
         // 🛡️ ระบบช่วยเช็ค: จำกัดการส่ง 1 ครั้ง/วัน
         // ==========================================
@@ -1276,10 +1443,6 @@
                 btn.disabled = true;
                 btn.className = "w-full bg-gray-300 text-gray-500 py-3.5 rounded-xl font-bold mt-4 cursor-not-allowed text-sm";
                 btn.innerText = "🔒 คุณบันทึกข้อมูลของวันนี้ไปแล้ว";
-            } else {
-                btn.disabled = false;
-                btn.className = "w-full bg-blue-600 text-white py-3.5 rounded-xl font-semibold shadow-md hover:bg-blue-700 transition text-sm";
-                btn.innerText = "บันทึกข้อมูลเข้าสู่ระบบ";
             }
             showPage('health-form');
         }
@@ -1341,54 +1504,33 @@
         // ==========================================
         async function openMarchTracker() {
             showPage('www-march'); const cal = document.getElementById('march-calendar');
-            const btnSave = document.querySelector('#page-www-march button[onclick="saveSteps(this)"]');
+            const btnSave = document.querySelector('button[onclick="saveSteps(this)"]');
             const inputSteps = document.getElementById('march-steps');
-            const fileInput = document.getElementById('march-image');
             
             if(checkDailyLimit('march')) {
                 inputSteps.disabled = true;
                 inputSteps.placeholder = "บันทึกแล้ว";
-                if(fileInput) fileInput.disabled = true;
                 btnSave.disabled = true;
-                btnSave.className = "w-full bg-gray-300 text-gray-500 py-3 rounded-xl font-bold shadow-sm cursor-not-allowed text-base mt-2";
-                btnSave.innerText = "🔒 คุณบันทึกก้าวเดินของวันนี้ไปแล้ว";
+                btnSave.className = "bg-gray-300 text-gray-500 px-5 rounded-xl font-bold shadow-sm cursor-not-allowed text-base";
+                btnSave.innerText = "✔️";
             } else {
                 inputSteps.disabled = false; inputSteps.placeholder = "0";
-                if(fileInput) { fileInput.disabled = false; fileInput.value = ''; }
                 btnSave.disabled = false;
-                btnSave.className = "w-full bg-emerald-500 hover:bg-emerald-600 text-white py-3 rounded-xl font-bold shadow-sm text-base mt-2";
-                btnSave.innerText = "ส่งบันทึกและรูปภาพหลักฐาน";
+                btnSave.className = "bg-emerald-500 text-white px-5 rounded-xl font-bold shadow-sm text-base";
+                btnSave.innerText = "บันทึก";
             }
 
             if(cal) cal.innerHTML = '<div class="col-span-7 text-center py-10 text-gray-400"><i class="fa-solid fa-spinner fa-spin text-xl text-emerald-500 mb-2 block"></i>กำลังโหลด...</div>';
-            const res = await callAPI("getMarchRecords", { memberId: currentUser.memberId }); 
-            if(res && Array.isArray(res)) { renderMarchCalendar(res); } else { renderMarchCalendar([]); }
+            const res = await callAPI("getMarchRecords", { memberId: currentUser.memberId }); renderMarchCalendar(res);
         }
 
         async function saveSteps(btn) {
             const steps = document.getElementById('march-steps').value;
-            const fileInput = document.getElementById('march-image');
             if(!steps || !currentUser) return; 
-
-            // ตรวจสอบและแปลงรูปภาพหลักฐานเป็น Base64
-            let base64Image = "";
-            let fileName = "";
-            if (fileInput && fileInput.files.length > 0) {
-                const file = fileInput.files[0];
-                fileName = file.name;
-                base64Image = await new Promise((resolve) => {
-                    const reader = new FileReader();
-                    reader.onloadend = () => resolve(reader.result.split(',')[1]);
-                    reader.readAsDataURL(file);
-                });
-            } else {
-                Swal.fire('ลืมแนบรูป', 'กรุณาแนบรูปภาพหน้าจอแอป StepsApp เพื่อใช้เป็นหลักฐานประจำวันด้วยครับ', 'warning');
-                return;
-            }
 
             const confirmResult = await Swal.fire({
                 title: 'ยืนยันก้าวเดิน?',
-                html: `คุณกำลังจะบันทึก <b class="text-emerald-600 text-2xl">${steps}</b> ก้าว พร้อมอัปโหลดหลักฐานสำหรับวันนี้`,
+                html: `คุณกำลังจะบันทึก <b class="text-emerald-600 text-2xl">${steps}</b> ก้าว สำหรับวันนี้`,
                 icon: 'info',
                 showCancelButton: true,
                 confirmButtonColor: '#10b981',
@@ -1398,49 +1540,16 @@
             });
             if (!confirmResult.isConfirmed) return;
 
-            btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังบันทึก...';
-            const res = await callAPI("saveMarchRecord", { 
-                memberId: currentUser.memberId, 
-                steps: steps,
-                imageRaw: base64Image,
-                imageName: fileName
-            });
-            
+            btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+            const res = await callAPI("saveMarchRecord", { memberId: currentUser.memberId, steps: steps });
             if(res.success) { 
                 setDailyLimit('march');
-                Swal.fire('เจ๋งมาก!', `บันทึกข้อมูลและภาพหลักฐานเรียบร้อย 🚶‍♂️`, 'success'); 
+                Swal.fire('เจ๋งมาก!', `บันทึก ${steps} ก้าว เรียบร้อย 🚶‍♂️`, 'success'); 
                 document.getElementById('march-steps').value = ''; 
                 openMarchTracker(); 
-            } else { Swal.fire('เกิดข้อผิดพลาด', res.message, 'error'); } 
-            btn.disabled = false; btn.innerText = "ส่งบันทึกและรูปภาพหลักฐาน";
-        }
-
-        function renderMarchCalendar(records) {
-            const container = document.getElementById('march-calendar'); if(!container) return;
-            let html = ''; const now = new Date(); const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate(); const firstDay = new Date(now.getFullYear(), now.getMonth(), 1).getDay();
-            let currentMonthSteps = Array(daysInMonth).fill(0); let totalStepsAllTime = 0; 
-            
-            // 🌟 แก้ไข: ตรวจสอบว่าเป็นอาร์เรย์หรือไม่ ป้องกันการพังถ้าระบบเพิ่งเริ่มใช้
-            if (records && Array.isArray(records) && records.length > 0) { 
-                records.forEach(r => { 
-                    totalStepsAllTime += r.steps; 
-                    let rDate = new Date(r.date); 
-                    if (rDate.getMonth() === now.getMonth() && rDate.getFullYear() === now.getFullYear()) { 
-                        currentMonthSteps[rDate.getDate() - 1] = r.steps; 
-                    } 
-                }); 
-            }
-            
-            if(document.getElementById('march-total-steps')) { document.getElementById('march-total-steps').innerText = totalStepsAllTime.toLocaleString(); }
-            
-            for(let i=0; i<firstDay; i++) { html += `<div class="bg-gray-50 min-h-[50px]"></div>`; }
-            for(let i=1; i<=daysInMonth; i++) {
-                let step = currentMonthSteps[i-1]; let bgClass = "bg-white text-gray-500"; 
-                if (step >= 10000) { bgClass = "bg-emerald-500 text-white font-bold"; } 
-                else if (step > 0) { bgClass = "bg-emerald-50 text-emerald-700"; } 
-                html += `<div class="${bgClass} flex flex-col items-center justify-center p-2 min-h-[50px] border border-gray-100"><span class="text-[9px] opacity-70">${i}</span><span class="text-[10px] mt-1">${step > 0 ? (step/1000).toFixed(1)+'k' : '-'}</span></div>`; 
-            }
-            container.innerHTML = html;
+            } 
+            else { Swal.fire('เกิดข้อผิดพลาด', res.message, 'error'); } 
+            btn.disabled = false; btn.innerText = "บันทึก";
         }
 
         // ==========================================
@@ -1479,7 +1588,7 @@
 
         async function saveSleepLog(btn) {
             if(!currentUser) return; const mood = document.getElementById('sleep-mood').value; 
-            if(mood === "0") { Swal.fire('ลืมเลือกอารมณ์', 'กรุณาประเมินอารมณ์การตื่นนอนเช้านี้ด้วยครับ', 'warning'); return; }
+            if(mood === "0") { Swal.fire('ลืมอะไรไปหรือเปล่า?', 'กรุณาประเมินอารมณ์การตื่นนอนเช้านี้ด้วย', 'warning'); return; }
             
             const confirmResult = await Swal.fire({
                 title: 'ยืนยันบันทึกการนอน?',
@@ -1506,6 +1615,7 @@
             btn.disabled = false; btn.innerText = "บันทึกข้อมูลการนอน";
         }
 
+        let sleepChartInstance = null;
         function renderSleepChart(records) {
             let chartElement = document.getElementById('sleepMoodChart'); if(!chartElement) return;
             if (sleepChartInstance) sleepChartInstance.destroy(); const ctx = chartElement.getContext('2d');
@@ -1539,8 +1649,164 @@
         }
 
         // ==========================================
+        // 5. บันทึกมื้ออาหาร (Good Food Good Mood)
+        // ==========================================
+        async function openFoodDirectory() {
+            showPage('www-food');
+            const container = document.getElementById('food-list'); container.innerHTML = '<div class="text-center py-10 text-gray-400"><i class="fa-solid fa-spinner fa-spin text-xl text-orange-500 mb-2 block"></i>กำลังโหลด...</div>';
+            
+            const btnFood = document.querySelector('button[onclick="openFoodModal()"]');
+            if(checkDailyLimit('food')) {
+                btnFood.disabled = true;
+                btnFood.className = "w-full mb-6 bg-gray-300 text-gray-500 font-bold py-3.5 rounded-xl shadow-md cursor-not-allowed flex items-center justify-center";
+                btnFood.innerHTML = "🔒 คุณส่งการบ้านของวันนี้ไปแล้ว";
+            } else {
+                btnFood.disabled = false;
+                btnFood.className = "w-full mb-6 bg-green-500 hover:bg-green-600 text-white font-bold py-3.5 rounded-xl shadow-md transition flex items-center justify-center";
+                btnFood.innerHTML = '<i class="fa-solid fa-bowl-food mr-2 text-lg"></i> บันทึกมื้อสุขภาพ';
+            }
+
+            const res = await callAPI("getFoodDirectory", {});
+            if(res && res.length > 0) {
+                container.innerHTML = res.map(f => `<div class="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100"><img src="${f.image}" class="w-full h-32 object-cover" alt="${f.name}"><div class="p-4"><h3 class="font-bold text-gray-800">${f.name}</h3><p class="text-[11px] text-gray-500 mt-1 mb-2"><strong>คอนเซปต์:</strong> ${f.concept}</p><p class="text-[11px] text-gray-500 mb-3"><strong>เมนูแนะนำ:</strong> ${f.recommend}</p><button onclick="openExternalLink('${f.link}')" class="w-full bg-green-500 text-white text-xs font-bold py-2.5 rounded-lg hover:bg-green-600 transition"><i class="fa-solid fa-motorcycle mr-1"></i> สั่งผ่าน Grab / ดูเมนู</button></div></div>`).join('');
+            } else { container.innerHTML = `<div class="text-center py-10 bg-white rounded-xl shadow-sm border border-gray-100"><div class="text-4xl text-gray-200 mb-3"><i class="fa-solid fa-store-slash"></i></div><p class="text-gray-400 font-bold text-sm">ยังไม่มีข้อมูล</p></div>`; }
+        }
+
+        function openFoodModal() {
+            document.getElementById('food-modal').classList.remove('hidden');
+            document.getElementById('food-modal').classList.add('flex');
+            document.getElementById('food-menu-input').value = ""; 
+            document.getElementById('food-msg').classList.add('hidden');
+        }
+
+        function closeFoodModal() {
+            document.getElementById('food-modal').classList.add('hidden');
+            document.getElementById('food-modal').classList.remove('flex');
+        }
+
+        async function submitFoodLog() {
+            const menuInput = document.getElementById('food-menu-input').value.trim();
+            const msgEl = document.getElementById('food-msg');
+            const btn = document.getElementById('btn-submit-food');
+
+            if(!menuInput) {
+                Swal.fire('ลืมบอกเมนู', 'กรุณาพิมพ์เมนูอาหารก่อนบันทึก', 'warning'); return;
+            }
+
+            const confirmResult = await Swal.fire({
+                title: 'ยืนยันส่งการบ้าน?',
+                text: "บันทึกได้ 1 ครั้ง/วัน เท่านั้น (ไม่สามารถแก้ไขได้)",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#22c55e',
+                cancelButtonColor: '#9ca3af',
+                confirmButtonText: 'ยืนยัน',
+                cancelButtonText: 'ยกเลิก'
+            });
+            if (!confirmResult.isConfirmed) return;
+
+            btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังบันทึก...';
+            msgEl.classList.add('hidden');
+
+            const res = await callAPI("submitFoodHomework", { memberId: currentUser.memberId, menu: menuInput });
+
+            if(res.success) {
+                setDailyLimit('food');
+                Swal.fire({ title: 'สุดยอด!', text: 'บันทึกมื้ออาหารสุดเฮลตี้สำเร็จ!', icon: 'success', confirmButtonColor: '#22c55e', timer: 2000}); 
+                closeFoodModal();
+                openFoodDirectory(); // รีโหลดปุ่มให้กลายเป็นสีเทา
+            } else {
+                Swal.fire('เกิดข้อผิดพลาด', res.message, 'error');
+                btn.disabled = false; btn.innerHTML = 'บันทึกมื้ออาหาร';
+            }
+        }
+
+        // ==========================================
         // 🌟 ระบบ Well Well Well! Recap (Story UI)
         // ==========================================
+        const wwwGoalsMaster = [
+            { id: 'c1', title: '1. การนอน', icon: 'fa-moon', color: 'text-indigo-400', tags: ['นอนครบวันละ 7-9 ชั่วโมง', 'ลดการสัมผัสแสงสีฟ้าก่อนนอน', 'รู้สึกผ่อนคลาย สบายตัว ไม่สะดุ้งตื่นกลางดึก', 'อาการเครียดหรือวิตกกังวลก่อนนอนลดลง', 'อาการฝันร้ายลดลง', 'ลดการดื่มเครื่องดื่มคาเฟอีน', 'รู้สึกสดชื่น ไม่เพลียระหว่างวัน'] },
+            { id: 'c2', title: '2. น้ำหนัก (รูปร่าง)', icon: 'fa-weight-scale', color: 'text-emerald-400', tags: ['ลดสัดส่วน', 'ลดน้ำหนัก', 'เพิ่มกล้ามเนื้อ'] },
+            { id: 'c3', title: '3. โรค', icon: 'fa-viruses', color: 'text-red-400', tags: ['ภูมิคุ้มกันดีขึ้น', 'อาการออฟฟิศซินโดรมลดลง', 'ความถี่ในการปวดไมเกรนลดลง'] },
+            { id: 'c4', title: '4. ค่าเลือด', icon: 'fa-droplet', color: 'text-rose-400', tags: ['ระดับไขมันในเลือด', 'การทำงานของไต', 'การทำงานของตับ'] },
+            { id: 'c5', title: '5. การขับถ่าย', icon: 'fa-toilet', color: 'text-amber-600', tags: ['ลดอาการท้องผูก', 'ลดอาการท้องเสีย', 'รู้สึกถ่ายง่ายขึ้น', 'ถ่ายเป็นกิจวัตรมากขึ้น', 'ไม่ปวดบิดเมื่อถ่าย'] },
+            { id: 'c6', title: '6. ผิวพรรณ', icon: 'fa-sparkles', color: 'text-pink-400', tags: ['ผิวหมองคล้ำ', 'ผิวแห้งลอก', 'ผิวมัน', 'ผิวไหม้จากแดด', 'ผิวแพ้ง่าย', 'เป็นสิว', 'เป็นกระ ฝ้า', 'ริ้วรอย', 'หย่อนคล้อย'] },
+            { id: 'c7', title: '7. พลังงานใจ', icon: 'fa-heart-circle-bolt', color: 'text-orange-400', tags: ['รู้สึกเครียดน้อยลง', 'จัดการความเครียดได้ดีมากขึ้น', 'รู้สึกมีแรงบันดาลใจมากขึ้น', 'มีมุมมองใหม่กับชีวิต', 'ลดการเสพโซเชียลระหว่างวัน'] },
+            { id: 'c8', title: '8. ความแข็งแรง', icon: 'fa-dumbbell', color: 'text-blue-400', tags: ['รู้สึกแข็งแรงมากขึ้น', 'รู้สึกไม่เหนื่อยง่าย', 'ร่างกายต้านทานแรงได้ดีมากขึ้น เช่น เดิน วิ่ง ในระยะไกลได้มากขึ้น'] }
+        ];
+
+        function openWWWWizard() {
+            showPage('www-wizard');
+            
+            const container = document.getElementById('wizard-goals-container');
+            container.innerHTML = wwwGoalsMaster.map(cat => `
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                    <h3 class="text-sm font-bold text-gray-800 mb-3"><i class="fa-solid ${cat.icon} ${cat.color} mr-1"></i> ${cat.title}</h3>
+                    <div class="flex flex-wrap gap-2">
+                        ${cat.tags.map(tag => `
+                            <label class="cursor-pointer">
+                                <input type="checkbox" value="${cat.title}|${tag}" class="peer hidden wiz-goal-cb">
+                                <div class="px-4 py-2 rounded-xl bg-gray-50 text-gray-600 text-[11px] font-medium transition-all peer-checked:bg-amber-500 peer-checked:text-white peer-checked:font-bold select-none border border-gray-200 peer-checked:border-amber-500 shadow-sm">${tag}</div>
+                            </label>`).join('')}
+                    </div>
+                </div>
+            `).join('');
+
+            if (globalHealthRecords && globalHealthRecords.length > 0) {
+                const latest = globalHealthRecords[0];
+                document.getElementById('wiz-weight').value = latest.weight || "";
+                document.getElementById('wiz-fat').value = latest.fat || "";
+                document.getElementById('wiz-visceral').value = latest.visceral || "";
+                document.getElementById('wiz-muscle').value = latest.muscle || "";
+                document.getElementById('wiz-bodyage').value = latest.bodyAge || "";
+                document.getElementById('wiz-bmr').value = latest.bmr || "";
+            }
+
+            document.querySelectorAll('[id^="wiz-step-"]').forEach(el => el.classList.add('hidden')); 
+            document.getElementById('wiz-step-1').classList.remove('hidden');
+        }
+
+        function nextWiz(stepNum) {
+            if (stepNum === 2) {
+                const checkedBoxes = document.querySelectorAll('.wiz-goal-cb:checked');
+                if (checkedBoxes.length === 0) { Swal.fire('คำเตือน', 'กรุณาเลือกเป้าหมายอย่างน้อย 1 ข้อ', 'warning'); return; }
+                let summaryObj = {}; checkedBoxes.forEach(cb => { let parts = cb.value.split('|'); let cat = parts[0]; let tag = parts[1]; if(!summaryObj[cat]) summaryObj[cat] = []; summaryObj[cat].push(tag); });
+                let sumHtml = ''; for (const [category, tags] of Object.entries(summaryObj)) { sumHtml += `<div class="mb-3 pb-3 border-b border-gray-100 last:border-0 last:pb-0"><h4 class="text-xs font-bold text-gray-800 mb-1">${category}</h4><ul class="list-disc pl-4 text-[11px] text-gray-500">${tags.map(t => `<li>${t}</li>`).join('')}</ul></div>`; }
+                document.getElementById('wizard-summary-content').innerHTML = sumHtml;
+            }
+            if (stepNum === 3) { const msg = document.getElementById('wiz-monthly-goal').value.trim(); if(!msg) { Swal.fire('คำเตือน', 'กรุณาเขียนเป้าหมายประจำเดือนของคุณ', 'warning'); return; } }
+            if (stepNum === 4) {
+                const w = document.getElementById('wiz-weight').value; const amb = document.getElementById('wiz-ambassador').value.trim();
+                if (!w || !amb) { Swal.fire('คำเตือน', 'กรุณากรอกน้ำหนัก และ ผู้แนะนำของท่านให้ครบถ้วน', 'warning'); return; }
+                if(currentUser && currentUser.email && currentUser.email !== "-") { document.getElementById('wiz-email').value = currentUser.email; }
+            }
+            document.querySelectorAll('[id^="wiz-step-"]').forEach(el => el.classList.add('hidden')); document.getElementById('wiz-step-' + stepNum).classList.remove('hidden'); window.scrollTo(0, 0);
+        }
+
+        function prevWiz(stepNum) {
+            document.querySelectorAll('[id^="wiz-step-"]').forEach(el => el.classList.add('hidden')); document.getElementById('wiz-step-' + stepNum).classList.remove('hidden'); window.scrollTo(0, 0);
+        }
+
+        async function submitWWWRegistration(btn) {
+            const emailInput = document.getElementById('wiz-email').value.trim(); const errEl = document.getElementById('wiz-email-error');
+            if(!emailInput || !emailInput.includes('@')) { errEl.classList.remove('hidden'); return; } else { errEl.classList.add('hidden'); }
+            const selectedGoals = Array.from(document.querySelectorAll('.wiz-goal-cb:checked')).map(cb => cb.value).join(', '); const monthlyGoal = document.getElementById('wiz-monthly-goal').value.trim();
+            const w = parseFloat(document.getElementById('wiz-weight').value)||0; const fat = parseFloat(document.getElementById('wiz-fat').value)||0; const vis = parseFloat(document.getElementById('wiz-visceral').value)||0; const mus = parseFloat(document.getElementById('wiz-muscle').value)||0; const ecw = parseFloat(document.getElementById('wiz-ecw').value)||0; const bAge = parseFloat(document.getElementById('wiz-bodyage').value)||0; const bmr = parseFloat(document.getElementById('wiz-bmr').value)||0; const amb = document.getElementById('wiz-ambassador').value.trim();
+            btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลัง Check-in...';
+            const payload = { memberId: currentUser.memberId, lineUid: currentLineUid, email: emailInput, goals: selectedGoals, monthlyGoalText: monthlyGoal, ambassador: amb, weight: w, fat: fat, visceral: vis, muscle: mus, ecw: ecw, bodyAge: bAge, bmr: bmr };
+            const res = await callAPI("registerWWWProject", payload);
+            if(res.success) {
+                Swal.fire('ยินดีต้อนรับ!', 'เข้าสู่โครงการ Well Well Well! เช็คอีเมลเพื่อรับลิงก์ Zoom ได้เลย', 'success');
+                currentUser.wellProject = "ใช่"; currentUser.email = emailInput; localStorage.setItem('gooddaySession', JSON.stringify(currentUser)); renderProfile(); showPage('www-dashboard');
+            } else { Swal.fire('เกิดข้อผิดพลาด', res.message, 'error'); btn.disabled = false; btn.innerText = "Check-in & เข้าสู่ระบบ WWW"; }
+        }
+
+        // --- Recap Data ---
+        let currentRecapIndex = 0;
+        let recapTimer = null;
+        const RECAP_DURATION = 7000;
+        let globalRecapData = null; 
+
         async function checkRecapEligibility(btn) {
             const originalContent = btn.innerHTML;
             btn.innerHTML = '<div class="flex justify-center items-center w-full py-2"><i class="fa-solid fa-spinner fa-spin text-2xl text-white"></i><span class="ml-2 text-white font-bold text-lg">กำลังประมวลผลข้อมูล...</span></div>';
@@ -1594,21 +1860,13 @@
             const ratingEl = document.querySelector('input[name="recap-rating"]:checked');
             const feedback = document.getElementById('recap-feedback').value.trim();
             
-            if (!ratingEl) { 
-                Swal.fire('คำเตือน', 'กรุณาเลือกการประเมินด้านบนก่อนไปต่อ ✌️', 'warning'); 
-                return; 
-            }
+            if (!ratingEl) { Swal.fire('คำเตือน', 'กรุณาเลือกการประเมินด้านบนก่อนไปต่อ ✌️', 'warning'); return; }
             
             const originalText = btn.innerHTML;
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังส่งข้อมูล...';
             btn.disabled = true;
             
-            const payload = {
-                memberId: currentUser.memberId,
-                rating: ratingEl.value,
-                feedback: feedback
-            };
-            
+            const payload = { memberId: currentUser.memberId, rating: ratingEl.value, feedback: feedback };
             const res = await callAPI("saveRecapEvaluation", payload);
 
             if(res.success) {
