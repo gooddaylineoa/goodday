@@ -615,9 +615,9 @@
                     <div class="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center text-2xl text-amber-600 mb-3"><i class="fa-solid fa-pen-to-square"></i></div>
                     <h3 class="font-bold text-sm text-amber-800 leading-tight">อัปเดตข้อมูล<br>องค์ประกอบร่างกาย</h3>
                 </div>
-                <div onclick="openWWWHistory()" class="bg-white rounded-xl p-4 border-2 border-amber-300 cursor-pointer shadow-sm hover:bg-amber-50 text-center flex flex-col items-center justify-center min-h-[120px]">
-                    <div class="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center text-2xl text-amber-600 mb-3"><i class="fa-solid fa-chart-pie"></i></div>
-                    <h3 class="font-bold text-sm text-amber-800 leading-tight">โปรไฟล์ร่างกาย</h3>
+                <div onclick="openWWWHistory()" class="bg-white rounded-xl p-4 border-2 border-amber-300 cursor-pointer shadow-sm hover:bg-amber-50 text-center">
+                    <div class="w-10 h-10 mx-auto bg-amber-100 rounded-full flex items-center justify-center text-xl text-amber-600 mb-2"><i class="fa-solid fa-chart-pie"></i></div>
+                    <h3 class="font-bold text-xs text-amber-800">โปรไฟล์ร่างกาย</h3>
                 </div>
             </div>
             
@@ -1497,6 +1497,24 @@
             } 
             else { Swal.fire('ข้อผิดพลาด', res.message, 'error'); }
             btn.disabled = false; btn.innerText = "บันทึกและอัปเดตสมุดสุขภาพ";
+        }
+
+        async function openWWWHistory() {
+            showPage('www-history');
+            document.getElementById('www-history-loading').classList.remove('hidden');
+            document.getElementById('www-history-no-data').classList.add('hidden');
+            document.getElementById('www-history-content').classList.add('hidden');
+
+            const res = await callAPI("getWellRecords", { memberId: currentUser.memberId });
+            document.getElementById('www-history-loading').classList.add('hidden');
+
+            if(res.success && res.data && res.data.length > 0) {
+                wwwDataArr = res.data;
+                document.getElementById('www-history-content').classList.remove('hidden');
+                loadWWWCharts();
+            } else {
+                document.getElementById('www-history-no-data').classList.remove('hidden');
+            }
         }
 
         function loadWWWCharts() {
