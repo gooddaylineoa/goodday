@@ -908,19 +908,36 @@
             }
         }
 
+        // ฟังก์ชันสแกน OS และเปิดแอปแบบ Deep Link
         function openStepsApp() {
             var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            var now = new Date().valueOf(); // จับเวลาปัจจุบัน
 
-            // เช็คว่าเป็นระบบ iOS (iPhone, iPad)
             if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-                openExternalLink("https://apps.apple.com/th/app/id1037595083");
+                // 🍏 สำหรับ iOS: ลองกระชากแอปด้วย URI Scheme
+                window.location.href = "stepsapp://";
+                
+                // ถ้าใน 1.5 วินาที แอปยังไม่เปิด (ไม่มีแอป) ให้เด้งไป App Store
+                setTimeout(function() {
+                    if (new Date().valueOf() - now < 2000) {
+                        openExternalLink("https://apps.apple.com/th/app/id1037595083");
+                    }
+                }, 1500);
             } 
-            // เช็คว่าเป็นระบบ Android
             else if (/android/i.test(userAgent)) {
-                openExternalLink("https://play.google.com/store/apps/details?id=com.stepsappgmbh.stepsapp");
+                // 🤖 สำหรับ Android: ใช้ระบบ Intent ลิงก์ตรงเข้าแอป
+                var intentUrl = "intent://#Intent;package=com.stepsappgmbh.stepsapp;end";
+                window.location.href = intentUrl;
+
+                // ถ้า Intent ไม่ทำงานใน 1.5 วินาที ให้เด้งไป Play Store
+                setTimeout(function() {
+                    if (new Date().valueOf() - now < 2000) {
+                        openExternalLink("https://play.google.com/store/apps/details?id=com.stepsappgmbh.stepsapp");
+                    }
+                }, 1500);
             } 
-            // กรณีเปิดในคอมพิวเตอร์ ให้เด้งไปหน้าเว็บหลักของแอป
             else {
+                // สำหรับเปิดบนคอมพิวเตอร์
                 openExternalLink("https://steps.app/");
             }
         }
