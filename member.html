@@ -1552,6 +1552,57 @@
             btn.disabled = false; btn.innerText = "บันทึก";
         }
 
+        function renderMarchCalendar(records) {
+            const container = document.getElementById('march-calendar'); if(!container) return;
+            let html = ''; const now = new Date(); const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate(); const firstDay = new Date(now.getFullYear(), now.getMonth(), 1).getDay();
+            let currentMonthSteps = Array(daysInMonth).fill(0); let totalStepsAllTime = 0; 
+            
+            // 🌟 แก้ไขการดึงข้อมูลจาก API ให้รองรับรูปแบบข้อมูลที่ถูกต้อง
+            if (records && Array.isArray(records) && records.length > 0) { 
+                records.forEach(r => { 
+                    totalStepsAllTime += (parseInt(r.steps) || 0); 
+                    // แปลงรูปแบบวันที่ที่รับมาจาก Google Sheets ("dd/MM/yyyy HH:mm" หรือ Date object)
+                    let rDate;
+                    if (typeof r.date === 'string' && r.date.includes('/')) {
+                        let parts = r.date.split(' ')[0].split('/');
+                        rDate = new Date(parts[2], parts[1]-1, parts[0]);
+                    } else {
+                        rDate = new Date(r.date);
+                    }
+
+                    if (!isNaN(rDate.getTime()) && rDate.getMonth() === now.getMonth() && rDate.getFullYear() === now.getFullYear()) { 
+                        currentMonthSteps[rDate.getDate() - 1] = (parseInt(r.steps) || 0); 
+                    } 
+                }); 
+            }
+            
+            if(document.getElementById('march-total-steps')) { document.getElementById('march-total-steps').innerText = totalStepsAllTime.toLocaleString(); }
+            
+            for(let i=0; i<firstDay; i++) { html += `<div class="bg-gray-50 min-h-[60px] border border-gray-100"></div>`; }
+            for(let i=1; i<=daysInMonth; i++) {
+                let step = currentMonthSteps[i-1]; let bgClass = "bg-white text-gray-500"; 
+                if (step >= 10000) { bgClass = "bg-emerald-500 text-white font-black shadow-inner transform scale-105 z-10 relative"; } 
+                else if (step > 0) { bgClass = "bg-emerald-50 text-emerald-800 font-bold"; } 
+                html += `<div class="${bgClass} flex flex-col items-center justify-center p-2 min-h-[60px] border border-gray-200"><span class="text-[10px] opacity-80 mb-1">${i}</span><span class="text-[11px] leading-tight">${step > 0 ? (step/1000).toFixed(1)+'k' : '-'}</span></div>`; 
+            }
+            container.innerHTML = html;
+        }
+
+        function createWWWChart(canvasId, dataArr, showX) {
+                let chartElement = document.getElementById(canvasId); if(!chartElement) return;
+                if (wwwChartsObj[canvasId]) wwwChartsObj[canvasId].destroy(); const ctx = chartElement.getContext('2d');
+                wwwChartsObj[canvasId] = new Chart(ctx, { 
+                    type: 'line', data: { labels: labels, datasets: [{ data: dataArr, borderColor: '#d97706', backgroundColor: '#fef3c7', borderWidth: 2, pointRadius: 4, pointBackgroundColor: '#d97706', tension: 0.1 }] }, 
+                    options: { responsive: true, maintainAspectRatio: false, layout: { padding: { top: 20, bottom: showX ? 0 : 10, left: 15, right: 15 } }, plugins: { legend: { display: false } }, scales: { x: { display: showX, grid: { color: '#f3f4f6' }, ticks: { font: { size: 10, family: 'Sarabun' }, maxRotation: 0 } }, y: { display: false } } }, 
+                    plugins: [{ id: 'customDataLabels', afterDatasetsDraw(chart) { const ctx = chart.ctx; chart.data.datasets.forEach((dataset, i) => { chart.getDatasetMeta(i).data.forEach((bar, index) => { 
+                        // 🌟 เพิ่ม Safe Guard ตรวจเช็คข้อมูล
+                        if (bar && dataset.data[index] !== undefined && dataset.data[index] !== null && dataset.data[index] !== "") { 
+                            ctx.fillStyle = '#92400e'; ctx.font = 'bold 11px Sarabun'; ctx.textAlign = 'center'; ctx.fillText(dataset.data[index], bar.x, bar.y - 8); 
+                        } 
+                    }); }); } }] 
+                });
+            }
+
         // ==========================================
         // 4. บันทึกการนอน (Sleep Well)
         // ==========================================
@@ -1652,24 +1703,22 @@
         // 5. บันทึกมื้ออาหาร (Good Food Good Mood)
         // ==========================================
         async function openFoodDirectory() {
-            showPage('www-food');
-            const container = document.getElementById('food-list'); container.innerHTML = '<div class="text-center py-10 text-gray-400"><i class="fa-solid fa-spinner fa-spin text-xl text-orange-500 mb-2 block"></i>กำลังโหลด...</div>';
+            showPage('www-food'); 
+            const container = document.getElementById('food-list'); 
+            container.innerHTML = '<div class="text-center py-16 text-gray-400"><i class="fa-solid fa-spinner fa-spin text-3xl text-orange-500 mb-4 block"></i>กำลังโหลดข้อมูลเมนู...</div>';
             
-            const btnFood = document.querySelector('button[onclick="openFoodModal()"]');
-            if(checkDailyLimit('food')) {
-                btnFood.disabled = true;
-                btnFood.className = "w-full mb-6 bg-gray-300 text-gray-500 font-bold py-3.5 rounded-xl shadow-md cursor-not-allowed flex items-center justify-center";
-                btnFood.innerHTML = "🔒 คุณส่งการบ้านของวันนี้ไปแล้ว";
-            } else {
-                btnFood.disabled = false;
-                btnFood.className = "w-full mb-6 bg-green-500 hover:bg-green-600 text-white font-bold py-3.5 rounded-xl shadow-md transition flex items-center justify-center";
-                btnFood.innerHTML = '<i class="fa-solid fa-bowl-food mr-2 text-lg"></i> บันทึกมื้อสุขภาพ';
+            try {
+                // 🌟 เพิ่มตัวดักจับ error หาก API ไม่ตอบสนอง
+                const res = await callAPI("getFoodDirectory", {});
+                
+                if(res && Array.isArray(res) && res.length > 0) {
+                    container.innerHTML = res.map(f => `<div class="bg-white rounded-2xl shadow-sm overflow-hidden border border-gray-100 mb-5 transform hover:scale-[1.02] transition"><img src="${f.image}" class="w-full h-40 object-cover" alt="${f.name}"><div class="p-5"><h3 class="font-black text-gray-800 text-lg mb-1">${f.name}</h3><div class="bg-orange-50 p-3 rounded-xl border border-orange-100 mb-3"><p class="text-xs text-gray-600 mb-1 leading-relaxed"><strong class="text-orange-800">คอนเซปต์:</strong> ${f.concept}</p><p class="text-xs text-gray-600 leading-relaxed"><strong class="text-orange-800">เมนูแนะนำ:</strong> ${f.recommend}</p></div><button onclick="openExternalLink('${f.link}')" class="w-full bg-green-500 text-white text-sm font-black py-3 rounded-xl hover:bg-green-600 transition shadow-md"><i class="fa-solid fa-motorcycle mr-2"></i> ดูเมนู / สั่งซื้อ</button></div></div>`).join('');
+                } else { 
+                    container.innerHTML = `<div class="text-center py-16 bg-white rounded-2xl shadow-sm border border-gray-100"><div class="text-6xl text-gray-200 mb-4"><i class="fa-solid fa-store-slash"></i></div><p class="text-gray-400 font-bold text-lg">ยังไม่มีข้อมูลเมนูอาหาร</p></div>`; 
+                }
+            } catch (err) {
+                container.innerHTML = `<div class="text-center py-16 bg-white rounded-2xl shadow-sm border border-red-100"><div class="text-6xl text-red-200 mb-4"><i class="fa-solid fa-circle-exclamation"></i></div><p class="text-red-500 font-bold text-lg">โหลดข้อมูลไม่สำเร็จ</p><button onclick="openFoodDirectory()" class="mt-4 bg-orange-100 text-orange-600 px-4 py-2 rounded-lg font-bold text-sm">ลองใหม่อีกครั้ง</button></div>`;
             }
-
-            const res = await callAPI("getFoodDirectory", {});
-            if(res && res.length > 0) {
-                container.innerHTML = res.map(f => `<div class="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100"><img src="${f.image}" class="w-full h-32 object-cover" alt="${f.name}"><div class="p-4"><h3 class="font-bold text-gray-800">${f.name}</h3><p class="text-[11px] text-gray-500 mt-1 mb-2"><strong>คอนเซปต์:</strong> ${f.concept}</p><p class="text-[11px] text-gray-500 mb-3"><strong>เมนูแนะนำ:</strong> ${f.recommend}</p><button onclick="openExternalLink('${f.link}')" class="w-full bg-green-500 text-white text-xs font-bold py-2.5 rounded-lg hover:bg-green-600 transition"><i class="fa-solid fa-motorcycle mr-1"></i> สั่งผ่าน Grab / ดูเมนู</button></div></div>`).join('');
-            } else { container.innerHTML = `<div class="text-center py-10 bg-white rounded-xl shadow-sm border border-gray-100"><div class="text-4xl text-gray-200 mb-3"><i class="fa-solid fa-store-slash"></i></div><p class="text-gray-400 font-bold text-sm">ยังไม่มีข้อมูล</p></div>`; }
         }
 
         function openFoodModal() {
