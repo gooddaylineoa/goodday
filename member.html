@@ -910,38 +910,40 @@
 
         // ฟังก์ชันสแกน OS และเปิดแอปแบบ Deep Link
         function openStepsApp() {
-            var userAgent = navigator.userAgent || navigator.vendor || window.opera;
-            var now = new Date().valueOf(); // จับเวลาปัจจุบัน
-
-            if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-                // 🍏 สำหรับ iOS: ลองกระชากแอปด้วย URI Scheme
-                window.location.href = "stepsapp://";
-                
-                // ถ้าใน 1.5 วินาที แอปยังไม่เปิด (ไม่มีแอป) ให้เด้งไป App Store
-                setTimeout(function() {
-                    if (new Date().valueOf() - now < 2000) {
-                        openExternalLink("https://apps.apple.com/th/app/id1037595083");
-                    }
-                }, 1500);
-            } 
-            else if (/android/i.test(userAgent)) {
-                // 🤖 สำหรับ Android: ใช้ระบบ Intent ลิงก์ตรงเข้าแอป
-                var intentUrl = "intent://#Intent;package=com.stepsappgmbh.stepsapp;end";
-                window.location.href = intentUrl;
-
-                // ถ้า Intent ไม่ทำงานใน 1.5 วินาที ให้เด้งไป Play Store
-                setTimeout(function() {
-                    if (new Date().valueOf() - now < 2000) {
-                        openExternalLink("https://play.google.com/store/apps/details?id=com.stepsappgmbh.stepsapp");
-                    }
-                }, 1500);
-            } 
-            else {
-                // สำหรับเปิดบนคอมพิวเตอร์
-                openExternalLink("https://steps.app/");
+        var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+        var appOpened = false;
+    
+        // ถ้าหน้าเว็บถูกซ่อน (ผู้ใช้สลับไปแอปอื่นสำเร็จ) ให้ตั้ง flag ไว้
+        function onVisibilityChange() {
+            if (document.hidden) {
+                appOpened = true;
             }
         }
-
+        document.addEventListener("visibilitychange", onVisibilityChange);
+    
+        if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+            window.location.href = "stepsapp://";
+            setTimeout(function() {
+                document.removeEventListener("visibilitychange", onVisibilityChange);
+                if (!appOpened) {
+                    openExternalLink("https://apps.apple.com/th/app/id1037595083");
+                }
+            }, 2000);
+        } 
+        else if (/android/i.test(userAgent)) {
+            var intentUrl = "intent://#Intent;package=com.stepsappgmbh.stepsapp;end";
+            window.location.href = intentUrl;
+            setTimeout(function() {
+                document.removeEventListener("visibilitychange", onVisibilityChange);
+                if (!appOpened) {
+                    openExternalLink("https://play.google.com/store/apps/details?id=com.stepsappgmbh.stepsapp");
+                }
+            }, 2000);
+        } 
+        else {
+            openExternalLink("https://steps.app/");
+        }
+    }
         async function callAPI(action, data = {}) {
             try {
                 const response = await fetch(API_URL, {
