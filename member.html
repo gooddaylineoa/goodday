@@ -711,8 +711,8 @@
                 <h2 class="text-lg font-bold text-emerald-600">The Long March</h2>
             </div>
             
-            <!-- 🌟 ปุ่มเปิด StepsApp -->
-            <button onclick="openExternalLink('https://play.google.com/store/apps/details?id=com.stepsappgmbh.stepsapp')" class="w-full mb-6 bg-gray-900 hover:bg-black text-white font-bold py-3.5 rounded-xl shadow-md transition flex items-center justify-center">
+            <!-- 🌟 ปุ่มเปิด StepsApp (สแกน iOS / Android อัตโนมัติ) -->
+            <button onclick="openStepsApp()" class="w-full mb-6 bg-gray-900 hover:bg-black text-white font-bold py-3.5 rounded-xl shadow-md transition flex items-center justify-center text-sm sm:text-base">
                 <i class="fa-solid fa-mobile-screen mr-2 text-lg"></i> เปิดแอป StepsApp เพื่อดูยอดก้าวเดิน
             </button>
 
@@ -905,6 +905,23 @@
                 liff.openWindow({ url: url, external: true });
             } else {
                 window.open(url, '_blank');
+            }
+        }
+
+        function openStepsApp() {
+            var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+            // เช็คว่าเป็นระบบ iOS (iPhone, iPad)
+            if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+                openExternalLink("https://apps.apple.com/th/app/id1037595083");
+            } 
+            // เช็คว่าเป็นระบบ Android
+            else if (/android/i.test(userAgent)) {
+                openExternalLink("https://play.google.com/store/apps/details?id=com.stepsappgmbh.stepsapp");
+            } 
+            // กรณีเปิดในคอมพิวเตอร์ ให้เด้งไปหน้าเว็บหลักของแอป
+            else {
+                openExternalLink("https://steps.app/");
             }
         }
 
