@@ -54,7 +54,6 @@
             </div>
         </div>
 
-        <!-- หน้าเข้าสู่ระบบ -->
         <div id="page-login" class="page-section p-4 pt-10">
             <div class="text-center mb-8">
                 <div class="w-16 h-16 bg-pink-50 text-pink-500 rounded-full flex items-center justify-center text-3xl mx-auto mb-4"><i class="fa-solid fa-user-lock"></i></div>
@@ -78,7 +77,6 @@
             </div>
         </div>
 
-        <!-- หน้าสมัครสมาชิก 1 -->
         <div id="page-reg-1" class="page-section p-4 pt-6">
             <div class="flex items-center mb-6">
                 <button onclick="showPage('login')" class="w-8 h-8 bg-gray-100 rounded-full text-gray-600 mr-3"><i class="fa-solid fa-arrow-left"></i></button>
@@ -119,7 +117,6 @@
             </div>
         </div>
 
-        <!-- หน้าสมัครสมาชิก 2 -->
         <div id="page-reg-2" class="page-section p-4 pt-6">
             <div class="flex items-center mb-6">
                 <button onclick="showPage('reg-1')" class="w-8 h-8 bg-gray-100 rounded-full text-gray-600 mr-3"><i class="fa-solid fa-arrow-left"></i></button>
@@ -167,7 +164,6 @@
             </div>
         </div>
 
-        <!-- หน้าโปรไฟล์หลัก -->
         <div id="page-profile" class="page-section p-4 pt-6">
             <div class="bg-gradient-to-r from-pink-500 to-rose-500 rounded-xl p-5 text-white shadow-sm mb-6 relative overflow-hidden">
                 <div class="absolute right-[-10px] top-[-10px] opacity-20 text-8xl"><i class="fa-solid fa-address-card"></i></div>
@@ -205,7 +201,6 @@
                 <i class="fa-solid fa-clock-rotate-left text-lg opacity-50"></i>
             </div>
 
-            <!-- กล่อง WWW -->
             <div id="box-active-www" onclick="showPage('www-dashboard')" class="bg-gradient-to-br from-yellow-400 to-amber-500 rounded-xl p-4 mb-4 text-white flex items-center justify-between cursor-pointer shadow-sm hidden">
                 <div class="flex items-center gap-3">
                     <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center text-2xl shadow-inner">
@@ -232,7 +227,6 @@
                 <i class="fa-solid fa-chevron-right text-lg opacity-50"></i>
             </div>
 
-            <!-- กล่อง Waste for Wealth -->
             <div id="box-join-waste" onclick="showPage('waste-reg')" class="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl p-4 mb-4 text-white flex items-center justify-between cursor-pointer shadow-sm hidden">
                 <div class="flex items-center gap-3">
                     <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center text-2xl shadow-inner">
@@ -268,7 +262,6 @@
             <button onclick="doLogout()" class="w-full text-gray-400 font-semibold py-3 text-xs hover:text-red-500 transition"><i class="fa-solid fa-power-off mr-1"></i> ออกจากระบบ</button>
         </div>
 
-        <!-- หน้าแก้ไขที่อยู่ -->
         <div id="page-edit-address" class="page-section p-4 pt-6">
             <div class="flex items-center mb-6">
                 <button onclick="showPage('profile')" class="w-8 h-8 bg-white rounded-full text-gray-600 mr-3"><i class="fa-solid fa-arrow-left"></i></button>
@@ -283,7 +276,6 @@
             </div>
         </div>
 
-        <!-- หน้า Waste For Wealth Logbook -->
         <div id="page-waste-logbook" class="page-section p-4 pt-6 bg-gray-50 min-h-screen">
             <div class="flex items-center mb-4">
                 <button onclick="showPage('profile')" class="w-8 h-8 bg-white rounded-full text-gray-600 mr-3 shadow-sm border border-gray-200"><i class="fa-solid fa-arrow-left"></i></button>
@@ -315,7 +307,6 @@
             <div id="waste-history-list" class="space-y-2 pb-10"></div>
         </div>
 
-        <!-- หน้าลงทะเบียน Waste -->
         <div id="page-waste-reg" class="page-section p-4 pt-6 bg-gray-50 min-h-screen">
             <div class="flex items-center mb-4">
                 <button onclick="showPage('profile')" class="w-8 h-8 bg-white rounded-full text-gray-600 mr-3 shadow-sm border border-gray-200"><i class="fa-solid fa-arrow-left"></i></button>
@@ -339,7 +330,6 @@
             <button onclick="confirmWasteMoney(this)" class="w-full bg-emerald-500 text-white py-3.5 rounded-xl font-semibold shadow-md hover:bg-emerald-600 transition text-sm">ยืนยันเข้าร่วมโครงการ</button>
         </div>
 
-        <!-- หน้าฟอร์มกรอกข้อมูลสุขภาพ (สมุดสีฟ้า) -->
         <div id="page-health-form" class="page-section p-4 pt-6 bg-gray-50 min-h-screen">
             <div class="flex items-center mb-4">
                 <button onclick="showPage('profile')" class="w-8 h-8 bg-white rounded-full text-gray-600 mr-3 shadow-sm border border-gray-200"><i class="fa-solid fa-arrow-left"></i></button>
@@ -428,7 +418,6 @@
             <button onclick="submitHealthRecord(this)" class="w-full bg-blue-600 text-white py-3.5 rounded-xl font-semibold shadow-md hover:bg-blue-700 transition text-sm">บันทึกข้อมูลเข้าสู่ระบบ</button>
         </div>
 
-        <!-- หน้าประวัติสมุดสุขภาพ -->
         <div id="page-health" class="page-section p-4 pt-6 bg-gray-50 min-h-screen pb-24">
             <div class="flex items-center mb-6">
                 <button onclick="showPage('profile')" class="w-8 h-8 bg-white rounded-full text-gray-600 mr-3 shadow-sm border border-gray-200"><i class="fa-solid fa-arrow-left"></i></button>
@@ -509,7 +498,6 @@
             </div>
         </div>
 
-        <!-- 🚀 หน้าสมัครเข้าโครงการ WWW (Onboarding Wizard) -->
         <div id="page-www-wizard" class="page-section bg-gray-50 min-h-screen text-gray-800 pb-24">
             <div id="wiz-step-1" class="p-4 pt-8">
                 <div class="flex items-center mb-6">
@@ -614,7 +602,6 @@
             </div>
         </div>
 
-        <!-- หน้า Dashboard ของ WWW (อัปเกรด Font Size & ภาษาไทย) -->
         <div id="page-www-dashboard" class="page-section p-4 pt-6 bg-yellow-50 min-h-screen">
             <div class="flex items-center mb-6">
                 <button onclick="showPage('profile')" class="w-8 h-8 bg-white rounded-full text-gray-600 mr-3 shadow-sm border border-yellow-200"><i class="fa-solid fa-arrow-left"></i></button>
@@ -678,7 +665,6 @@
                 </div>
             </div>
 
-            <!-- 🌟 ปุ่ม Well Well Well! Recap -->
             <div onclick="checkRecapEligibility(this)" class="bg-gradient-to-r from-fuchsia-600 to-pink-500 rounded-xl p-5 mt-8 text-white flex items-center justify-between cursor-pointer shadow-lg relative overflow-hidden transform transition hover:scale-[1.02]">
                 <div class="absolute right-[-10px] bottom-[-10px] opacity-20 text-7xl"><i class="fa-solid fa-clock-rotate-left"></i></div>
                 <div class="flex items-center gap-4 relative z-10">
@@ -692,37 +678,36 @@
             </div>
         </div>
 
-        <!-- หน้า Good Food Good Mood (ส่งการบ้าน) -->
         <div id="page-www-food" class="page-section p-4 pt-6 bg-gray-50 min-h-screen">
             <div class="flex items-center mb-6">
                 <button onclick="showPage('www-dashboard')" class="w-8 h-8 bg-white rounded-full text-gray-600 mr-3 shadow-sm border"><i class="fa-solid fa-arrow-left"></i></button>
                 <h2 class="text-lg font-bold text-orange-600">Good Food, Good Mood</h2>
             </div>
-            <button onclick="openFoodModal()" class="w-full mb-6 bg-green-500 hover:bg-green-600 text-white font-bold py-3.5 rounded-xl shadow-md transition flex items-center justify-center">
-                <i class="fa-solid fa-bowl-food mr-2 text-lg"></i> บันทึกมื้อสุขภาพ
-            </button>
             <div id="food-list" class="space-y-4"></div>
         </div>
 
-        <!-- หน้า The Long March (ก้าวเดิน) -->
         <div id="page-www-march" class="page-section p-4 pt-6 bg-white min-h-screen">
             <div class="flex items-center mb-6">
                 <button onclick="showPage('www-dashboard')" class="w-8 h-8 bg-gray-100 rounded-full text-gray-600 mr-3 shadow-sm border"><i class="fa-solid fa-arrow-left"></i></button>
                 <h2 class="text-lg font-bold text-emerald-600">The Long March</h2>
             </div>
             
-            <!-- 🌟 ปุ่มเปิด StepsApp (สแกน iOS / Android อัตโนมัติ) -->
             <button onclick="openStepsApp()" class="w-full mb-6 bg-gray-900 hover:bg-black text-white font-bold py-3.5 rounded-xl shadow-md transition flex items-center justify-center text-sm sm:text-base">
                 <i class="fa-solid fa-mobile-screen mr-2 text-lg"></i> เปิดแอป StepsApp เพื่อดูยอดก้าวเดิน
             </button>
 
-            <div class="bg-emerald-50 p-4 rounded-xl border border-emerald-100 mb-6">
-                <label class="text-sm font-bold text-emerald-800 mb-2 block">บันทึกก้าวเดินวันนี้</label>
-                <div class="flex gap-2">
-                    <input type="number" id="march-steps" class="form-input flex-1 text-center font-black text-xl text-emerald-600" placeholder="0">
-                    <button onclick="saveSteps(this)" class="bg-emerald-500 text-white px-5 rounded-xl font-bold shadow-sm text-base">บันทึก</button>
+            <div class="bg-emerald-50 p-4 rounded-xl border border-emerald-100 mb-6 space-y-3">
+                <div>
+                    <label class="text-sm font-bold text-emerald-800 mb-1 block">1. ระบุจำนวนก้าวเดินวันนี้ *</label>
+                    <input type="number" id="march-steps" class="form-input text-center font-black text-xl text-emerald-600" placeholder="0">
                 </div>
+                <div>
+                    <label class="text-sm font-bold text-emerald-800 mb-1 block">2. แนบรูปภาพหน้าจอหลักฐาน (StepsApp) *</label>
+                    <input type="file" id="march-image" accept="image/*" class="form-input text-xs">
+                </div>
+                <button onclick="saveSteps(this)" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white py-3 rounded-xl font-bold shadow-sm text-base mt-2">ส่งบันทึกและรูปภาพหลักฐาน</button>
             </div>
+
             <h3 class="font-bold text-gray-700 text-base mb-3">ตารางบันทึกประจำเดือน</h3>
             <div class="border border-gray-200 rounded-xl overflow-hidden text-center text-sm">
                 <div class="grid grid-cols-7 bg-gray-100 font-bold text-gray-600 py-3">
@@ -741,7 +726,6 @@
             </div>
         </div>
 
-        <!-- หน้า Sleep well (การนอน อัปเกรดภาษาไทยและสีสัน) -->
         <div id="page-www-sleep" class="page-section p-4 pt-6 bg-indigo-50 min-h-screen pb-20">
             <div class="flex items-center mb-6">
                 <button onclick="showPage('www-dashboard')" class="w-8 h-8 bg-white rounded-full text-gray-600 mr-3 shadow-sm border border-indigo-200"><i class="fa-solid fa-arrow-left"></i></button>
@@ -783,7 +767,6 @@
             <button onclick="saveSleepLog(this)" class="w-full bg-indigo-600 text-white py-4 rounded-xl font-bold shadow-md hover:bg-indigo-700 transition text-base">บันทึกข้อมูลการนอน</button>
         </div>
 
-        <!-- หน้าอัปเดตข้อมูลองค์ประกอบร่างกาย -->
         <div id="page-www-form" class="page-section p-4 pt-6 bg-white min-h-screen">
             <div class="flex items-center mb-6">
                 <button onclick="showPage('www-dashboard')" class="w-8 h-8 bg-gray-100 rounded-full text-gray-600 mr-3 shadow-sm"><i class="fa-solid fa-arrow-left"></i></button>
@@ -817,7 +800,6 @@
             </div>
         </div>
 
-        <!-- หน้ากราฟประวัติ WWW -->
         <div id="page-www-history" class="page-section p-4 pt-6 bg-gray-50 min-h-screen">
             <div class="flex items-center mb-4">
                 <button onclick="showPage('www-dashboard')" class="w-8 h-8 bg-white rounded-full text-gray-600 mr-3 shadow-sm border"><i class="fa-solid fa-arrow-left"></i></button>
@@ -847,14 +829,7 @@
             </div>
         </div> 
 
-    </div> <!-- ปิด div max-w-md -->
-
-    <!-- ========================================== -->
-    <!-- 🌟 หน้าต่าง Popup 🌟 -->
-    <!-- ========================================== -->
-
-    <!-- หน้าต่าง Recap -->
-    <div id="recap-overlay" class="fixed inset-0 bg-gray-900 z-[9999] hidden flex-col font-['Sarabun']">
+    </div> <div id="recap-overlay" class="fixed inset-0 bg-gray-900 z-[9999] hidden flex-col font-['Sarabun']">
         <div class="absolute top-4 left-4 right-12 flex gap-1 z-50" id="recap-progress-container"></div>
         <button onclick="closeRecap()" class="absolute top-2 right-2 w-10 h-10 text-white text-2xl z-50 drop-shadow-md hover:text-gray-300"><i class="fa-solid fa-xmark"></i></button>
 
@@ -864,25 +839,7 @@
         <div id="recap-slide-content" class="w-full h-full relative overflow-hidden flex flex-col items-center justify-center p-6 text-white text-center transition-all duration-300">
         </div>
     </div>
-
-    <!-- หน้าต่างส่งการบ้านมื้ออาหาร -->
-    <div id="food-modal" class="fixed inset-0 bg-gray-900 bg-opacity-60 z-[9999] hidden flex justify-center items-center p-4 backdrop-blur-sm">
-        <div class="bg-white w-full max-w-sm rounded-2xl shadow-xl overflow-hidden animate-[fadeInUp_0.3s_ease-out]">
-            <div class="bg-green-500 px-6 py-4 flex justify-between items-center text-white">
-                <h2 class="text-lg font-bold"><i class="fa-solid fa-leaf mr-2"></i>บันทึกอาหารมื้อนี้</h2>
-                <button onclick="closeFoodModal()" class="text-white hover:text-green-200 text-2xl transition"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <div class="p-6 bg-gray-50">
-                <label class="block text-base font-bold text-gray-700 mb-2">เมนูสุขภาพของคุณคืออะไร?</label>
-                <textarea id="food-menu-input" rows="3" class="w-full border border-gray-300 rounded-xl p-3 text-base font-medium focus:border-green-500 outline-none shadow-inner" placeholder="เช่น อกไก่ย่าง, สลัดผัก, ข้าวกล้อง..."></textarea>
-                <div id="food-msg" class="mt-3 text-sm font-bold text-center hidden"></div>
-                <button id="btn-submit-food" onclick="submitFoodLog()" class="w-full mt-4 bg-green-500 hover:bg-green-600 text-white font-bold py-3.5 rounded-xl shadow-md transition text-base">
-                    บันทึกมื้ออาหาร
-                </button>
-            </div>
-        </div>
-    </div>
-
+    
     <!-- ========================================== -->
     <!-- ⚙️ JavaScript ของระบบสมาชิก -->
     <!-- ========================================== -->
@@ -1544,53 +1501,51 @@
         // 3. ก้าวเดิน (The Long March)
         // ==========================================
         async function openMarchTracker() {
-            showPage('www-march'); const cal = document.getElementById('march-calendar');
-            const btnSave = document.querySelector('button[onclick="saveSteps(this)"]');
-            const inputSteps = document.getElementById('march-steps');
-            
+            const btnSave = document.querySelector('#page-www-march button[onclick="saveSteps(this)"]');
+            const inputSteps = document.getElementById('march-steps'); const fileInput = document.getElementById('march-image');
             if(checkDailyLimit('march')) {
-                inputSteps.disabled = true;
-                inputSteps.placeholder = "บันทึกแล้ว";
-                btnSave.disabled = true;
-                btnSave.className = "bg-gray-300 text-gray-500 px-5 rounded-xl font-bold shadow-sm cursor-not-allowed text-base";
-                btnSave.innerText = "✔️";
+                inputSteps.disabled = true; inputSteps.placeholder = "บันทึกแล้ว"; if(fileInput) fileInput.disabled = true;
+                btnSave.disabled = true; btnSave.className = "w-full bg-gray-300 text-gray-500 py-3 rounded-xl font-bold shadow-sm cursor-not-allowed text-base mt-2"; btnSave.innerText = "🔒 คุณบันทึกก้าวเดินของวันนี้ไปแล้ว";
             } else {
-                inputSteps.disabled = false; inputSteps.placeholder = "0";
-                btnSave.disabled = false;
-                btnSave.className = "bg-emerald-500 text-white px-5 rounded-xl font-bold shadow-sm text-base";
-                btnSave.innerText = "บันทึก";
+                inputSteps.disabled = false; inputSteps.placeholder = "0"; if(fileInput) { fileInput.disabled = false; fileInput.value = ''; }
+                btnSave.disabled = false; btnSave.className = "w-full bg-emerald-500 hover:bg-emerald-600 text-white py-3 rounded-xl font-bold shadow-sm text-base mt-2"; btnSave.innerText = "ส่งบันทึกและรูปภาพหลักฐาน";
             }
-
-            if(cal) cal.innerHTML = '<div class="col-span-7 text-center py-10 text-gray-400"><i class="fa-solid fa-spinner fa-spin text-xl text-emerald-500 mb-2 block"></i>กำลังโหลด...</div>';
+            const cal = document.getElementById('march-calendar'); if(cal) cal.innerHTML = '<div class="col-span-7 text-center py-10 text-gray-400"><i class="fa-solid fa-spinner fa-spin text-xl text-emerald-500 mb-2 block"></i>กำลังโหลด...</div>';
             const res = await callAPI("getMarchRecords", { memberId: currentUser.memberId }); renderMarchCalendar(res);
         }
 
         async function saveSteps(btn) {
-            const steps = document.getElementById('march-steps').value;
+            const steps = document.getElementById('march-steps').value; const fileInput = document.getElementById('march-image');
             if(!steps || !currentUser) return; 
+            let base64Image = ""; let fileName = "";
+            if (fileInput && fileInput.files.length > 0) {
+                const file = fileInput.files[0]; fileName = file.name;
+                base64Image = await new Promise((resolve) => {
+                    const reader = new FileReader(); reader.onloadend = () => resolve(reader.result.split(',')[1]); reader.readAsDataURL(file);
+                });
+            } else { Swal.fire('ลืมแนบรูป', 'กรุณาแนบรูปภาพหน้าจอแอป StepsApp เพื่อใช้เป็นหลักฐานประจำวัน', 'warning'); return; }
 
-            const confirmResult = await Swal.fire({
-                title: 'ยืนยันก้าวเดิน?',
-                html: `คุณกำลังจะบันทึก <b class="text-emerald-600 text-2xl">${steps}</b> ก้าว สำหรับวันนี้`,
-                icon: 'info',
-                showCancelButton: true,
-                confirmButtonColor: '#10b981',
-                cancelButtonColor: '#d1d5db',
-                confirmButtonText: 'บันทึกเลย',
-                cancelButtonText: 'แก้ไข'
-            });
+            const confirmResult = await Swal.fire({ title: 'ยืนยันก้าวเดิน?', html: `คุณกำลังจะบันทึก <b class="text-emerald-600 text-2xl">${steps}</b> ก้าว พร้อมอัปโหลดหลักฐานสำหรับวันนี้`, icon: 'info', showCancelButton: true, confirmButtonColor: '#10b981', cancelButtonColor: '#d1d5db', confirmButtonText: 'บันทึกเลย', cancelButtonText: 'แก้ไข' });
             if (!confirmResult.isConfirmed) return;
 
-            btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
-            const res = await callAPI("saveMarchRecord", { memberId: currentUser.memberId, steps: steps });
-            if(res.success) { 
-                setDailyLimit('march');
-                Swal.fire('เจ๋งมาก!', `บันทึก ${steps} ก้าว เรียบร้อย 🚶‍♂️`, 'success'); 
-                document.getElementById('march-steps').value = ''; 
-                openMarchTracker(); 
-            } 
-            else { Swal.fire('เกิดข้อผิดพลาด', res.message, 'error'); } 
-            btn.disabled = false; btn.innerText = "บันทึก";
+            btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังบันทึก...';
+            const res = await callAPI("saveMarchRecord", { memberId: currentUser.memberId, steps: steps, imageRaw: base64Image, imageName: fileName });
+            if(res.success) { setDailyLimit('march'); Swal.fire('เจ๋งมาก!', `บันทึกข้อมูลและภาพหลักฐานเรียบร้อย 🚶‍♂️`, 'success'); document.getElementById('march-steps').value = ''; openMarchTracker(); } 
+            else { Swal.fire('เกิดข้อผิดพลาด', res.message, 'error'); } btn.disabled = false; btn.innerText = "ส่งบันทึกและรูปภาพหลักฐาน";
+        }
+
+        function renderMarchCalendar(records) {
+            const container = document.getElementById('march-calendar'); if(!container) return;
+            let html = ''; const now = new Date(); const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate(); const firstDay = new Date(now.getFullYear(), now.getMonth(), 1).getDay();
+            let currentMonthSteps = Array(daysInMonth).fill(0); let totalStepsAllTime = 0; 
+            if (records && records.length > 0) { records.forEach(r => { totalStepsAllTime += r.steps; let rDate = new Date(r.date); if (rDate.getMonth() === now.getMonth() && rDate.getFullYear() === now.getFullYear()) { currentMonthSteps[rDate.getDate() - 1] = r.steps; } }); }
+            if(document.getElementById('march-total-steps')) { document.getElementById('march-total-steps').innerText = totalStepsAllTime.toLocaleString(); }
+            for(let i=0; i<firstDay; i++) { html += `<div class="bg-gray-50 min-h-[50px]"></div>`; }
+            for(let i=1; i<=daysInMonth; i++) {
+                let step = currentMonthSteps[i-1]; let bgClass = step>=10000?"bg-emerald-500 text-white font-bold":(step>0?"bg-emerald-50 text-emerald-700":"bg-white text-gray-500");
+                html += `<div class="${bgClass} flex flex-col items-center justify-center p-2 min-h-[50px] border border-gray-100"><span class="text-[9px] opacity-70">${i}</span><span class="text-[10px] mt-1">${step>0?(step/1000).toFixed(1)+'k':'-'}</span></div>`;
+            }
+            container.innerHTML = html;
         }
 
         // ==========================================
