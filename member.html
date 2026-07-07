@@ -1563,13 +1563,55 @@
             else { Swal.fire('ข้อผิดพลาด', res.message, 'error'); } btn.disabled = false; btn.innerText = "บันทึกข้อมูลการนอน";
         }
 
+        // แปลงชื่อวันภาษาอังกฤษ (เผื่อฐานข้อมูลส่งกลับมาเป็น Sun, Mon, Tue...) ให้เป็นภาษาไทยแบบย่อ
+        const dayNameThaiMap = {
+            'sun': 'อา.', 'sunday': 'อา.',
+            'mon': 'จ.', 'monday': 'จ.',
+            'tue': 'อ.', 'tues': 'อ.', 'tuesday': 'อ.',
+            'wed': 'พ.', 'wednesday': 'พ.',
+            'thu': 'พฤ.', 'thur': 'พฤ.', 'thurs': 'พฤ.', 'thursday': 'พฤ.',
+            'fri': 'ศ.', 'friday': 'ศ.',
+            'sat': 'ส.', 'saturday': 'ส.'
+        };
+        function toThaiDayName(name) {
+            if (!name) return '-';
+            const key = String(name).trim().toLowerCase();
+            return dayNameThaiMap[key] || name; // ถ้าเป็นภาษาไทยอยู่แล้ว จะคืนค่าเดิมโดยไม่แก้ไข
+        }
+
         function renderSleepChart(records) {
             let chartElement = document.getElementById('sleepMoodChart'); if(!chartElement) return;
             if (sleepChartInstance) sleepChartInstance.destroy(); const ctx = chartElement.getContext('2d');
             let chartLabels = ['อา.', 'จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.']; let chartMoods = [null, null, null, null, null, null, null];
-            if(records && records.length > 0) { const last7Days = records.slice(-7); last7Days.forEach((r, i) => { chartLabels[i] = r.dayName; chartMoods[i] = r.mood; }); }
+            if(records && records.length > 0) { const last7Days = records.slice(-7); last7Days.forEach((r, i) => { chartLabels[i] = toThaiDayName(r.dayName); chartMoods[i] = r.mood; }); }
             const pointColors = chartMoods.map(m => m===1?'#ef4444':(m===2?'#fb923c':(m===3?'#facc15':(m===4?'#2dd4bf':(m===5?'#4ade80':'#6366f1')))));
-            sleepChartInstance = new Chart(ctx, { type: 'line', data: { labels: chartLabels, datasets: [{ data: chartMoods, borderColor: '#6366f1', borderWidth: 3, pointBackgroundColor: pointColors, pointBorderColor: pointColors, pointRadius: 6, pointHoverRadius: 8, tension: 0.3 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { color: '#f3f4f6', drawBorder: false }, ticks: { color: '#4b5563', font: { size: 12, family: 'Sarabun' } } }, y: { min: 1, max: 5, grid: { color: '#f3f4f6', drawBorder: false, borderDash: [5, 5] }, ticks: { color: '#4b5563', font: { size: 10, family: 'Sarabun' }, stepSize: 1, callback: function(value) { return value===1?'แย่มาก':(value===3?'ปกติ':(value===5?'ยอดเยี่ยม':'')); } } } } } });
+            sleepChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: { labels: chartLabels, datasets: [{ data: chartMoods, borderColor: '#6366f1', borderWidth: 3, pointBackgroundColor: pointColors, pointBorderColor: pointColors, pointRadius: 6, pointHoverRadius: 8, tension: 0.3 }] },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    layout: { padding: { left: 2, right: 10, top: 4 } },
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { color: '#f3f4f6', drawBorder: false }, ticks: { color: '#4b5563', font: { size: 12, family: 'Sarabun' } } },
+                        y: {
+                            min: 1, max: 5,
+                            grid: { color: '#f3f4f6', drawBorder: false, borderDash: [5, 5] },
+                            // บังคับความกว้างของแกน Y ให้พอสำหรับคำภาษาไทยที่ยาวที่สุด ("ยอดเยี่ยม")
+                            // กันปัญหาป้ายกำกับถูกตัดคำตอนฟอนต์ Sarabun โหลดไม่ทันช่วง Chart.js คำนวณ layout
+                            afterFit: function(scaleInstance) { scaleInstance.width = 62; },
+                            ticks: {
+                                color: '#4b5563', font: { size: 10, family: 'Sarabun' }, stepSize: 1,
+                                callback: function(value) { return value===1?'แย่มาก':(value===3?'ปกติ':(value===5?'ยอดเยี่ยม':'')); }
+                            }
+                        }
+                    }
+                }
+            });
+            // เผื่อฟอนต์ Sarabun โหลดเสร็จหลังจากวาดกราฟไปแล้ว ให้สั่งอัปเดตกราฟอีกครั้งเพื่อความคมชัด
+            if (document.fonts && document.fonts.ready) {
+                document.fonts.ready.then(() => { if (sleepChartInstance) sleepChartInstance.update(); });
+            }
         }
 
         // ==========================================
