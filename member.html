@@ -555,7 +555,7 @@
                         <div><label class="text-[11px] font-bold text-gray-500 mb-1 block">อายุร่างกาย (ปี)</label><input type="number" id="wiz-bodyage" class="form-input"></div>
                         <div><label class="text-[11px] font-bold text-gray-500 mb-1 block">BMR (Kcal)</label><input type="number" id="wiz-bmr" class="form-input"></div>
                     </div>
-                    <div><label class="text-xs font-bold text-gray-500 mb-1 block">ผู้แนะนำของท่าน *</label><input type="text" id="wiz-ambassador" class="form-input" placeholder="ชื่อ-นามสกุล คนดูแล"></div>
+                    <div><label class="text-xs font-bold text-gray-500 mb-1 block">ผู้แนะนำของท่าน *</label><input type="text" id="wiz-ambassador" class="form-input" placeholder="ชื่อ-นามสกุล ผู้แนะนำ"></div>
                 </div>
                 <div class="fixed bottom-0 left-0 right-0 max-w-md mx-auto p-4 bg-white border-t border-gray-100">
                     <button onclick="nextWiz(4)" class="w-full bg-amber-500 text-white py-3.5 rounded-xl font-bold shadow-lg hover:bg-amber-600 transition">บันทึกข้อมูลร่างกาย</button>
@@ -815,7 +815,7 @@
             <div id="www-history-no-data" class="hidden text-center py-12 bg-white rounded-2xl shadow-sm border border-gray-100 mt-4">
                 <div class="text-5xl text-gray-200 mb-4"><i class="fa-solid fa-chart-pie"></i></div>
                 <p class="text-gray-600 font-black text-lg mb-2">ยังไม่มีประวัติตรวจองค์ประกอบร่างกาย</p>
-                <p class="text-gray-500 text-sm mb-6 px-4">กรุณาอัปเดตข้อมูลองค์ประกอบร่างกายอย่างน้อย 1 ครั้ง เพื่อให้ระบบสร้างกราฟประมวลผลครับ</p>
+                <p class="text-gray-500 text-sm mb-6 px-4">กรุณาอัปเดตข้อมูลองค์ประกอบร่างกายอย่างน้อย 1 ครั้ง เพื่อให้ระบบสร้างกราฟประมวลผล</p>
                 <button onclick="openWWWForm()" class="bg-amber-500 text-white px-6 py-3 rounded-xl text-sm font-bold shadow-md hover:bg-amber-600 transition">อัปเดตข้อมูลองค์ประกอบร่างกาย</button>
             </div>
             <div id="www-history-content" class="hidden">
@@ -844,7 +844,7 @@
     </div>
 
     <script>
-        // 🚨 อย่าลืมแก้ API_URL ตรงนี้ให้เป็นลิงก์ Web App หลังบ้านของคุณนะครับ
+        // 🚨 อย่าลืมแก้ API_URL ตรงนี้ให้เป็นลิงก์ Web App หลังบ้านของคุณ
         const API_URL = "https://script.google.com/macros/s/AKfycbwPGR0J7K5yMYQfE5R6DzfNHQB9V4STEP3N15OJPqlq12WhsNf0mFJk1TWBAVmww7fP/exec";
         const LIFF_ID = "2009970638-dqNKJ4CJ"; 
         
@@ -1408,7 +1408,7 @@
         async function submitWWWRecord(btn) {
             const w = parseFloat(document.getElementById('www-weight').value)||0; const bmr = parseFloat(document.getElementById('www-bmr').value)||0;
             const isConfirmed = document.getElementById('www-confirm').checked;
-            if(!isConfirmed) { Swal.fire('ลืมกดยืนยัน', 'กรุณากดยืนยันความถูกต้องของข้อมูลก่อนส่งครับ', 'warning'); return; }
+            if(!isConfirmed) { Swal.fire('ลืมกดยืนยัน', 'กรุณากดยืนยันความถูกต้องของข้อมูลก่อนส่ง', 'warning'); return; }
             const amb = document.getElementById('www-ambassador').value.trim();
             if(!amb || !w) { Swal.fire('ข้อมูลไม่ครบ', 'กรุณาระบุน้ำหนักปัจจุบันและชื่อผู้แนะนำ', 'warning'); return; }
 
@@ -1488,7 +1488,7 @@
             if (fileInput && fileInput.files.length > 0) {
                 const file = fileInput.files[0]; fileName = file.name;
                 base64Image = await new Promise((resolve) => { const reader = new FileReader(); reader.onloadend = () => resolve(reader.result.split(',')[1]); reader.readAsDataURL(file); });
-            } else { Swal.fire('ลืมแนบรูป', 'กรุณาแนบรูปภาพหน้าจอแอป StepsApp เพื่อใช้เป็นหลักฐานประจำวันด้วยครับ', 'warning'); return; }
+            } else { Swal.fire('ลืมแนบรูป', 'กรุณาแนบรูปภาพหน้าจอแอป StepsApp เพื่อใช้เป็นหลักฐานประจำวัน', 'warning'); return; }
 
             const confirmResult = await Swal.fire({ title: 'ยืนยันก้าวเดิน?', html: `คุณกำลังจะบันทึก <b class="text-emerald-600 text-2xl">${steps}</b> ก้าว พร้อมอัปโหลดหลักฐานสำหรับวันนี้`, icon: 'info', showCancelButton: true, confirmButtonColor: '#10b981', cancelButtonColor: '#d1d5db', confirmButtonText: 'บันทึกเลย', cancelButtonText: 'แก้ไข' });
             if (!confirmResult.isConfirmed) return;
@@ -1552,7 +1552,7 @@
 
         async function saveSleepLog(btn) {
             if(!currentUser) return; const mood = document.getElementById('sleep-mood').value; 
-            if(mood === "0") { Swal.fire('ลืมเลือกอารมณ์', 'กรุณาประเมินอารมณ์การตื่นนอนเช้านี้ด้วยครับ', 'warning'); return; }
+            if(mood === "0") { Swal.fire('ลืมเลือกอารมณ์', 'กรุณาประเมินอารมณ์การตื่นนอนเช้านี้', 'warning'); return; }
             const confirmResult = await Swal.fire({ title: 'ยืนยันบันทึกการนอน?', text: "บันทึกแล้วจะไม่สามารถแก้ไขของวันนี้ได้ (บันทึกได้ 1 ครั้ง/วัน)", icon: 'question', showCancelButton: true, confirmButtonColor: '#4f46e5', cancelButtonColor: '#9ca3af', confirmButtonText: 'ยืนยันการส่ง', cancelButtonText: 'ยกเลิก' });
             if (!confirmResult.isConfirmed) return;
 
