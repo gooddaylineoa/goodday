@@ -1753,7 +1753,7 @@
             }
         }
 
-        // ฟังก์ชันวาดหน้ารายละเอียดอาหาร
+        // ฟังก์ชันวาดหน้ารายละเอียดอาหาร (อัปเกรดระบบรองรับหัวข้อย่อย)
         function openFoodDetail(id) {
             const food = globalFoodData.find(f => f.id === id);
             if(!food) return;
@@ -1764,16 +1764,52 @@
             document.getElementById('fd-concept').innerText = food.concept;
             document.getElementById('fd-image').src = food.image;
 
-            document.getElementById('fd-ingredients').innerHTML = food.ingredients.map(ing => `<li>${ing}</li>`).join('');
+            // 🌟 1. ระบบแปลงวัตถุดิบ (รองรับหัวข้อหลัก และ ข้อย่อย)
+            let ingHTML = '';
+            let inSubIng = false;
+            food.ingredients.forEach((line, i) => {
+                let text = line.trim();
+                if (text.startsWith('-')) {
+                    if (!inSubIng) {
+                        ingHTML += `<ul class="list-[circle] pl-5 mt-1.5 mb-3 space-y-1.5 text-gray-600 font-normal marker:text-gray-400">`;
+                        inSubIng = true;
+                    }
+                    ingHTML += `<li>${text.substring(1).trim()}</li>`;
+                } else {
+                    if (inSubIng) { ingHTML += '</ul></li>'; inSubIng = false; } 
+                    else if (i !== 0) { ingHTML += '</li>'; }
+                    ingHTML += `<li class="font-bold text-gray-800 mt-3 first:mt-0 marker:text-orange-500">${text}`;
+                }
+            });
+            if (inSubIng) { ingHTML += '</ul></li>'; } else if (ingHTML !== '') { ingHTML += '</li>'; }
+            document.getElementById('fd-ingredients').innerHTML = ingHTML;
             
-            document.getElementById('fd-instructions').innerHTML = food.instructions.map((step, index) => `
-                <div class="flex gap-3 items-start">
-                    <div class="w-6 h-6 rounded-full bg-orange-100 text-orange-600 font-black text-xs flex items-center justify-center shrink-0 mt-0.5">${index + 1}</div>
-                    <p class="leading-relaxed">${step}</p>
-                </div>
-            `).join('');
+            // 🌟 2. ระบบแปลงวิธีทำ (รองรับหัวข้อหลัก เป็นเลขข้อ 1,2,3 และ ข้อย่อย)
+            let instHTML = '';
+            let inSubInst = false;
+            let stepCount = 1;
+            food.instructions.forEach((line, i) => {
+                let text = line.trim();
+                if (text.startsWith('-')) {
+                    if (!inSubInst) {
+                        instHTML += `<ul class="list-[circle] pl-8 mt-2 mb-3 space-y-1.5 text-gray-600 font-normal marker:text-gray-400">`;
+                        inSubInst = true;
+                    }
+                    instHTML += `<li>${text.substring(1).trim()}</li>`;
+                } else {
+                    if (inSubInst) { instHTML += '</ul></div></div>'; inSubInst = false; } 
+                    else if (i !== 0) { instHTML += '</div></div>'; }
+                    instHTML += `
+                        <div class="flex gap-3 items-start mt-4 first:mt-0">
+                            <div class="w-6 h-6 rounded-full bg-orange-100 text-orange-600 font-black text-xs flex items-center justify-center shrink-0 mt-0.5">${stepCount++}</div>
+                            <div class="w-full">
+                                <p class="font-bold text-gray-800 leading-relaxed">${text}</p>`;
+                }
+            });
+            if (inSubInst) { instHTML += '</ul></div></div>'; } else if (instHTML !== '') { instHTML += '</div></div>'; }
+            document.getElementById('fd-instructions').innerHTML = instHTML;
 
-            // วาดกล่องเกร็ดความรู้ (เลื่อนซ้ายขวาได้)
+            // 🌟 3. วาดกล่องเกร็ดความรู้ (เลื่อนซ้ายขวาได้)
             document.getElementById('fd-tips').innerHTML = food.tips.map((tip, index) => `
                 <div onclick="showTipPopup('${tip.icon}', '${tip.title}', '${tip.detail}')" class="min-w-[110px] w-[110px] bg-white rounded-2xl p-4 shadow-sm border border-gray-200 snap-center shrink-0 cursor-pointer hover:border-yellow-400 hover:bg-yellow-50 transition flex flex-col items-center justify-center text-center">
                     <div class="text-3xl mb-2">${tip.icon}</div>
