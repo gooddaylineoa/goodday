@@ -681,37 +681,67 @@
             </div>
         </div>
 
+        <!-- ========================================== -->
+        <!-- 🥗 หน้า Good Food Good Mood (รายการเมนู) -->
+        <!-- ========================================== -->
+        <div id="page-www-food" class="page-section p-4 pt-6 bg-gray-50 min-h-screen">
+            <div class="flex items-center mb-6">
+                <button onclick="showPage('www-dashboard')" class="w-8 h-8 bg-white rounded-full text-gray-600 mr-3 shadow-sm border border-gray-200"><i class="fa-solid fa-arrow-left"></i></button>
+                <h2 class="text-lg font-bold text-orange-600">Good Food, Good Mood</h2>
+            </div>
+            
+            <div id="food-list" class="space-y-4 pb-10">
+                <!-- ระบบจะวาดรายการเมนูอาหารตรงนี้อัตโนมัติ -->
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- 🍲 หน้ารายละเอียดเมนูอาหาร (Food Detail) -->
+        <!-- ========================================== -->
         <div id="page-food-detail" class="page-section bg-gray-50 min-h-screen pb-20">
+            <!-- Header แบบติดขอบบน -->
             <div class="flex items-center p-4 sticky top-0 bg-white/80 backdrop-blur-md z-40 border-b border-gray-100">
                 <button onclick="showPage('www-food')" class="w-8 h-8 bg-white rounded-full text-gray-600 mr-3 shadow-sm"><i class="fa-solid fa-arrow-left"></i></button>
                 <h2 class="text-lg font-bold text-orange-600 truncate" id="fd-title-header">รายละเอียดเมนู</h2>
             </div>
             
+            <!-- รูปภาพอาหารขนาดใหญ่ (Hero Image) -->
             <div class="w-full h-56 bg-gray-200 relative">
                 <img id="fd-image" src="" alt="Food" class="w-full h-full object-cover">
+                <!-- กรอบสีดำจางๆ ไล่ระดับเพื่อให้ตัวหนังสือชัดขึ้น -->
                 <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                <!-- ชื่อเมนู -->
                 <h2 id="fd-title" class="absolute bottom-4 left-4 text-2xl font-black text-white shadow-sm leading-tight pr-4">ชื่อเมนู</h2>
             </div>
 
+            <!-- ส่วนรายละเอียดเนื้อหา -->
             <div class="p-4 space-y-6">
+                <!-- คำอธิบาย/คอนเซปต์ -->
                 <p id="fd-concept" class="text-sm font-medium text-gray-600 italic border-l-4 border-orange-500 pl-3 leading-relaxed"></p>
 
+                <!-- 1. วัตถุดิบ -->
                 <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
                     <h3 class="font-bold text-orange-800 text-base mb-3"><i class="fa-solid fa-basket-shopping mr-2 text-orange-500"></i>วัตถุดิบและปริมาณ</h3>
                     <ul id="fd-ingredients" class="space-y-2 text-sm text-gray-700 marker:text-orange-400 list-disc pl-5 leading-relaxed">
-                        </ul>
+                        <!-- ระบบจะวาดลิสต์วัตถุดิบตรงนี้ -->
+                    </ul>
                 </div>
 
+                <!-- 2. วิธีทำ -->
                 <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
                     <h3 class="font-bold text-orange-800 text-base mb-3"><i class="fa-solid fa-fire-burner mr-2 text-orange-500"></i>วิธีการปรุง</h3>
                     <div id="fd-instructions" class="space-y-3 text-sm text-gray-700">
-                        </div>
+                        <!-- ระบบจะวาดขั้นตอนตรงนี้ -->
+                    </div>
                 </div>
 
+                <!-- 3. กล่องเกร็ดความรู้ (เลื่อนซ้ายขวาได้) -->
                 <div>
-                    <h3 class="font-bold text-orange-800 text-base mb-3 ml-1"><i class="fa-solid fa-lightbulb mr-2 text-yellow-500"></i>เกร็ดความรู้ <span class="text-[10px] text-gray-400 font-normal">(ปัดและแตะ)</span></h3>
+                    <h3 class="font-bold text-orange-800 text-base mb-3 ml-1"><i class="fa-solid fa-lightbulb mr-2 text-yellow-500"></i>เกร็ดความรู้ <span class="text-[10px] text-gray-400 font-normal">(ปัดเลื่อนและแตะเพื่ออ่าน)</span></h3>
+                    <!-- กล่อง Container แบบ Horizontal Scroll (ลากซ้ายขวา) -->
                     <div id="fd-tips" class="flex overflow-x-auto gap-3 pb-4 snap-x snap-mandatory hide-scrollbar">
-                        </div>
+                        <!-- ระบบจะวาดกล่องสี่เหลี่ยม Tips ตรงนี้ -->
+                    </div>
                 </div>
             </div>
         </div>
