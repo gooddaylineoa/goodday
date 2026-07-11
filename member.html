@@ -752,62 +752,52 @@
         <div id="page-www-march" class="page-section p-4 pt-6 bg-gray-50 min-h-screen pb-24">
             <div class="flex items-center mb-6">
                 <button onclick="showPage('www-dashboard')" class="w-8 h-8 bg-white rounded-full text-gray-600 mr-3 shadow-sm border border-gray-200"><i class="fa-solid fa-arrow-left"></i></button>
-                <h2 class="text-xl font-black text-emerald-700">The Long March</h2>
+                <h2 class="text-lg font-bold text-emerald-700">The Long March</h2>
             </div>
 
-            <!-- โซนที่ 1: แผนที่ตะลอนชลบุรี (รอข้อมูลพี่นิ) -->
             <div class="bg-gradient-to-b from-blue-100 to-emerald-50 rounded-3xl p-5 shadow-sm border border-emerald-100 mb-6 relative overflow-hidden">
                 <h3 class="text-center font-black text-emerald-800 text-lg mb-2 z-10 relative">📍 เดินตะลอนชลบุรี</h3>
-                <p class="text-center text-xs text-emerald-600 font-bold mb-4 z-10 relative">สะสมก้าวเดินเพื่อปลดล็อกแลนด์มาร์คสำคัญ!</p>
+                <p class="text-center text-sm text-emerald-600 font-bold mb-4 z-10 relative">สะสมก้าวเดินเพื่อปลดล็อกแลนด์มาร์คสำคัญ!</p>
                 
-                <!-- กล่องจำลองแผนที่ -->
                 <div class="w-full h-40 bg-white/60 backdrop-blur-sm rounded-2xl border-2 border-dashed border-emerald-300 flex flex-col items-center justify-center text-emerald-500 z-10 relative">
                     <i class="fa-solid fa-map-location-dot text-4xl mb-2 opacity-50"></i>
                     <p class="text-xs font-bold text-center px-4">(พื้นที่แสดงแผนที่จังหวัดชลบุรี และเส้นทางปลดล็อกอีโมจิ<br>รอข้อมูลอัปเดต)</p>
                 </div>
             </div>
 
-            <!-- โซนที่ 2: 3 เมนูหลัก -->
             <div class="space-y-4">
-                <!-- เมนู 1: เช็กโซน 2 -->
                 <div onclick="showPage('march-zone2')" class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 flex items-center gap-4 cursor-pointer hover:border-emerald-400 transition transform hover:-translate-y-1">
                     <div class="w-12 h-12 bg-blue-50 text-blue-500 rounded-full flex items-center justify-center text-xl shrink-0"><i class="fa-solid fa-heart-pulse"></i></div>
                     <div class="flex-1">
-                        <h4 class="font-bold text-gray-800 text-sm">เช็กการออกกำลังกายโซน 2 ของคุณ</h4>
-                        <p class="text-[10px] text-gray-500 mt-0.5 leading-tight">ด้วยหลักการปรับจังหวะของร่างกาย (Rhythmic Entrainment)</p>
+                        <h4 class="font-black text-gray-800 text-base">เช็กการออกกำลังกายโซน 2</h4>
+                        <p class="text-xs font-bold text-gray-500 mt-0.5 leading-tight">ผ่านการปรับจังหวะร่างกาย (Rhythmic)</p>
                     </div>
                     <i class="fa-solid fa-chevron-right text-gray-300"></i>
                 </div>
 
-                <!-- เมนู 2: อัปโหลดก้าวเดิน -->
                 <div onclick="showPage('march-upload')" class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 flex items-center gap-4 cursor-pointer hover:border-emerald-400 transition transform hover:-translate-y-1">
                     <div class="w-12 h-12 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center text-xl shrink-0"><i class="fa-solid fa-shoe-prints"></i></div>
                     <div class="flex-1">
-                        <h4 class="font-bold text-gray-800 text-sm">อัปโหลดก้าวเดินของคุณ</h4>
-                        <p class="text-[10px] text-gray-500 mt-0.5 leading-tight">เพื่อปลดล็อกความสำเร็จและเซอร์ไพรส์!</p>
+                        <h4 class="font-black text-gray-800 text-base">อัปโหลดก้าวเดินของคุณ</h4>
+                        <p class="text-xs font-bold text-gray-500 mt-0.5 leading-tight">เพื่อปลดล็อกความสำเร็จและรางวัล!</p>
                     </div>
                     <i class="fa-solid fa-chevron-right text-gray-300"></i>
                 </div>
 
-                <!-- เมนู 3: Playlist -->
                 <div onclick="showPage('march-playlist')" class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 flex items-center gap-4 cursor-pointer hover:border-emerald-400 transition transform hover:-translate-y-1">
                     <div class="w-12 h-12 bg-purple-50 text-purple-500 rounded-full flex items-center justify-center text-xl shrink-0"><i class="fa-solid fa-music"></i></div>
                     <div class="flex-1">
-                        <h4 class="font-bold text-gray-800 text-sm">Personal Playlist</h4>
-                        <p class="text-[10px] text-gray-500 mt-0.5 leading-tight">เพลย์ลิสเพลงออกกำลังกายของคุณ</p>
+                        <h4 class="font-black text-gray-800 text-base">Personal Playlist</h4>
+                        <p class="text-xs font-bold text-gray-500 mt-0.5 leading-tight">เพลย์ลิสต์เพลงออกกำลังกายของคุณ</p>
                     </div>
                     <i class="fa-solid fa-chevron-right text-gray-300"></i>
                 </div>
             </div>
         </div>
 
-        <!-- ========================================== -->
-        <!-- 🎧 เมนูย่อย 1: หน้าเช็ก Zone 2 (Rhythmic Entrainment) -->
-        <!-- ========================================== -->
         <div id="page-march-zone2" class="page-section bg-white min-h-screen pb-24 relative">
             <button onclick="showPage('www-march')" class="absolute top-4 left-4 w-8 h-8 bg-gray-100 rounded-full text-gray-600 z-50 flex items-center justify-center shadow-sm"><i class="fa-solid fa-arrow-left"></i></button>
             
-            <!-- Step 1: หน้า Intro -->
             <div id="zone2-intro" class="flex flex-col items-center justify-center min-h-[80vh] p-6 text-center animate-fadeInUp">
                 <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=600&q=80" class="w-48 h-48 object-cover rounded-full shadow-lg mb-8 border-4 border-blue-100">
                 <h2 class="text-2xl font-black text-blue-800 mb-4 leading-tight">เช็กการออกกำลังกาย<br>โซน 2 ของคุณ</h2>
@@ -816,78 +806,68 @@
                 <button onclick="startZone2Selection()" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold shadow-lg hover:bg-blue-700 transition text-lg">เริ่มต้นค้นหาจังหวะของคุณ <i class="fa-solid fa-arrow-right ml-2"></i></button>
             </div>
 
-            <!-- Step 2: หน้าเลือกเพลง (โจทย์) -->
             <div id="zone2-selection" class="hidden pt-20 p-4">
                 <div class="text-center mb-6">
                     <h2 class="text-xl font-black text-blue-800 mb-2">โจทย์ของเราวันนี้</h2>
                     <p class="text-sm font-bold text-gray-600 bg-yellow-50 p-3 rounded-xl border border-yellow-200">"เลือกความเร็วของเพลงที่ทำให้คุณ<br>รู้สึกเหนื่อยขึ้นมาสักนิด!"</p>
-                    <p class="text-[10px] text-gray-400 mt-3">(กดฟังตัวอย่างเสียง แล้วเลือกจังหวะที่ใช่สำหรับคุณ)</p>
+                    <p class="text-xs text-gray-400 font-bold mt-3">(กดฟังตัวอย่างเสียง แล้วเลือกจังหวะที่ใช่สำหรับคุณ)</p>
                 </div>
 
                 <div class="space-y-3">
-                    <!-- ตัวเลือกที่ 1 -->
                     <div class="bg-white border border-gray-200 p-4 rounded-2xl shadow-sm flex flex-col gap-3">
                         <div class="flex justify-between items-center">
-                            <span class="font-bold text-gray-800 text-sm">ระดับ 1 (BPM 90-100)</span>
+                            <span class="font-bold text-gray-800 text-base">ระดับ 1 (BPM 90-100)</span>
                             <button onclick="togglePreviewAudio('audio-1', this)" class="bg-gray-100 text-blue-600 w-8 h-8 rounded-full flex items-center justify-center"><i class="fa-solid fa-play"></i></button>
-                            <audio id="audio-1" class="bpm-audio hidden" src="https://www.dropbox.com/scl/fi/f7m71xm4azpncffsnl5iy/1.mp3?rlkey=d6o2r7y84p67kra3i3vp82tdh&st=a49gl373&dl=0"></audio> <!-- ลิงก์จำลอง -->
+                            <audio id="audio-1" class="bpm-audio hidden" src="https://www.dropbox.com/scl/fi/f7m71xm4azpncffsnl5iy/1.mp3?rlkey=d6o2r7y84p67kra3i3vp82tdh&st=h6klrwsb&raw=1"></audio>
                         </div>
-                        <button onclick="confirmBPM('ระดับ 1 (BPM 90-100)')" class="w-full bg-blue-50 text-blue-600 py-2 rounded-xl text-xs font-bold hover:bg-blue-600 hover:text-white transition border border-blue-200">เลือกจังหวะนี้</button>
+                        <button onclick="confirmBPM('ระดับ 1 (BPM 90-100)')" class="w-full bg-blue-50 text-blue-600 py-2.5 rounded-xl text-sm font-bold hover:bg-blue-600 hover:text-white transition border border-blue-200">เลือกจังหวะนี้</button>
                     </div>
-                    <!-- ตัวเลือกที่ 2 -->
                     <div class="bg-white border border-gray-200 p-4 rounded-2xl shadow-sm flex flex-col gap-3">
                         <div class="flex justify-between items-center">
-                            <span class="font-bold text-gray-800 text-sm">ระดับ 2 (BPM 100-120)</span>
+                            <span class="font-bold text-gray-800 text-base">ระดับ 2 (BPM 100-120)</span>
                             <button onclick="togglePreviewAudio('audio-2', this)" class="bg-gray-100 text-blue-600 w-8 h-8 rounded-full flex items-center justify-center"><i class="fa-solid fa-play"></i></button>
-                            <audio id="audio-2" class="bpm-audio hidden" src="https://www.dropbox.com/scl/fi/c6begszcww5fcuix0w4is/2.mp3?rlkey=3zycfu2f7knz0ihbg2ijrkqbe&st=futfq7c2&dl=0"></audio>
+                            <audio id="audio-2" class="bpm-audio hidden" src="https://www.dropbox.com/scl/fi/c6begszcww5fcuix0w4is/2.mp3?rlkey=3zycfu2f7knz0ihbg2ijrkqbe&st=eqhiq2if&raw=1"></audio>
                         </div>
-                        <button onclick="confirmBPM('ระดับ 2 (BPM 100-120)')" class="w-full bg-blue-50 text-blue-600 py-2 rounded-xl text-xs font-bold hover:bg-blue-600 hover:text-white transition border border-blue-200">เลือกจังหวะนี้</button>
+                        <button onclick="confirmBPM('ระดับ 2 (BPM 100-120)')" class="w-full bg-blue-50 text-blue-600 py-2.5 rounded-xl text-sm font-bold hover:bg-blue-600 hover:text-white transition border border-blue-200">เลือกจังหวะนี้</button>
                     </div>
-                    <!-- ตัวเลือกที่ 3 -->
                     <div class="bg-white border border-gray-200 p-4 rounded-2xl shadow-sm flex flex-col gap-3">
                         <div class="flex justify-between items-center">
-                            <span class="font-bold text-gray-800 text-sm">ระดับ 3 (BPM 120 ขึ้นไป)</span>
+                            <span class="font-bold text-gray-800 text-base">ระดับ 3 (BPM 120 ขึ้นไป)</span>
                             <button onclick="togglePreviewAudio('audio-3', this)" class="bg-gray-100 text-blue-600 w-8 h-8 rounded-full flex items-center justify-center"><i class="fa-solid fa-play"></i></button>
-                            <audio id="audio-3" class="bpm-audio hidden" src="https://www.dropbox.com/scl/fi/yo75bom9nqcc8dxo3yna4/3.mp3?rlkey=awqr3ifqhcx48qsdfcbjvybg1&st=qgpmyutt&dl=0"></audio>
+                            <audio id="audio-3" class="bpm-audio hidden" src="https://www.dropbox.com/scl/fi/yo75bom9nqcc8dxo3yna4/3.mp3?rlkey=awqr3ifqhcx48qsdfcbjvybg1&st=kl9q0vpv&raw=1"></audio>
                         </div>
-                        <button onclick="confirmBPM('ระดับ 3 (BPM 120 ขึ้นไป)')" class="w-full bg-blue-50 text-blue-600 py-2 rounded-xl text-xs font-bold hover:bg-blue-600 hover:text-white transition border border-blue-200">เลือกจังหวะนี้</button>
+                        <button onclick="confirmBPM('ระดับ 3 (BPM 120 ขึ้นไป)')" class="w-full bg-blue-50 text-blue-600 py-2.5 rounded-xl text-sm font-bold hover:bg-blue-600 hover:text-white transition border border-blue-200">เลือกจังหวะนี้</button>
                     </div>
-                    <!-- ตัวเลือกที่ 4 -->
                     <div class="bg-white border border-gray-200 p-4 rounded-2xl shadow-sm flex flex-col gap-3">
                         <div class="flex justify-between items-center">
-                            <span class="font-bold text-gray-800 text-sm">ระดับ 4 (BPM เร็ว - ค่อนวิ่ง)</span>
+                            <span class="font-bold text-gray-800 text-base">ระดับ 4 (BPM เร็ว - ค่อนวิ่ง)</span>
                             <button onclick="togglePreviewAudio('audio-4', this)" class="bg-gray-100 text-blue-600 w-8 h-8 rounded-full flex items-center justify-center"><i class="fa-solid fa-play"></i></button>
-                            <audio id="audio-4" class="bpm-audio hidden" src="https://www.dropbox.com/scl/fi/z0pioh3ahnyfqjq7p43bi/4.mp3?rlkey=2homnxrx9w9tphph86psh5bed&st=yxf7pu01&dl=0"></audio>
+                            <audio id="audio-4" class="bpm-audio hidden" src="https://www.dropbox.com/scl/fi/z0pioh3ahnyfqjq7p43bi/4.mp3?rlkey=2homnxrx9w9tphph86psh5bed&st=hwka4c6e&raw=1"></audio>
                         </div>
-                        <button onclick="confirmBPM('ระดับ 4 (BPM เร็ว - ค่อนวิ่ง)')" class="w-full bg-blue-50 text-blue-600 py-2 rounded-xl text-xs font-bold hover:bg-blue-600 hover:text-white transition border border-blue-200">เลือกจังหวะนี้</button>
+                        <button onclick="confirmBPM('ระดับ 4 (BPM เร็ว - ค่อนวิ่ง)')" class="w-full bg-blue-50 text-blue-600 py-2.5 rounded-xl text-sm font-bold hover:bg-blue-600 hover:text-white transition border border-blue-200">เลือกจังหวะนี้</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- ========================================== -->
-        <!-- 📸 เมนูย่อย 2: หน้าอัปโหลดก้าวเดิน & สถิติกราฟ -->
-        <!-- ========================================== -->
         <div id="page-march-upload" class="page-section p-4 pt-6 bg-gray-50 min-h-screen pb-24">
             <div class="flex items-center mb-6">
                 <button onclick="showPage('www-march')" class="w-8 h-8 bg-white rounded-full text-gray-600 mr-3 shadow-sm border border-gray-200"><i class="fa-solid fa-arrow-left"></i></button>
-                <h2 class="text-xl font-black text-emerald-700">อัปโหลดก้าวเดิน</h2>
+                <h2 class="text-lg font-bold text-emerald-700">อัปโหลดก้าวเดิน</h2>
             </div>
             
             <button onclick="openStepsApp()" class="w-full mb-6 bg-gray-900 hover:bg-black text-white font-bold py-3.5 rounded-2xl shadow-md transition flex items-center justify-center text-sm">
                 <i class="fa-solid fa-mobile-screen mr-2 text-lg"></i> เปิดแอป StepsApp ดูยอดก้าวเดิน
             </button>
 
-            <!-- กล่องอัปโหลดรูปภาพ (รอเชื่อม AI) -->
             <div class="bg-white p-5 rounded-3xl shadow-sm border border-emerald-100 mb-6 text-center">
                 <div class="w-16 h-16 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center text-3xl mx-auto mb-3"><i class="fa-solid fa-cloud-arrow-up"></i></div>
-                <h3 class="font-bold text-gray-800 mb-1">ส่งหลักฐานก้าวเดินวันนี้</h3>
-                <p class="text-[10px] text-gray-500 mb-4">ระบบจะทำการประมวลผลตัวเลขจากภาพอัตโนมัติ</p>
+                <h3 class="font-bold text-gray-800 text-base mb-1">ส่งหลักฐานก้าวเดินวันนี้</h3>
+                <p class="text-xs text-gray-500 font-bold mb-4">ระบบจะทำการประมวลผลตัวเลขจากภาพอัตโนมัติ</p>
                 <input type="file" id="march-image-ai" accept="image/*" class="w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 mb-3 bg-gray-50 p-2 rounded-xl">
-                <button onclick="uploadStepImageAI(this)" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white py-3 rounded-xl font-bold shadow-sm text-sm transition">ให้ AI อ่านภาพและส่งข้อมูล</button>
+                <button onclick="uploadStepImageAI(this)" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white py-3.5 rounded-xl font-bold shadow-sm text-sm transition">ให้ AI อ่านภาพและส่งข้อมูล</button>
             </div>
 
-            <!-- กล่องสถิติและกราฟ -->
             <div class="bg-white p-4 rounded-3xl shadow-sm border border-gray-200">
                 <h3 class="font-bold text-emerald-800 text-base mb-4 border-b pb-2"><i class="fa-solid fa-chart-area mr-1"></i> สถิติของคุณ</h3>
                 
@@ -902,7 +882,7 @@
                     </div>
                 </div>
 
-                <p class="text-xs font-bold text-gray-600 mb-2">กราฟก้าวเดินรายวัน (ขึ้น-ลง)</p>
+                <p class="text-sm font-bold text-gray-600 mb-2">กราฟก้าวเดินรายวัน (ขึ้น-ลง)</p>
                 <div class="w-full h-40 relative bg-gray-50 rounded-xl border border-gray-100 p-2">
                     <canvas id="marchStepsChart"></canvas>
                 </div>
@@ -910,66 +890,67 @@
         </div>
 
         <!-- ========================================== -->
-        <!-- 🎶 เมนูย่อย 3: Personal Playlist -->
+        <!-- 🎶 เมนูย่อย 3: Personal Playlist (แบบลิงก์แอป 3 ปุ่ม) -->
         <!-- ========================================== -->
         <div id="page-march-playlist" class="page-section p-4 pt-6 bg-gray-50 min-h-screen pb-24">
             <div class="flex items-center mb-6">
+                <!-- ถอดฟังก์ชันหยุดเสียงออก เพราะใช้สลับหน้าจออย่างเดียว -->
                 <button onclick="showPage('www-march')" class="w-8 h-8 bg-white rounded-full text-gray-600 mr-3 shadow-sm border border-gray-200"><i class="fa-solid fa-arrow-left"></i></button>
-                <h2 class="text-xl font-black text-purple-700">Personal Playlist</h2>
+                <h2 class="text-lg font-bold text-purple-700">Personal Playlist</h2>
             </div>
             
-            <p class="text-xs font-bold text-gray-500 mb-4 px-2">เลือกกล่องเพลย์ลิสต์ที่ตรงกับจังหวะการเดินของคุณ</p>
+            <p class="text-sm font-bold text-gray-500 mb-4 px-2">เลือกกล่องเพลย์ลิสต์ที่ตรงกับจังหวะการเดินของคุณ</p>
             
             <div class="grid grid-cols-1 gap-4">
                 <!-- ระดับ 4 -->
                 <div class="bg-gradient-to-r from-red-500 to-rose-500 p-4 rounded-2xl shadow-md text-white">
                     <div class="flex justify-between items-center mb-3">
-                        <h3 class="font-black text-lg">ระดับ 4</h3>
-                        <span class="bg-white/20 text-xs font-bold px-2 py-1 rounded">BPM เร็ว - ค่อนวิ่ง</span>
+                        <h3 class="font-black text-base">ระดับ 4</h3>
+                        <span class="bg-white/20 text-[10px] font-bold px-2 py-1 rounded">BPM เร็ว - ค่อนวิ่ง</span>
                     </div>
                     <div class="flex gap-2">
-                        <button onclick="openExternalLink('https://spotify.com')" class="flex-1 bg-white/20 hover:bg-white/30 text-white text-[11px] font-bold py-2 rounded-lg flex items-center justify-center gap-1 backdrop-blur-sm transition"><i class="fa-brands fa-spotify"></i> Spotify</button>
-                        <button onclick="openExternalLink('https://music.youtube.com')" class="flex-1 bg-white/20 hover:bg-white/30 text-white text-[11px] font-bold py-2 rounded-lg flex items-center justify-center gap-1 backdrop-blur-sm transition"><i class="fa-brands fa-youtube"></i> YT Music</button>
-                        <button onclick="openExternalLink('https://youtube.com')" class="flex-1 bg-white/20 hover:bg-white/30 text-white text-[11px] font-bold py-2 rounded-lg flex items-center justify-center gap-1 backdrop-blur-sm transition"><i class="fa-solid fa-play"></i> YouTube</button>
+                        <button onclick="openExternalLink('https://open.spotify.com/')" class="flex-1 bg-white/20 hover:bg-white/30 text-white text-[11px] font-bold py-2.5 rounded-lg flex items-center justify-center gap-1 backdrop-blur-sm transition"><i class="fa-brands fa-spotify"></i> Spotify</button>
+                        <button onclick="openExternalLink('https://music.youtube.com/')" class="flex-1 bg-white/20 hover:bg-white/30 text-white text-[11px] font-bold py-2.5 rounded-lg flex items-center justify-center gap-1 backdrop-blur-sm transition"><i class="fa-brands fa-youtube"></i> YT Music</button>
+                        <button onclick="openExternalLink('https://youtube.com/')" class="flex-1 bg-white/20 hover:bg-white/30 text-white text-[11px] font-bold py-2.5 rounded-lg flex items-center justify-center gap-1 backdrop-blur-sm transition"><i class="fa-solid fa-play"></i> YouTube</button>
                     </div>
                 </div>
 
                 <!-- ระดับ 3 -->
                 <div class="bg-gradient-to-r from-orange-400 to-amber-500 p-4 rounded-2xl shadow-md text-white">
                     <div class="flex justify-between items-center mb-3">
-                        <h3 class="font-black text-lg">ระดับ 3</h3>
-                        <span class="bg-white/20 text-xs font-bold px-2 py-1 rounded">BPM 120 ขึ้นไป</span>
+                        <h3 class="font-black text-base">ระดับ 3</h3>
+                        <span class="bg-white/20 text-[10px] font-bold px-2 py-1 rounded">BPM 120 ขึ้นไป</span>
                     </div>
                     <div class="flex gap-2">
-                        <button onclick="openExternalLink('https://spotify.com')" class="flex-1 bg-white/20 hover:bg-white/30 text-white text-[11px] font-bold py-2 rounded-lg flex items-center justify-center gap-1 backdrop-blur-sm transition"><i class="fa-brands fa-spotify"></i> Spotify</button>
-                        <button onclick="openExternalLink('https://music.youtube.com')" class="flex-1 bg-white/20 hover:bg-white/30 text-white text-[11px] font-bold py-2 rounded-lg flex items-center justify-center gap-1 backdrop-blur-sm transition"><i class="fa-brands fa-youtube"></i> YT Music</button>
-                        <button onclick="openExternalLink('https://youtube.com')" class="flex-1 bg-white/20 hover:bg-white/30 text-white text-[11px] font-bold py-2 rounded-lg flex items-center justify-center gap-1 backdrop-blur-sm transition"><i class="fa-solid fa-play"></i> YouTube</button>
+                        <button onclick="openExternalLink('https://open.spotify.com/')" class="flex-1 bg-white/20 hover:bg-white/30 text-white text-[11px] font-bold py-2.5 rounded-lg flex items-center justify-center gap-1 backdrop-blur-sm transition"><i class="fa-brands fa-spotify"></i> Spotify</button>
+                        <button onclick="openExternalLink('https://music.youtube.com/')" class="flex-1 bg-white/20 hover:bg-white/30 text-white text-[11px] font-bold py-2.5 rounded-lg flex items-center justify-center gap-1 backdrop-blur-sm transition"><i class="fa-brands fa-youtube"></i> YT Music</button>
+                        <button onclick="openExternalLink('https://youtube.com/')" class="flex-1 bg-white/20 hover:bg-white/30 text-white text-[11px] font-bold py-2.5 rounded-lg flex items-center justify-center gap-1 backdrop-blur-sm transition"><i class="fa-solid fa-play"></i> YouTube</button>
                     </div>
                 </div>
 
                 <!-- ระดับ 2 -->
                 <div class="bg-gradient-to-r from-teal-400 to-emerald-500 p-4 rounded-2xl shadow-md text-white">
                     <div class="flex justify-between items-center mb-3">
-                        <h3 class="font-black text-lg">ระดับ 2</h3>
-                        <span class="bg-white/20 text-xs font-bold px-2 py-1 rounded">BPM 100-120</span>
+                        <h3 class="font-black text-base">ระดับ 2</h3>
+                        <span class="bg-white/20 text-[10px] font-bold px-2 py-1 rounded">BPM 100-120</span>
                     </div>
                     <div class="flex gap-2">
-                        <button onclick="openExternalLink('https://spotify.com')" class="flex-1 bg-white/20 hover:bg-white/30 text-white text-[11px] font-bold py-2 rounded-lg flex items-center justify-center gap-1 backdrop-blur-sm transition"><i class="fa-brands fa-spotify"></i> Spotify</button>
-                        <button onclick="openExternalLink('https://music.youtube.com')" class="flex-1 bg-white/20 hover:bg-white/30 text-white text-[11px] font-bold py-2 rounded-lg flex items-center justify-center gap-1 backdrop-blur-sm transition"><i class="fa-brands fa-youtube"></i> YT Music</button>
-                        <button onclick="openExternalLink('https://youtube.com')" class="flex-1 bg-white/20 hover:bg-white/30 text-white text-[11px] font-bold py-2 rounded-lg flex items-center justify-center gap-1 backdrop-blur-sm transition"><i class="fa-solid fa-play"></i> YouTube</button>
+                        <button onclick="openExternalLink('https://open.spotify.com/')" class="flex-1 bg-white/20 hover:bg-white/30 text-white text-[11px] font-bold py-2.5 rounded-lg flex items-center justify-center gap-1 backdrop-blur-sm transition"><i class="fa-brands fa-spotify"></i> Spotify</button>
+                        <button onclick="openExternalLink('https://music.youtube.com/')" class="flex-1 bg-white/20 hover:bg-white/30 text-white text-[11px] font-bold py-2.5 rounded-lg flex items-center justify-center gap-1 backdrop-blur-sm transition"><i class="fa-brands fa-youtube"></i> YT Music</button>
+                        <button onclick="openExternalLink('https://youtube.com/')" class="flex-1 bg-white/20 hover:bg-white/30 text-white text-[11px] font-bold py-2.5 rounded-lg flex items-center justify-center gap-1 backdrop-blur-sm transition"><i class="fa-solid fa-play"></i> YouTube</button>
                     </div>
                 </div>
 
                 <!-- ระดับ 1 -->
                 <div class="bg-gradient-to-r from-blue-400 to-indigo-500 p-4 rounded-2xl shadow-md text-white">
                     <div class="flex justify-between items-center mb-3">
-                        <h3 class="font-black text-lg">ระดับ 1</h3>
-                        <span class="bg-white/20 text-xs font-bold px-2 py-1 rounded">BPM 90-100</span>
+                        <h3 class="font-black text-base">ระดับ 1</h3>
+                        <span class="bg-white/20 text-[10px] font-bold px-2 py-1 rounded">BPM 90-100</span>
                     </div>
                     <div class="flex gap-2">
-                        <button onclick="openExternalLink('https://spotify.com')" class="flex-1 bg-white/20 hover:bg-white/30 text-white text-[11px] font-bold py-2 rounded-lg flex items-center justify-center gap-1 backdrop-blur-sm transition"><i class="fa-brands fa-spotify"></i> Spotify</button>
-                        <button onclick="openExternalLink('https://music.youtube.com')" class="flex-1 bg-white/20 hover:bg-white/30 text-white text-[11px] font-bold py-2 rounded-lg flex items-center justify-center gap-1 backdrop-blur-sm transition"><i class="fa-brands fa-youtube"></i> YT Music</button>
-                        <button onclick="openExternalLink('https://youtube.com')" class="flex-1 bg-white/20 hover:bg-white/30 text-white text-[11px] font-bold py-2 rounded-lg flex items-center justify-center gap-1 backdrop-blur-sm transition"><i class="fa-solid fa-play"></i> YouTube</button>
+                        <button onclick="openExternalLink('https://open.spotify.com/')" class="flex-1 bg-white/20 hover:bg-white/30 text-white text-[11px] font-bold py-2.5 rounded-lg flex items-center justify-center gap-1 backdrop-blur-sm transition"><i class="fa-brands fa-spotify"></i> Spotify</button>
+                        <button onclick="openExternalLink('https://music.youtube.com/')" class="flex-1 bg-white/20 hover:bg-white/30 text-white text-[11px] font-bold py-2.5 rounded-lg flex items-center justify-center gap-1 backdrop-blur-sm transition"><i class="fa-brands fa-youtube"></i> YT Music</button>
+                        <button onclick="openExternalLink('https://youtube.com/')" class="flex-1 bg-white/20 hover:bg-white/30 text-white text-[11px] font-bold py-2.5 rounded-lg flex items-center justify-center gap-1 backdrop-blur-sm transition"><i class="fa-solid fa-play"></i> YouTube</button>
                     </div>
                 </div>
             </div>
