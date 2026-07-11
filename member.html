@@ -1115,7 +1115,7 @@
         // ==========================================
         function openExternalLink(url) {
             if (typeof liff !== 'undefined' && liff.isLoggedIn()) {
-                liff.openWindow({ url: url, external: true });
+                liff.openWindow({ url: url, external: true });f
             } else {
                 window.open(url, '_blank');
             }
@@ -1705,72 +1705,189 @@
         }
 
         // ==========================================
-        // 👟 3. ระบบก้าวเดิน (The Long March) + อัปโหลดภาพ Base64
+        // 👟 ระบบก้าวเดิน The Long March (อัปเดตใหม่)
         // ==========================================
-        async function openMarchTracker() {
-            showPage('www-march');
-            const btnSave = document.querySelector('#page-www-march button[onclick="saveSteps(this)"]');
-            const inputSteps = document.getElementById('march-steps'); const fileInput = document.getElementById('march-image');
-            
-            if(checkDailyLimit('march')) {
-                inputSteps.disabled = true; inputSteps.placeholder = "บันทึกแล้ว"; if(fileInput) fileInput.disabled = true;
-                btnSave.disabled = true; btnSave.className = "w-full bg-gray-300 text-gray-500 py-3 rounded-xl font-bold shadow-sm cursor-not-allowed text-base mt-2"; btnSave.innerText = "🔒 คุณบันทึกก้าวเดินของวันนี้ไปแล้ว";
-            } else {
-                inputSteps.disabled = false; inputSteps.placeholder = "0"; if(fileInput) { fileInput.disabled = false; fileInput.value = ''; }
-                btnSave.disabled = false; btnSave.className = "w-full bg-emerald-500 hover:bg-emerald-600 text-white py-3 rounded-xl font-bold shadow-sm text-base mt-2"; btnSave.innerText = "ส่งบันทึกและรูปภาพหลักฐาน";
+        let marchStepsChartObj = null;
+
+        // --- Flow ของหน้า Zone 2 ---
+        function startZone2Selection() {
+            document.getElementById('zone2-intro').classList.add('hidden');
+            document.getElementById('zone2-selection').classList.remove('hidden');
+            document.getElementById('zone2-selection').classList.add('animate-fadeInUp');
+        }
+
+        // กดปุ่ม Play ควบคุมเสียงเพลง (กดอันนึง อีกอันต้องหยุด)
+        function togglePreviewAudio(audioId, btnElement) {
+            let audioEls = document.querySelectorAll('.bpm-audio');
+            let isCurrentlyPlaying = !document.getElementById(audioId).paused;
+
+            // หยุดทุกเพลง และเปลี่ยนไอคอนกลับเป็นปุ่ม Play
+            audioEls.forEach(a => a.pause());
+            document.querySelectorAll('#zone2-selection button i.fa-pause').forEach(icon => {
+                icon.classList.remove('fa-pause');
+                icon.classList.add('fa-play');
+            });
+
+            // ถ้าเพลงนั้นยังไม่ได้เล่น ให้สั่งเล่น
+            if (!isCurrentlyPlaying) {
+                document.getElementById(audioId).play();
+                btnElement.innerHTML = '<i class="fa-solid fa-pause"></i>';
             }
-            
-            const cal = document.getElementById('march-calendar'); 
-            if(cal) cal.innerHTML = '<div class="col-span-7 text-center py-10 text-gray-400"><i class="fa-solid fa-spinner fa-spin text-xl text-emerald-500 mb-2 block"></i>กำลังโหลด...</div>';
-            
+        }
+
+        // ป๊อปอัพยืนยันการเลือก BPM
+        function confirmBPM(bpmLevel) {
+            // หยุดเพลงก่อนแสดงป๊อปอัพ
+            document.querySelectorAll('.bpm-audio').forEach(a => a.pause());
+            document.querySelectorAll('#zone2-selection button i.fa-pause').forEach(icon => {
+                icon.classList.remove('fa-pause'); icon.classList.add('fa-play');
+            });
+
+            Swal.fire({
+                title: 'ยืนยันตัวเลือก?',
+                text: `ความเร็วของเพลงที่คุณเลือกคือ "${bpmLevel}" ใช่หรือไม่?`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#2563eb',
+                cancelButtonColor: '#9ca3af',
+                confirmButtonText: 'ใช่ ยืนยัน',
+                cancelButtonText: 'เลือกใหม่',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'สำเร็จ!',
+                        text: 'ระบบได้ยืนยันตัวเลือกของคุณแล้ว (สามารถเปลี่ยนได้ภายหลัง)',
+                        icon: 'success',
+                        confirmButtonColor: '#2563eb'
+                    }).then(() => {
+                        // กลับไปหน้าหลัก Long March
+                        document.getElementById('zone2-intro').classList.remove('hidden');
+                        document.getElementById('zone2-selection').classList.add('hidden');
+                        showPage('www-march');
+                    });
+                }
+            });
+        }
+
+        // --- Flow หน้าอัปโหลด & กราฟ ---
+        async function openMarchTracker() { // เรียกใช้เมื่อกดเข้าเมนู
+            // กราฟจะถูกวาดที่นี่ (ดึงข้อมูลจาก API แบบเดิม)
             const res = await callAPI("getMarchRecords", { memberId: currentUser.memberId }); 
-            if(res && Array.isArray(res)) { renderMarchCalendar(res); } else { renderMarchCalendar([]); }
+            if(res && Array.isArray(res)) { renderMarchLineChart(res); } else { renderMarchLineChart([]); }
         }
 
-        async function saveSteps(btn) {
-            const steps = document.getElementById('march-steps').value; const fileInput = document.getElementById('march-image');
-            if(!steps || !currentUser) return; 
-            let base64Image = ""; let fileName = "";
-            if (fileInput && fileInput.files.length > 0) {
-                const file = fileInput.files[0]; fileName = file.name;
-                base64Image = await new Promise((resolve) => { const reader = new FileReader(); reader.onloadend = () => resolve(reader.result.split(',')[1]); reader.readAsDataURL(file); });
-            } else { Swal.fire('ลืมแนบรูป', 'กรุณาแนบรูปภาพหน้าจอแอป StepsApp เพื่อใช้เป็นหลักฐานประจำวัน', 'warning'); return; }
-
-            const confirmResult = await Swal.fire({ title: 'ยืนยันก้าวเดิน?', html: `คุณกำลังจะบันทึก <b class="text-emerald-600 text-2xl">${steps}</b> ก้าว พร้อมอัปโหลดหลักฐานสำหรับวันนี้`, icon: 'info', showCancelButton: true, confirmButtonColor: '#10b981', cancelButtonColor: '#d1d5db', confirmButtonText: 'บันทึกเลย', cancelButtonText: 'แก้ไข' });
-            if (!confirmResult.isConfirmed) return;
-
-            btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังบันทึก...';
-            const res = await callAPI("saveMarchRecord", { memberId: currentUser.memberId, steps: steps, imageRaw: base64Image, imageName: fileName });
+        function renderMarchLineChart(records) {
+            let totalSteps = 0;
+            const labels = [];
+            const dataSteps = [];
             
-            if(res.success) { setDailyLimit('march'); Swal.fire('เจ๋งมาก!', `บันทึกข้อมูลและภาพหลักฐานเรียบร้อย 🚶‍♂️`, 'success'); document.getElementById('march-steps').value = ''; openMarchTracker(); } 
-            else { Swal.fire('เกิดข้อผิดพลาด', res.message, 'error'); } btn.disabled = false; btn.innerText = "ส่งบันทึกและรูปภาพหลักฐาน";
+            // จำกัดโชว์ 7 วันล่าสุดให้กราฟดูสวย
+            const last7Days = records.slice(-7);
+            
+            last7Days.forEach(r => {
+                let rDate = r.date.split(' ')[0].substring(0, 5); // เอาแค่วัน/เดือน
+                labels.push(rDate);
+                dataSteps.push(parseInt(r.steps) || 0);
+            });
+
+            records.forEach(r => { totalSteps += (parseInt(r.steps) || 0); });
+            if(document.getElementById('march-total-steps')) { document.getElementById('march-total-steps').innerText = totalSteps.toLocaleString(); }
+
+            let chartElement = document.getElementById('marchStepsChart'); if(!chartElement) return;
+            if (marchStepsChartObj) marchStepsChartObj.destroy();
+            const ctx = chartElement.getContext('2d');
+            
+            marchStepsChartObj = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: dataSteps,
+                        borderColor: '#10b981', // สี emerald-500
+                        backgroundColor: '#d1fae5', 
+                        borderWidth: 2,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#047857',
+                        tension: 0.3,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    layout: { padding: { top: 20, left: 10, right: 10, bottom: 5 } },
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { font: { size: 10, family: 'Sarabun' } } },
+                        y: { display: false, min: 0 }
+                    },
+                    plugins: [{ 
+                        id: 'customDataLabels', afterDatasetsDraw(chart) {
+                            const ctx = chart.ctx; chart.data.datasets.forEach((dataset, i) => { 
+                                const meta = chart.getDatasetMeta(i);
+                                if (!meta || !meta.data) return; 
+                                meta.data.forEach((bar, index) => { 
+                                    if (bar && bar.x !== undefined && bar.y !== undefined && dataset.data[index] != null) {
+                                        let val = dataset.data[index] > 0 ? (dataset.data[index]/1000).toFixed(1)+'k' : '0';
+                                        ctx.fillStyle = '#065f46'; ctx.font = 'bold 9px Sarabun'; ctx.textAlign = 'center'; ctx.fillText(val, bar.x, bar.y - 8); 
+                                    }
+                            }); });
+                        }
+                    }]
+                }
+            });
         }
 
-        function renderMarchCalendar(records) {
-            const container = document.getElementById('march-calendar'); if(!container) return;
-            let html = ''; const now = new Date(); const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate(); const firstDay = new Date(now.getFullYear(), now.getMonth(), 1).getDay();
-            let currentMonthSteps = Array(daysInMonth).fill(0); let totalStepsAllTime = 0; 
-            
-            if (records && Array.isArray(records) && records.length > 0) { 
-                records.forEach(r => { 
-                    totalStepsAllTime += (parseInt(r.steps) || 0); 
-                    let rDate;
-                    if (typeof r.date === 'string' && r.date.includes('/')) {
-                        let parts = r.date.split(' ')[0].split('/');
-                        rDate = new Date(parts[2], parts[1]-1, parts[0]);
-                    } else { rDate = new Date(r.date); }
-                    if (!isNaN(rDate.getTime()) && rDate.getMonth() === now.getMonth() && rDate.getFullYear() === now.getFullYear()) { currentMonthSteps[rDate.getDate() - 1] = (parseInt(r.steps) || 0); } 
-                }); 
+        // ปุ่มจำลองการส่งให้ AI ตรวจ
+        async function uploadStepImageAI(btn) {
+            const fileInput = document.getElementById('march-image-ai');
+            if (!fileInput.files.length) {
+                Swal.fire('ลืมแนบรูป', 'กรุณาอัปโหลดรูปภาพหน้าจอ StepsApp ก่อนครับ', 'warning');
+                return;
             }
-            if(document.getElementById('march-total-steps')) { document.getElementById('march-total-steps').innerText = totalStepsAllTime.toLocaleString(); }
-            
-            for(let i=0; i<firstDay; i++) { html += `<div class="bg-gray-50 min-h-[60px] border border-gray-100"></div>`; }
-            for(let i=1; i<=daysInMonth; i++) {
-                let step = currentMonthSteps[i-1]; let bgClass = "bg-white text-gray-500"; 
-                if (step >= 10000) { bgClass = "bg-emerald-500 text-white font-black shadow-inner transform scale-105 z-10 relative"; } else if (step > 0) { bgClass = "bg-emerald-50 text-emerald-800 font-bold"; } 
-                html += `<div class="${bgClass} flex flex-col items-center justify-center p-2 min-h-[60px] border border-gray-200"><span class="text-[10px] opacity-80 mb-1">${i}</span><span class="text-[11px] leading-tight">${step > 0 ? (step/1000).toFixed(1)+'k' : '-'}</span></div>`; 
+
+            // แจ้งเตือนจำลองการสแกนด้วย AI
+            btn.disabled = true;
+            let originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-robot fa-bounce mr-2"></i> AI กำลังประมวลผลรูปภาพ...';
+
+            // TODO: โค้ดตรงนี้จะส่ง Base64 ไปให้ Gemini API ฝั่ง Google Apps Script ในอนาคต
+            // จำลองเวลาสแกน 2 วินาที
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                
+                // แจ้งว่าสำเร็จ และเช็ก Milestone เด้งป๊อปอัพชลบุรี
+                Swal.fire({
+                    title: 'สแกนสำเร็จ!',
+                    html: `AI อ่านตัวเลขได้ <b class="text-emerald-600 text-xl">8,450</b> ก้าว<br>บันทึกเข้าระบบเรียบร้อยแล้ว`, // ตัวเลขสมมติ
+                    icon: 'success'
+                }).then(() => {
+                    // จำลองฟังก์ชันปลดล็อกเกร็ดความรู้ชลบุรี
+                    checkChonburiMilestone(15000); 
+                });
+            }, 2000);
+        }
+
+        // ฟังก์ชันจำลองเมื่อถึงเป้าหมายชลบุรี (รอเนื้อหาจากพี่นิ)
+        function checkChonburiMilestone(totalStepsThisMonth) {
+            // สมมติว่าเป้าหมายคือ 15,000 ก้าว
+            if (totalStepsThisMonth >= 15000) {
+                Swal.fire({
+                    title: '🎉 ปลดล็อกความสำเร็จ!',
+                    html: `
+                        <div class="text-left mt-2">
+                            <p class="font-bold text-emerald-800 mb-2">ยินดีด้วย! คุณเดินถึง "สัตหีบ" แล้ว 🌊</p>
+                            <img src="https://images.unsplash.com/photo-1588668211019-f53831846b0a?auto=format&fit=crop&w=400&q=80" class="w-full h-32 object-cover rounded-xl mb-3 shadow-sm">
+                            <p class="text-sm text-gray-600 bg-gray-50 p-3 rounded-lg border border-gray-100 italic">
+                            "สัตหีบ เป็นสถานที่ท่องเที่ยวยอดฮิตของจังหวัดชลบุรี..." <br><span class="text-[10px] text-gray-400">(รอข้อมูลเกร็ดความรู้)</span>
+                            </p>
+                        </div>
+                    `,
+                    confirmButtonText: 'เก็บเข้าคอลเลกชัน',
+                    confirmButtonColor: '#10b981'
+                });
             }
-            container.innerHTML = html;
         }
 
         // ==========================================
