@@ -884,7 +884,7 @@
                 <h3 class="font-black text-gray-800 text-lg mb-2">ส่งหลักฐานก้าวเดินวันนี้</h3>
                 <p class="text-sm text-gray-500 font-bold mb-5">ระบบจะทำการอ่านตัวเลขจากภาพอัตโนมัติ</p>
                 <input type="file" id="march-image-ai" accept="image/*" class="w-full text-sm text-gray-500 file:mr-4 file:py-2.5 file:px-5 file:rounded-full file:border-0 file:text-sm file:font-bold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 mb-4 bg-gray-50 p-2 rounded-xl">
-                <button onclick="uploadStepImageAI(this)" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white py-4 rounded-xl font-bold shadow-sm text-base transition">ให้ AI อ่านภาพและส่งข้อมูล</button>
+                <button onclick="uploadStepImageAI(this)" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white py-4 rounded-xl font-bold shadow-sm text-base transition">ตรวจสอบภาพและส่งข้อมูล</button>
             </div>
 
             <div class="bg-white p-5 rounded-3xl shadow-sm border border-gray-200">
@@ -1793,23 +1793,21 @@
             const labels = [];
             const dataSteps = [];
             
-            // เตรียมเช็กเดือนปัจจุบัน
             const now = new Date();
             const currentMonth = now.getMonth();
             const currentYear = now.getFullYear();
             
-            // 1. คำนวณยอดเดินรวม และยอดเดือนนี้
+            // 1. คำนวณยอดรวม และยอดเดือนนี้
             records.forEach(r => {
                 let s = parseInt(r.steps) || 0;
                 totalSteps += s;
                 
-                // ถอดรหัสวันที่ เพื่อเช็กว่าเป็นก้าวของเดือนนี้ไหม
-                let rDateStr = String(r.date).split(' ')[0].split('T')[0]; // รองรับทั้งแบบ / และ -
+                let rDateStr = String(r.date).split(' ')[0].split('T')[0];
                 let rMonth = -1, rYear = -1;
                 
                 if (rDateStr.includes('/')) {
                     let parts = rDateStr.split('/');
-                    rMonth = parseInt(parts[1]) - 1; // JavaScript เดือนเริ่มที่ 0
+                    rMonth = parseInt(parts[1]) - 1; 
                     rYear = parseInt(parts[2]);
                 } else {
                     let d = new Date(rDateStr);
@@ -1822,7 +1820,6 @@
                 }
             });
 
-            // 2. อัปเดตตัวเลขขึ้นหน้าจอ UI
             if(document.getElementById('march-total-steps')) { 
                 document.getElementById('march-total-steps').innerText = totalSteps.toLocaleString(); 
             }
@@ -1830,25 +1827,43 @@
                 document.getElementById('march-month-steps').innerText = monthSteps.toLocaleString(); 
             }
 
-            // 3. เตรียมข้อมูลวาดกราฟ (จำกัด 7 วันล่าสุดให้กราฟดูสวย ไม่เบียด)
+            // 2. ดึง 7 วันล่าสุดและแปลงวันที่ให้สวยงาม
             const last7Days = records.slice(-7);
             
             last7Days.forEach(r => {
-                let rDate = String(r.date).split(' ')[0].substring(0, 5); // ดึงแค่วัน/เดือน
-                labels.push(rDate);
+                let rawDate = String(r.date).split('T')[0].split(' ')[0];
+                let shortDate = "";
+                
+                // 🌟 แก้ปัญหาวันที่ 2026- สลับเป็น วัน/เดือน
+                if (rawDate.includes("-")) {
+                    let p = rawDate.split("-");
+                    if (p[0].length === 4) { // ถ้าปีขึ้นก่อน (2026-07-11)
+                        shortDate = `${p[2]}/${p[1]}`;
+                    } else { // ถ้าวันขึ้นก่อน (11-07-2026)
+                        shortDate = `${p[0]}/${p[1]}`; 
+                    }
+                } else if (rawDate.includes("/")) {
+                    let p = rawDate.split("/"); // (11/07/2026)
+                    shortDate = `${p[0]}/${p[1]}`;
+                } else {
+                    shortDate = rawDate.substring(0, 5);
+                }
+                
+                labels.push(shortDate);
                 dataSteps.push(parseInt(r.steps) || 0);
             });
 
             let chartElement = document.getElementById('marchStepsChart'); if(!chartElement) return;
-            if (marchStepsChartObj) marchStepsChartObj.destroy();
+            if (window.marchStepsChartObj) window.marchStepsChartObj.destroy();
             const ctx = chartElement.getContext('2d');
             
-            // วาดกราฟเส้น
-            marchStepsChartObj = new Chart(ctx, {
+            // 3. วาดกราฟ
+            window.marchStepsChartObj = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: labels,
                     datasets: [{
+                        label: 'จำนวนก้าว', // 🌟 แก้ปัญหา undefined โดยการตั้งชื่อให้ตรงนี้ครับ
                         data: dataSteps,
                         borderColor: '#10b981', 
                         backgroundColor: '#d1fae5', 
@@ -1862,7 +1877,16 @@
                 options: {
                     responsive: true, maintainAspectRatio: false,
                     layout: { padding: { top: 20, left: 10, right: 10, bottom: 5 } },
-                    plugins: { legend: { display: false } },
+                    plugins: { 
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ' ' + context.parsed.y.toLocaleString() + ' ก้าว';
+                                }
+                            }
+                        }
+                    },
                     scales: {
                         x: { grid: { display: false }, ticks: { font: { size: 10, family: 'Sarabun' } } },
                         y: { display: false, min: 0 }
@@ -1875,7 +1899,7 @@
                                 meta.data.forEach((bar, index) => { 
                                     if (bar && bar.x !== undefined && bar.y !== undefined && dataset.data[index] != null) {
                                         let val = dataset.data[index] > 0 ? (dataset.data[index]/1000).toFixed(1)+'k' : '0';
-                                        ctx.fillStyle = '#065f46'; ctx.font = 'bold 9px Sarabun'; ctx.textAlign = 'center'; ctx.fillText(val, bar.x, bar.y - 8); 
+                                        ctx.fillStyle = '#065f46'; ctx.font = 'bold 10px Sarabun'; ctx.textAlign = 'center'; ctx.fillText(val, bar.x, bar.y - 10); 
                                     }
                             }); });
                         }
