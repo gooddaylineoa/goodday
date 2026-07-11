@@ -763,7 +763,7 @@
                 <!-- กล่องจำลองแผนที่ -->
                 <div class="w-full h-40 bg-white/60 backdrop-blur-sm rounded-2xl border-2 border-dashed border-emerald-300 flex flex-col items-center justify-center text-emerald-500 z-10 relative">
                     <i class="fa-solid fa-map-location-dot text-4xl mb-2 opacity-50"></i>
-                    <p class="text-xs font-bold text-center px-4">(พื้นที่แสดงแผนที่จังหวัดชลบุรี และเส้นทางปลดล็อกอีโมจิ<br>รอข้อมูลอัปเดตจากทีมงาน)</p>
+                    <p class="text-xs font-bold text-center px-4">(พื้นที่แสดงแผนที่จังหวัดชลบุรี และเส้นทางปลดล็อกอีโมจิ<br>รอข้อมูลอัปเดต)</p>
                 </div>
             </div>
 
@@ -1772,10 +1772,11 @@
 
         // --- Flow หน้าอัปโหลด & กราฟ ---
         async function openMarchTracker() { // เรียกใช้เมื่อกดเข้าเมนู
+            showPage('www-march'); // 🌟 เพิ่มบรรทัดนี้ สลับหน้าไปก่อนเลย
             // กราฟจะถูกวาดที่นี่ (ดึงข้อมูลจาก API แบบเดิม)
             const res = await callAPI("getMarchRecords", { memberId: currentUser.memberId }); 
             if(res && Array.isArray(res)) { renderMarchLineChart(res); } else { renderMarchLineChart([]); }
-        }
+        }    
 
         function renderMarchLineChart(records) {
             let totalSteps = 0;
