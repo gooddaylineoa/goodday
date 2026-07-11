@@ -874,11 +874,11 @@
                 <div class="grid grid-cols-2 gap-3 mb-6">
                     <div class="bg-emerald-50 p-3 rounded-2xl text-center border border-emerald-100">
                         <p class="text-[10px] text-emerald-600 font-bold uppercase mb-1">ก้าวสะสม (เดือนนี้)</p>
-                        <p class="text-2xl font-black text-emerald-700">0</p>
+                        <p class="text-2xl font-black text-emerald-700" id="march-month-steps">0</p>
                     </div>
                     <div class="bg-blue-50 p-3 rounded-2xl text-center border border-blue-100">
                         <p class="text-[10px] text-blue-600 font-bold uppercase mb-1">ก้าวสะสม (รวมทั้งหมด)</p>
-                        <p class="text-2xl font-black text-blue-700"><span id="march-total-steps">0</span></p>
+                        <p class="text-2xl font-black text-blue-700" id="march-total-steps">0</p>
                     </div>
                 </div>
 
@@ -1752,41 +1752,87 @@
         }
 
         // --- Flow หน้าอัปโหลด & กราฟ ---
-        async function openMarchTracker() { // เรียกใช้เมื่อกดเข้าเมนู
-            showPage('www-march'); // 🌟 เพิ่มบรรทัดนี้ สลับหน้าไปก่อนเลย
-            // กราฟจะถูกวาดที่นี่ (ดึงข้อมูลจาก API แบบเดิม)
+        async function openMarchTracker() { 
+            showPage('march-upload'); 
             const res = await callAPI("getMarchRecords", { memberId: currentUser.memberId }); 
-            if(res && Array.isArray(res)) { renderMarchLineChart(res); } else { renderMarchLineChart([]); }
-        }    
+            
+            // 🌟 อัปเกรดระบบดักจับข้อมูล (เผื่อหลังบ้านส่งข้อมูลมาเป็น Array หรือ Object)
+            let recordsData = [];
+            if (res && Array.isArray(res)) {
+                recordsData = res;
+            } else if (res && res.success && Array.isArray(res.data)) {
+                recordsData = res.data;
+            } else if (res && Array.isArray(res.data)) {
+                recordsData = res.data;
+            }
+            
+            renderMarchLineChart(recordsData);
+        }
 
         function renderMarchLineChart(records) {
             let totalSteps = 0;
+            let monthSteps = 0;
             const labels = [];
             const dataSteps = [];
             
-            // จำกัดโชว์ 7 วันล่าสุดให้กราฟดูสวย
+            // เตรียมเช็กเดือนปัจจุบัน
+            const now = new Date();
+            const currentMonth = now.getMonth();
+            const currentYear = now.getFullYear();
+            
+            // 1. คำนวณยอดเดินรวม และยอดเดือนนี้
+            records.forEach(r => {
+                let s = parseInt(r.steps) || 0;
+                totalSteps += s;
+                
+                // ถอดรหัสวันที่ เพื่อเช็กว่าเป็นก้าวของเดือนนี้ไหม
+                let rDateStr = String(r.date).split(' ')[0].split('T')[0]; // รองรับทั้งแบบ / และ -
+                let rMonth = -1, rYear = -1;
+                
+                if (rDateStr.includes('/')) {
+                    let parts = rDateStr.split('/');
+                    rMonth = parseInt(parts[1]) - 1; // JavaScript เดือนเริ่มที่ 0
+                    rYear = parseInt(parts[2]);
+                } else {
+                    let d = new Date(rDateStr);
+                    rMonth = d.getMonth();
+                    rYear = d.getFullYear();
+                }
+
+                if (rMonth === currentMonth && rYear === currentYear) {
+                    monthSteps += s;
+                }
+            });
+
+            // 2. อัปเดตตัวเลขขึ้นหน้าจอ UI
+            if(document.getElementById('march-total-steps')) { 
+                document.getElementById('march-total-steps').innerText = totalSteps.toLocaleString(); 
+            }
+            if(document.getElementById('march-month-steps')) { 
+                document.getElementById('march-month-steps').innerText = monthSteps.toLocaleString(); 
+            }
+
+            // 3. เตรียมข้อมูลวาดกราฟ (จำกัด 7 วันล่าสุดให้กราฟดูสวย ไม่เบียด)
             const last7Days = records.slice(-7);
             
             last7Days.forEach(r => {
-                let rDate = r.date.split(' ')[0].substring(0, 5); // เอาแค่วัน/เดือน
+                let rDate = String(r.date).split(' ')[0].substring(0, 5); // ดึงแค่วัน/เดือน
                 labels.push(rDate);
                 dataSteps.push(parseInt(r.steps) || 0);
             });
-
-            records.forEach(r => { totalSteps += (parseInt(r.steps) || 0); });
-            if(document.getElementById('march-total-steps')) { document.getElementById('march-total-steps').innerText = totalSteps.toLocaleString(); }
 
             let chartElement = document.getElementById('marchStepsChart'); if(!chartElement) return;
             if (marchStepsChartObj) marchStepsChartObj.destroy();
             const ctx = chartElement.getContext('2d');
             
+            // วาดกราฟเส้น
             marchStepsChartObj = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: labels,
                     datasets: [{
                         data: dataSteps,
-                        borderColor: '#10b981', // สี emerald-500
+                        borderColor: '#10b981', 
                         backgroundColor: '#d1fae5', 
                         borderWidth: 2,
                         pointRadius: 4,
@@ -1820,7 +1866,6 @@
             });
         }
 
-        // ปุ่มจำลองการส่งให้ AI ตรวจ
         // ปุ่มส่งภาพให้ AI ตรวจสอบของจริง
         async function uploadStepImageAI(btn) {
             const fileInput = document.getElementById('march-image-ai');
@@ -1868,29 +1913,32 @@
                 Swal.fire({
                     title: 'AI สแกนสำเร็จ! 🤖',
                     html: `
-                        <p class="text-sm text-gray-600 mb-3">โปรดตรวจสอบตัวเลขที่ AI อ่านได้<br>(หากไม่ถูกต้อง สามารถพิมพ์แก้ไขได้เลย)</p>
-                        <input type="number" id="ai-confirm-steps" class="form-input text-center text-3xl font-black text-emerald-600 border-emerald-300" value="${detectedSteps}">
+                        <p class="text-sm text-gray-600 mb-2">ระบบอ่านจำนวนก้าวเดินของคุณได้</p>
+                        <div class="text-5xl font-black text-emerald-600 mb-1">${detectedSteps.toLocaleString()}</div>
+                        <p class="text-xs text-gray-500 font-bold mb-4">ก้าว</p>
+                        <p class="text-[10px] text-red-500 bg-red-50 p-2 rounded-lg border border-red-100">
+                           *ไม่สามารถแก้ไขตัวเลขได้ หากเลขไม่ตรงให้กดปุ่ม "เลขไม่ตรงกับภาพ"
+                        </p>
                     `,
                     showCancelButton: true,
-                    confirmButtonColor: '#10b981',
-                    cancelButtonColor: '#d1d5db',
-                    confirmButtonText: 'ยืนยันและส่งข้อมูล',
+                    showDenyButton: true, // เปิดใช้งานปุ่มที่ 3
+                    confirmButtonColor: '#10b981', // สีเขียว ยืนยัน
+                    denyButtonColor: '#ef4444',    // สีแดง แจ้งปัญหา
+                    cancelButtonColor: '#d1d5db',  // สีเทา ยกเลิก
+                    confirmButtonText: 'ยืนยัน',
+                    denyButtonText: 'เลขไม่ตรงกับภาพ',
                     cancelButtonText: 'ยกเลิก',
-                    preConfirm: () => {
-                        return document.getElementById('ai-confirm-steps').value;
-                    }
                 }).then(async (result) => {
                     if (result.isConfirmed) {
-                        let finalSteps = result.value;
-                        if(finalSteps <= 0) return;
+                        // --- กรณีผู้ใช้กดยืนยัน (เลขถูกต้อง) ---
+                        if(detectedSteps <= 0) return;
                         
-                        // 5. บันทึกข้อมูลจริงลง Google Sheets
                         btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> กำลังบันทึกเข้าสมุด...';
                         btn.disabled = true;
 
                         const saveRes = await callAPI("saveMarchRecord", { 
                             memberId: currentUser.memberId, 
-                            steps: finalSteps, 
+                            steps: detectedSteps, // ใช้เลขที่ AI ตรวจได้เลย
                             imageRaw: base64Image, 
                             imageName: fileName 
                         });
@@ -1900,22 +1948,28 @@
 
                         if(saveRes.success) {
                             setDailyLimit('march'); 
-                            Swal.fire('ยอดเยี่ยม!', `บันทึก <b>${parseInt(finalSteps).toLocaleString()}</b> ก้าว เรียบร้อย 🚶‍♂️`, 'success')
+                            Swal.fire('ยอดเยี่ยม!', `บันทึก <b>${detectedSteps.toLocaleString()}</b> ก้าว เรียบร้อย 🚶‍♂️`, 'success')
                             .then(() => {
                                 document.getElementById('march-image-ai').value = '';
                                 openMarchTracker(); // โหลดอัปเดตกราฟใหม่
-                                
-                                // TODO: อนาคตเราจะเรียกฟังก์ชันเช็กแลนด์มาร์คชลบุรีตรงนี้ครับ
-                                // checkChonburiMilestone(ยอดสะสมรวม);
                             });
                         } else {
-                            Swal.fire('DEBUG', scanRes.message || 'ไม่มีข้อความ error', 'error');  // 🌟 เปลี่ยนชั่วคราว
+                            Swal.fire('เกิดข้อผิดพลาด', saveRes.message, 'error');
                         }
+                    } else if (result.isDenied) {
+                        // --- กรณีผู้ใช้กดปุ่ม "เลขไม่ตรงกับภาพ" ---
+                        Swal.fire({
+                            title: 'รับทราบปัญหา',
+                            text: 'กรุณาลองครอปรูปภาพ (Crop) ให้เห็นเฉพาะตัวเลขเป้าหมายชัดๆ แล้วลองอัปโหลดใหม่อีกครั้ง',
+                            icon: 'info',
+                            confirmButtonColor: '#10b981'
+                        });
                     }
                 });
 
             } else {
-                Swal.fire('DEBUG', scanRes.message || 'ไม่มีข้อความ error', 'error');  // 🌟 เปลี่ยนชั่วคราว
+                // ถ้า AI เจอรูปหมา แมว หรือรูปที่ไม่ใช่แอปนับก้าว (ตอบกลับมาว่า Error)
+                Swal.fire('ภาพไม่ถูกต้อง', 'ตรวจพบว่านี่อาจไม่ใช่ภาพหน้าจอแอปนับก้าว กรุณาลองอัปโหลดใหม่อีกครั้ง', 'error');
             }
         }
         // ฟังก์ชันจำลองเมื่อถึงเป้าหมายชลบุรี (รอเนื้อหาจากพี่นิ)
