@@ -830,7 +830,7 @@
                         <div class="flex justify-between items-center">
                             <span class="font-bold text-gray-800 text-sm">ระดับ 1 (BPM 90-100)</span>
                             <button onclick="togglePreviewAudio('audio-1', this)" class="bg-gray-100 text-blue-600 w-8 h-8 rounded-full flex items-center justify-center"><i class="fa-solid fa-play"></i></button>
-                            <audio id="audio-1" class="bpm-audio hidden" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio> <!-- ลิงก์จำลอง -->
+                            <audio id="audio-1" class="bpm-audio hidden" src="https://docs.google.com/uc?export=download&id=1L-2xFFbI502zngqiamPnRDZVLaMwc0QZ"></audio> <!-- ลิงก์จำลอง -->
                         </div>
                         <button onclick="confirmBPM('ระดับ 1 (BPM 90-100)')" class="w-full bg-blue-50 text-blue-600 py-2 rounded-xl text-xs font-bold hover:bg-blue-600 hover:text-white transition border border-blue-200">เลือกจังหวะนี้</button>
                     </div>
@@ -839,7 +839,7 @@
                         <div class="flex justify-between items-center">
                             <span class="font-bold text-gray-800 text-sm">ระดับ 2 (BPM 100-120)</span>
                             <button onclick="togglePreviewAudio('audio-2', this)" class="bg-gray-100 text-blue-600 w-8 h-8 rounded-full flex items-center justify-center"><i class="fa-solid fa-play"></i></button>
-                            <audio id="audio-2" class="bpm-audio hidden" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"></audio>
+                            <audio id="audio-2" class="bpm-audio hidden" src="https://docs.google.com/uc?export=download&id=1bKlrmR4ilg5Hyooy7tRmKn2VcwKaMGo1"></audio>
                         </div>
                         <button onclick="confirmBPM('ระดับ 2 (BPM 100-120)')" class="w-full bg-blue-50 text-blue-600 py-2 rounded-xl text-xs font-bold hover:bg-blue-600 hover:text-white transition border border-blue-200">เลือกจังหวะนี้</button>
                     </div>
@@ -848,7 +848,7 @@
                         <div class="flex justify-between items-center">
                             <span class="font-bold text-gray-800 text-sm">ระดับ 3 (BPM 120 ขึ้นไป)</span>
                             <button onclick="togglePreviewAudio('audio-3', this)" class="bg-gray-100 text-blue-600 w-8 h-8 rounded-full flex items-center justify-center"><i class="fa-solid fa-play"></i></button>
-                            <audio id="audio-3" class="bpm-audio hidden" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"></audio>
+                            <audio id="audio-3" class="bpm-audio hidden" src="https://docs.google.com/uc?export=download&id=17BHKq1gOmtjBd8f6SUy2TEYnHGUuzaP8"></audio>
                         </div>
                         <button onclick="confirmBPM('ระดับ 3 (BPM 120 ขึ้นไป)')" class="w-full bg-blue-50 text-blue-600 py-2 rounded-xl text-xs font-bold hover:bg-blue-600 hover:text-white transition border border-blue-200">เลือกจังหวะนี้</button>
                     </div>
@@ -857,7 +857,7 @@
                         <div class="flex justify-between items-center">
                             <span class="font-bold text-gray-800 text-sm">ระดับ 4 (BPM เร็ว - ค่อนวิ่ง)</span>
                             <button onclick="togglePreviewAudio('audio-4', this)" class="bg-gray-100 text-blue-600 w-8 h-8 rounded-full flex items-center justify-center"><i class="fa-solid fa-play"></i></button>
-                            <audio id="audio-4" class="bpm-audio hidden" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3"></audio>
+                            <audio id="audio-4" class="bpm-audio hidden" src="https://docs.google.com/uc?export=download&id=1dD2vcFa7YJxmQ4WPWyv-rka8-IwCo9JP"></audio>
                         </div>
                         <button onclick="confirmBPM('ระดับ 4 (BPM เร็ว - ค่อนวิ่ง)')" class="w-full bg-blue-50 text-blue-600 py-2 rounded-xl text-xs font-bold hover:bg-blue-600 hover:text-white transition border border-blue-200">เลือกจังหวะนี้</button>
                     </div>
@@ -1928,7 +1928,7 @@
                                 // checkChonburiMilestone(ยอดสะสมรวม);
                             });
                         } else {
-                            Swal.fire('เกิดข้อผิดพลาด', saveRes.message, 'error');
+                            Swal.fire('DEBUG', scanRes.message || 'ไม่มีข้อความ error', 'error');  // 🌟 เปลี่ยนชั่วคราว
                         }
                     }
                 });
