@@ -882,7 +882,7 @@
             <div class="bg-white p-5 rounded-3xl shadow-sm border border-emerald-100 mb-6 text-center">
                 <div class="w-16 h-16 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center text-3xl mx-auto mb-3"><i class="fa-solid fa-cloud-arrow-up"></i></div>
                 <h3 class="font-bold text-gray-800 mb-1">ส่งหลักฐานก้าวเดินวันนี้</h3>
-                <p class="text-[10px] text-gray-500 mb-4">ระบบ AI จะทำการประมวลผลตัวเลขจากภาพอัตโนมัติ</p>
+                <p class="text-[10px] text-gray-500 mb-4">ระบบจะทำการประมวลผลตัวเลขจากภาพอัตโนมัติ</p>
                 <input type="file" id="march-image-ai" accept="image/*" class="w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 mb-3 bg-gray-50 p-2 rounded-xl">
                 <button onclick="uploadStepImageAI(this)" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white py-3 rounded-xl font-bold shadow-sm text-sm transition">ให้ AI อ่านภาพและส่งข้อมูล</button>
             </div>
@@ -914,63 +914,47 @@
         <!-- ========================================== -->
         <div id="page-march-playlist" class="page-section p-4 pt-6 bg-gray-50 min-h-screen pb-24">
             <div class="flex items-center mb-6">
-                <button onclick="showPage('www-march')" class="w-8 h-8 bg-white rounded-full text-gray-600 mr-3 shadow-sm border border-gray-200"><i class="fa-solid fa-arrow-left"></i></button>
+                <button onclick="stopAllPlaylistAudio(); showPage('www-march')" class="w-8 h-8 bg-white rounded-full text-gray-600 mr-3 shadow-sm border border-gray-200"><i class="fa-solid fa-arrow-left"></i></button>
                 <h2 class="text-xl font-black text-purple-700">Personal Playlist</h2>
             </div>
             
-            <p class="text-xs font-bold text-gray-500 mb-4 px-2">เลือกกล่องเพลย์ลิสต์ที่ตรงกับจังหวะการเดินของคุณ</p>
+            <p class="text-xs font-bold text-gray-500 mb-4 px-2">กดปุ่มเพื่อฟังเพลงจังหวะที่เหมาะกับความเร็วการเดินของคุณ</p>
             
-            <div class="grid grid-cols-1 gap-4">
-                <!-- ระดับ 4 -->
-                <div class="bg-gradient-to-r from-red-500 to-rose-500 p-4 rounded-2xl shadow-md text-white">
-                    <div class="flex justify-between items-center mb-3">
-                        <h3 class="font-black text-lg">ระดับ 4</h3>
-                        <span class="bg-white/20 text-xs font-bold px-2 py-1 rounded">BPM เร็ว - ค่อนวิ่ง</span>
+            <div class="space-y-3">
+                <div class="bg-white border border-gray-200 p-4 rounded-2xl shadow-sm flex justify-between items-center">
+                    <div>
+                        <h3 class="font-black text-gray-800 text-sm">ระดับ 4</h3>
+                        <p class="text-[10px] text-gray-400 font-bold">จังหวะ BPM เร็ว - ค่อนวิ่ง</p>
                     </div>
-                    <div class="flex gap-2">
-                        <button onclick="openExternalLink('https://spotify.com')" class="flex-1 bg-white/20 hover:bg-white/30 text-white text-[11px] font-bold py-2 rounded-lg flex items-center justify-center gap-1 backdrop-blur-sm transition"><i class="fa-brands fa-spotify"></i> Spotify</button>
-                        <button onclick="openExternalLink('https://music.youtube.com')" class="flex-1 bg-white/20 hover:bg-white/30 text-white text-[11px] font-bold py-2 rounded-lg flex items-center justify-center gap-1 backdrop-blur-sm transition"><i class="fa-brands fa-youtube"></i> YT Music</button>
-                        <button onclick="openExternalLink('https://youtube.com')" class="flex-1 bg-white/20 hover:bg-white/30 text-white text-[11px] font-bold py-2 rounded-lg flex items-center justify-center gap-1 backdrop-blur-sm transition"><i class="fa-solid fa-play"></i> YouTube</button>
-                    </div>
+                    <button onclick="togglePlaylistAudio('play-audio-4', this)" class="w-10 h-10 rounded-full bg-red-100 text-red-600 flex items-center justify-center text-sm shadow-sm transition"><i class="fa-solid fa-play"></i></button>
+                    <audio id="play-audio-4" class="playlist-audio hidden" src="ใส่ลิงก์ตรง_mp3_ระดับ4_ตรงนี้"></audio>
                 </div>
 
-                <!-- ระดับ 3 -->
-                <div class="bg-gradient-to-r from-orange-400 to-amber-500 p-4 rounded-2xl shadow-md text-white">
-                    <div class="flex justify-between items-center mb-3">
-                        <h3 class="font-black text-lg">ระดับ 3</h3>
-                        <span class="bg-white/20 text-xs font-bold px-2 py-1 rounded">BPM 120 ขึ้นไป</span>
+                <div class="bg-white border border-gray-200 p-4 rounded-2xl shadow-sm flex justify-between items-center">
+                    <div>
+                        <h3 class="font-black text-gray-800 text-sm">ระดับ 3</h3>
+                        <p class="text-[10px] text-gray-400 font-bold">จังหวะ BPM 120 ขึ้นไป</p>
                     </div>
-                    <div class="flex gap-2">
-                        <button onclick="openExternalLink('https://spotify.com')" class="flex-1 bg-white/20 hover:bg-white/30 text-white text-[11px] font-bold py-2 rounded-lg flex items-center justify-center gap-1 backdrop-blur-sm transition"><i class="fa-brands fa-spotify"></i> Spotify</button>
-                        <button onclick="openExternalLink('https://music.youtube.com')" class="flex-1 bg-white/20 hover:bg-white/30 text-white text-[11px] font-bold py-2 rounded-lg flex items-center justify-center gap-1 backdrop-blur-sm transition"><i class="fa-brands fa-youtube"></i> YT Music</button>
-                        <button onclick="openExternalLink('https://youtube.com')" class="flex-1 bg-white/20 hover:bg-white/30 text-white text-[11px] font-bold py-2 rounded-lg flex items-center justify-center gap-1 backdrop-blur-sm transition"><i class="fa-solid fa-play"></i> YouTube</button>
-                    </div>
+                    <button onclick="togglePlaylistAudio('play-audio-3', this)" class="w-10 h-10 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center text-sm shadow-sm transition"><i class="fa-solid fa-play"></i></button>
+                    <audio id="play-audio-3" class="playlist-audio hidden" src="ใส่ลิงก์ตรง_mp3_ระดับ3_ตรงนี้"></audio>
                 </div>
 
-                <!-- ระดับ 2 -->
-                <div class="bg-gradient-to-r from-teal-400 to-emerald-500 p-4 rounded-2xl shadow-md text-white">
-                    <div class="flex justify-between items-center mb-3">
-                        <h3 class="font-black text-lg">ระดับ 2</h3>
-                        <span class="bg-white/20 text-xs font-bold px-2 py-1 rounded">BPM 100-120</span>
+                <div class="bg-white border border-gray-200 p-4 rounded-2xl shadow-sm flex justify-between items-center">
+                    <div>
+                        <h3 class="font-black text-gray-800 text-sm">ระดับ 2</h3>
+                        <p class="text-[10px] text-gray-400 font-bold">จังหวะ BPM 100-120</p>
                     </div>
-                    <div class="flex gap-2">
-                        <button onclick="openExternalLink('https://spotify.com')" class="flex-1 bg-white/20 hover:bg-white/30 text-white text-[11px] font-bold py-2 rounded-lg flex items-center justify-center gap-1 backdrop-blur-sm transition"><i class="fa-brands fa-spotify"></i> Spotify</button>
-                        <button onclick="openExternalLink('https://music.youtube.com')" class="flex-1 bg-white/20 hover:bg-white/30 text-white text-[11px] font-bold py-2 rounded-lg flex items-center justify-center gap-1 backdrop-blur-sm transition"><i class="fa-brands fa-youtube"></i> YT Music</button>
-                        <button onclick="openExternalLink('https://youtube.com')" class="flex-1 bg-white/20 hover:bg-white/30 text-white text-[11px] font-bold py-2 rounded-lg flex items-center justify-center gap-1 backdrop-blur-sm transition"><i class="fa-solid fa-play"></i> YouTube</button>
-                    </div>
+                    <button onclick="togglePlaylistAudio('play-audio-2', this)" class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-sm shadow-sm transition"><i class="fa-solid fa-play"></i></button>
+                    <audio id="play-audio-2" class="playlist-audio hidden" src="ใส่ลิงก์ตรง_mp3_ระดับ2_ตรงนี้"></audio>
                 </div>
 
-                <!-- ระดับ 1 -->
-                <div class="bg-gradient-to-r from-blue-400 to-indigo-500 p-4 rounded-2xl shadow-md text-white">
-                    <div class="flex justify-between items-center mb-3">
-                        <h3 class="font-black text-lg">ระดับ 1</h3>
-                        <span class="bg-white/20 text-xs font-bold px-2 py-1 rounded">BPM 90-100</span>
+                <div class="bg-white border border-gray-200 p-4 rounded-2xl shadow-sm flex justify-between items-center">
+                    <div>
+                        <h3 class="font-black text-gray-800 text-sm">ระดับ 1</h3>
+                        <p class="text-[10px] text-gray-400 font-bold">จังหวะ BPM 90-100</p>
                     </div>
-                    <div class="flex gap-2">
-                        <button onclick="openExternalLink('https://spotify.com')" class="flex-1 bg-white/20 hover:bg-white/30 text-white text-[11px] font-bold py-2 rounded-lg flex items-center justify-center gap-1 backdrop-blur-sm transition"><i class="fa-brands fa-spotify"></i> Spotify</button>
-                        <button onclick="openExternalLink('https://music.youtube.com')" class="flex-1 bg-white/20 hover:bg-white/30 text-white text-[11px] font-bold py-2 rounded-lg flex items-center justify-center gap-1 backdrop-blur-sm transition"><i class="fa-brands fa-youtube"></i> YT Music</button>
-                        <button onclick="openExternalLink('https://youtube.com')" class="flex-1 bg-white/20 hover:bg-white/30 text-white text-[11px] font-bold py-2 rounded-lg flex items-center justify-center gap-1 backdrop-blur-sm transition"><i class="fa-solid fa-play"></i> YouTube</button>
-                    </div>
+                    <button onclick="togglePlaylistAudio('play-audio-1', this)" class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-sm shadow-sm transition"><i class="fa-solid fa-play"></i></button>
+                    <audio id="play-audio-1" class="playlist-audio hidden" src="ใส่ลิงก์ตรง_mp3_ระดับ1_ตรงนี้"></audio>
                 </div>
             </div>
         </div>
@@ -1840,36 +1824,104 @@
         }
 
         // ปุ่มจำลองการส่งให้ AI ตรวจ
+        // ปุ่มส่งภาพให้ AI ตรวจสอบของจริง
         async function uploadStepImageAI(btn) {
             const fileInput = document.getElementById('march-image-ai');
             if (!fileInput.files.length) {
-                Swal.fire('ลืมแนบรูป', 'กรุณาอัปโหลดรูปภาพหน้าจอ StepsApp ก่อนครับ', 'warning');
+                Swal.fire('ลืมแนบรูป', 'กรุณาอัปโหลดรูปภาพหน้าจอ StepsApp', 'warning');
                 return;
             }
 
-            // แจ้งเตือนจำลองการสแกนด้วย AI
+            const file = fileInput.files[0];
+            const fileName = file.name;
+            
+            // ดักจับไฟล์ใหญ่เกินไป (กันระบบหน่วง)
+            if(file.size > 4 * 1024 * 1024) { 
+               Swal.fire('ไฟล์ใหญ่เกินไป', 'กรุณาลดขนาดรูปภาพให้ไม่เกิน 4MB', 'warning');
+               return;
+            }
+
+            let base64Image = await new Promise((resolve) => { 
+                const reader = new FileReader(); 
+                reader.onloadend = () => resolve(reader.result.split(',')[1]); 
+                reader.readAsDataURL(file); 
+            });
+
+            // 1. แจ้งเตือน AI กำลังสแกน
             btn.disabled = true;
             let originalText = btn.innerHTML;
-            btn.innerHTML = '<i class="fa-solid fa-robot fa-bounce mr-2"></i> AI กำลังประมวลผลรูปภาพ...';
+            btn.innerHTML = '<i class="fa-solid fa-robot fa-bounce mr-2"></i>กำลังสแกนรูปภาพ...';
 
-            // TODO: โค้ดตรงนี้จะส่ง Base64 ไปให้ Gemini API ฝั่ง Google Apps Script ในอนาคต
-            // จำลองเวลาสแกน 2 วินาที
-            setTimeout(() => {
-                btn.innerHTML = originalText;
-                btn.disabled = false;
+            // 2. ยิงรูปไปให้ระบบหลังบ้าน (Gemini API) อ่าน
+            const scanRes = await callAPI("scanStepsAI", { imageRaw: base64Image });
+            
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+
+            // 3. ตรวจสอบผลลัพธ์จาก AI
+            if(scanRes.success && scanRes.steps !== "Error" && scanRes.steps !== "") {
+                let detectedSteps = parseInt(scanRes.steps);
                 
-                // แจ้งว่าสำเร็จ และเช็ก Milestone เด้งป๊อปอัพชลบุรี
-                Swal.fire({
-                    title: 'สแกนสำเร็จ!',
-                    html: `AI อ่านตัวเลขได้ <b class="text-emerald-600 text-xl">8,450</b> ก้าว<br>บันทึกเข้าระบบเรียบร้อยแล้ว`, // ตัวเลขสมมติ
-                    icon: 'success'
-                }).then(() => {
-                    // จำลองฟังก์ชันปลดล็อกเกร็ดความรู้ชลบุรี
-                    checkChonburiMilestone(15000); 
-                });
-            }, 2000);
-        }
+                if(isNaN(detectedSteps)) {
+                    Swal.fire('สแกนไม่สำเร็จ', 'มองไม่เห็นตัวเลขก้าวเดิน ลองเปลี่ยนรูป หรือครอปให้ชัดขึ้น', 'error');
+                    return;
+                }
 
+                // 4. เด้งป๊อปอัพให้สมาชิกรีเช็ก และแก้ไขได้ถ้า AI อ่านเพี้ยน
+                Swal.fire({
+                    title: 'AI สแกนสำเร็จ! 🤖',
+                    html: `
+                        <p class="text-sm text-gray-600 mb-3">โปรดตรวจสอบตัวเลขที่ AI อ่านได้<br>(หากไม่ถูกต้อง สามารถพิมพ์แก้ไขได้เลย)</p>
+                        <input type="number" id="ai-confirm-steps" class="form-input text-center text-3xl font-black text-emerald-600 border-emerald-300" value="${detectedSteps}">
+                    `,
+                    showCancelButton: true,
+                    confirmButtonColor: '#10b981',
+                    cancelButtonColor: '#d1d5db',
+                    confirmButtonText: 'ยืนยันและส่งข้อมูล',
+                    cancelButtonText: 'ยกเลิก',
+                    preConfirm: () => {
+                        return document.getElementById('ai-confirm-steps').value;
+                    }
+                }).then(async (result) => {
+                    if (result.isConfirmed) {
+                        let finalSteps = result.value;
+                        if(finalSteps <= 0) return;
+                        
+                        // 5. บันทึกข้อมูลจริงลง Google Sheets
+                        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> กำลังบันทึกเข้าสมุด...';
+                        btn.disabled = true;
+
+                        const saveRes = await callAPI("saveMarchRecord", { 
+                            memberId: currentUser.memberId, 
+                            steps: finalSteps, 
+                            imageRaw: base64Image, 
+                            imageName: fileName 
+                        });
+
+                        btn.innerHTML = originalText;
+                        btn.disabled = false;
+
+                        if(saveRes.success) {
+                            setDailyLimit('march'); 
+                            Swal.fire('ยอดเยี่ยม!', `บันทึก <b>${parseInt(finalSteps).toLocaleString()}</b> ก้าว เรียบร้อย 🚶‍♂️`, 'success')
+                            .then(() => {
+                                document.getElementById('march-image-ai').value = '';
+                                openMarchTracker(); // โหลดอัปเดตกราฟใหม่
+                                
+                                // TODO: อนาคตเราจะเรียกฟังก์ชันเช็กแลนด์มาร์คชลบุรีตรงนี้ครับ
+                                // checkChonburiMilestone(ยอดสะสมรวม);
+                            });
+                        } else {
+                            Swal.fire('เกิดข้อผิดพลาด', saveRes.message, 'error');
+                        }
+                    }
+                });
+
+            } else {
+                // ถ้า AI เจอรูปหมา แมว หรือรูปที่ไม่ใช่แอปนับก้าว (ตอบกลับมาว่า Error)
+                Swal.fire('ภาพไม่ถูกต้อง', 'ตรวจพบว่านี่อาจไม่ใช่ภาพหน้าจอแอปนับก้าว กรุณาลองอัปโหลดใหม่อีกครั้ง', 'error');
+            }
+        }
         // ฟังก์ชันจำลองเมื่อถึงเป้าหมายชลบุรี (รอเนื้อหาจากพี่นิ)
         function checkChonburiMilestone(totalStepsThisMonth) {
             // สมมติว่าเป้าหมายคือ 15,000 ก้าว
@@ -1889,6 +1941,31 @@
                     confirmButtonColor: '#10b981'
                 });
             }
+        }
+
+        // ฟังก์ชันควบคุมการเปิด-ปิดเพลงประจำเพลย์ลิสต์
+        function togglePlaylistAudio(audioId, btnElement) {
+            let audioEl = document.getElementById(audioId);
+            let isPlaying = !audioEl.paused;
+
+            // หยุดเพลงอื่นๆ ที่อาจกำลังเปิดค้างอยู่
+            document.querySelectorAll('.playlist-audio').forEach(a => { if(a.id !== audioId) a.pause(); });
+            document.querySelectorAll('#page-march-playlist button').forEach(btn => { 
+                if(btn !== btnElement) btn.innerHTML = '<i class="fa-solid fa-play"></i>'; 
+            });
+
+            if (!isPlaying) {
+                audioEl.play();
+                btnElement.innerHTML = '<i class="fa-solid fa-pause"></i>';
+            } else {
+                audioEl.pause();
+                btnElement.innerHTML = '<i class="fa-solid fa-play"></i>';
+            }
+        }
+
+        function stopAllPlaylistAudio() {
+            document.querySelectorAll('.playlist-audio').forEach(a => a.pause());
+            document.querySelectorAll('#page-march-playlist button').forEach(btn => btn.innerHTML = '<i class="fa-solid fa-play"></i>');
         }
 
         // ==========================================
