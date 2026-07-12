@@ -1909,9 +1909,9 @@
         }
 
         // ==========================================
-        // 🛠️ ฟังก์ชันบีบอัดรูปภาพอัตโนมัติ (แก้ปัญหาส่งไม่ไป)
+        // 🛠️ ฟังก์ชันบีบอัดรูปภาพอัตโนมัติ (ปรับให้เบาหวิวสุดๆ ป้องกันเบราว์เซอร์ค้าง)
         // ==========================================
-        function resizeImageForAI(file, maxSize = 1000) {
+        function resizeImageForAI(file, maxSize = 800) { // ลดขนาดจาก 1000 เหลือ 800px
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
                 reader.onload = function(e) {
@@ -1920,23 +1920,21 @@
                         let width = img.width;
                         let height = img.height;
                         
-                        // คำนวณสัดส่วนให้ด้านยาวที่สุดไม่เกิน maxSize (1000px)
                         if (width > height) {
                             if (width > maxSize) { height = Math.round(height *= maxSize / width); width = maxSize; }
                         } else {
                             if (height > maxSize) { width = Math.round(width *= maxSize / height); height = maxSize; }
                         }
                         
-                        // วาดรูปลงผืนผ้าใบ (Canvas) เพื่อย่อขนาด
                         const canvas = document.createElement('canvas');
                         canvas.width = width;
                         canvas.height = height;
                         const ctx = canvas.getContext('2d');
                         ctx.drawImage(img, 0, 0, width, height);
                         
-                        // บีบอัดเป็น JPEG คุณภาพ 80% (ไฟล์จะเล็กลงมหาศาล)
-                        const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
-                        resolve(dataUrl.split(',')[1]); // คืนค่าเฉพาะ Base64
+                        // ลดคุณภาพลงเหลือ 60% (ไฟล์จะเล็กมากๆ ส่งผ่านเน็ตมือถือได้ไวปานสายฟ้า)
+                        const dataUrl = canvas.toDataURL('image/jpeg', 0.6); 
+                        resolve(dataUrl.split(',')[1]); 
                     };
                     img.onerror = reject;
                     img.src = e.target.result;
@@ -1947,7 +1945,7 @@
         }
 
         // ==========================================
-        // 🤖 ปุ่มส่งภาพให้ AI ตรวจสอบ (เพิ่มระบบแจ้งตรวจสอบ)
+        // 🤖 ปุ่มส่งภาพให้ AI ตรวจสอบ (เพิ่มระบบ Auto-Retry กดซ้ำอัตโนมัติถ้าสะดุด)
         // ==========================================
         async function uploadStepImageAI(btn) {
             const fileInput = document.getElementById('march-image-ai');
@@ -1959,100 +1957,121 @@
             const file = fileInput.files[0];
             const fileName = file.name;
 
+            if(file.size > 4 * 1024 * 1024) { 
+               Swal.fire('ไฟล์ใหญ่เกินไป', 'กรุณาลดขนาดรูปภาพให้ไม่เกิน 4MB', 'warning');
+               return;
+            }
+
             btn.disabled = true;
             let originalText = btn.innerHTML;
             btn.innerHTML = '<i class="fa-solid fa-robot fa-bounce mr-2"></i>กำลังประมวลผลรูปภาพ...';
 
-            try {
-                let base64Compressed = await resizeImageForAI(file);
-                const scanRes = await callAPI("scanStepsAI", { imageRaw: base64Compressed });
-                
-                btn.innerHTML = originalText;
-                btn.disabled = false;
+            let attempt = 0;
+            let maxRetries = 2; // สั่งให้พยายามส่ง 2 ครั้ง ถ้ารอบแรกสะดุด ให้แอบส่งรอบสองเอง
+            let scanRes = null;
+            let base64Compressed = null;
 
-                if(scanRes.success && scanRes.steps !== "Error" && scanRes.steps !== "") {
-                    let detectedSteps = parseInt(scanRes.steps);
+            // 🌟 ระบบ Auto-Retry ป้องกัน Google หลับ
+            while (attempt < maxRetries) {
+                attempt++;
+                try {
+                    base64Compressed = await resizeImageForAI(file);
+                    scanRes = await callAPI("scanStepsAI", { imageRaw: base64Compressed });
                     
-                    if(isNaN(detectedSteps)) {
-                        Swal.fire('สแกนไม่สำเร็จ', 'ระบบมองไม่เห็นตัวเลขก้าวเดิน ลองอัปโหลดรูปใหม่อีกครั้ง', 'error');
+                    if (scanRes) break; // ถ้าได้คำตอบกลับมา (เชื่อมต่อสำเร็จ) ให้หยุดลูป
+                } catch (error) {
+                    if (attempt >= maxRetries) {
+                        // ถ้าระบบพยายามครบ 2 ครั้งแล้วยังไม่ได้จริงๆ ถึงจะโชว์แจ้งเตือน
+                        btn.innerHTML = originalText;
+                        btn.disabled = false;
+                        Swal.fire('การเชื่อมต่อขัดข้อง', 'ระบบไม่สามารถประมวลผลภาพได้ กรุณาลองใหม่อีกครั้ง', 'error');
                         return;
                     }
-
-                    Swal.fire({
-                        title: 'AI สแกนสำเร็จ! 🤖',
-                        html: `
-                            <p class="text-base text-gray-600 mb-2">ระบบอ่านจำนวนก้าวเดินของคุณได้</p>
-                            <div class="text-6xl font-black text-emerald-600 mb-2">${detectedSteps.toLocaleString()}</div>
-                            <p class="text-sm text-gray-500 font-bold mb-4">ก้าว</p>
-                            <p class="text-xs text-red-500 bg-red-50 p-3 rounded-lg border border-red-100 font-bold">
-                               *ไม่สามารถแก้ไขตัวเลขได้ หากเลขไม่ตรงให้กดปุ่ม "ก้าวเดินไม่ตรงภาพ" ด้านล่าง
-                            </p>
-                        `,
-                        showCancelButton: true,
-                        showDenyButton: true, 
-                        confirmButtonColor: '#10b981', 
-                        denyButtonColor: '#ef4444',    
-                        cancelButtonColor: '#d1d5db',  
-                        confirmButtonText: 'ยืนยัน',
-                        denyButtonText: 'ก้าวเดินไม่ตรงภาพ',
-                        cancelButtonText: 'ยกเลิก',
-                    }).then(async (result) => {
-                        if (result.isConfirmed || result.isDenied) {
-                            if(detectedSteps <= 0) return;
-                            
-                            // เปลี่ยนข้อความปุ่มตามการกระทำ
-                            if (result.isConfirmed) {
-                                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> กำลังบันทึกข้อมูล...';
-                            } else {
-                                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> กำลังส่งเรื่อง...';
-                            }
-                            
-                            btn.disabled = true;
-
-                            const saveRes = await callAPI("saveMarchRecord", { 
-                                memberId: currentUser.memberId, 
-                                steps: detectedSteps, 
-                                imageRaw: base64Compressed, 
-                                imageName: fileName,
-                                // 🌟 ถ้ากดปุ่มแดง จะส่งค่า isFlagged = true ไปให้แอดมินเช็ก
-                                isFlagged: result.isDenied 
-                            });
-
-                            btn.innerHTML = originalText;
-                            btn.disabled = false;
-
-                            if(saveRes.success) {
-                                setDailyLimit('march'); 
-                                
-                                if (result.isConfirmed) {
-                                    Swal.fire('ยอดเยี่ยม!', `บันทึก <b>${detectedSteps.toLocaleString()}</b> ก้าว เรียบร้อย 🚶‍♂️`, 'success').then(() => {
-                                        document.getElementById('march-image-ai').value = '';
-                                        openMarchTracker(); 
-                                    });
-                                } else {
-                                    Swal.fire({
-                                        title: 'ส่งเรื่องตรวจสอบแล้ว!',
-                                        html: `ระบบบันทึกยอด <b>${detectedSteps.toLocaleString()}</b> ก้าว (ชั่วคราว) <br><br>ทีมงานจะทำการตรวจสอบและแก้ไขจำนวนก้าวเดินของท่านภายใน 24 ชั่วโมง`,
-                                        icon: 'success',
-                                        confirmButtonColor: '#10b981'
-                                    }).then(() => {
-                                        document.getElementById('march-image-ai').value = '';
-                                        openMarchTracker(); 
-                                    });
-                                }
-                            } else {
-                                Swal.fire('เกิดข้อผิดพลาด', saveRes.message, 'error');
-                            }
-                        }
-                    });
-
-                } else {
-                    Swal.fire('ภาพไม่ถูกต้อง', 'ตรวจพบว่านี่อาจไม่ใช่ภาพหน้าจอแอปนับก้าว หรือตัวเลขไม่ชัดเจน กรุณาลองอัปโหลดใหม่อีกครั้ง', 'error');
+                    // ถ้ารอบแรกสะดุด ให้รอ 1 วินาที แล้ววนลูปส่งใหม่อีกครั้งแบบเนียนๆ
+                    await new Promise(r => setTimeout(r, 1000));
                 }
-            } catch (error) {
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-                Swal.fire('การเชื่อมต่อขัดข้อง', 'ระบบไม่สามารถประมวลผลภาพได้ กรุณาลองใหม่อีกครั้ง', 'error');
+            }
+
+            // --- เมื่อเชื่อมต่อสำเร็จ มาเช็กคำตอบของ AI กันต่อ ---
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+
+            if(scanRes && scanRes.success && scanRes.steps !== "Error" && scanRes.steps !== "") {
+                let detectedSteps = parseInt(scanRes.steps);
+                
+                if(isNaN(detectedSteps)) {
+                    Swal.fire('สแกนไม่สำเร็จ', 'ระบบมองไม่เห็นตัวเลขก้าวเดิน ลองอัปโหลดรูปใหม่อีกครั้ง', 'error');
+                    return;
+                }
+
+                Swal.fire({
+                    title: 'AI สแกนสำเร็จ! 🤖',
+                    html: `
+                        <p class="text-base text-gray-600 mb-2">ระบบอ่านจำนวนก้าวเดินของคุณได้</p>
+                        <div class="text-6xl font-black text-emerald-600 mb-2">${detectedSteps.toLocaleString()}</div>
+                        <p class="text-sm text-gray-500 font-bold mb-4">ก้าว</p>
+                        <p class="text-xs text-red-500 bg-red-50 p-3 rounded-lg border border-red-100 font-bold">
+                           *ไม่สามารถแก้ไขตัวเลขได้ หากเลขไม่ตรงให้กดปุ่ม "ก้าวเดินไม่ตรงภาพ" ด้านล่าง
+                        </p>
+                    `,
+                    showCancelButton: true,
+                    showDenyButton: true, 
+                    confirmButtonColor: '#10b981', 
+                    denyButtonColor: '#ef4444',    
+                    cancelButtonColor: '#d1d5db',  
+                    confirmButtonText: 'ยืนยัน',
+                    denyButtonText: 'ก้าวเดินไม่ตรงภาพ',
+                    cancelButtonText: 'ยกเลิก',
+                }).then(async (result) => {
+                    if (result.isConfirmed || result.isDenied) {
+                        if(detectedSteps <= 0) return;
+                        
+                        if (result.isConfirmed) {
+                            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> กำลังบันทึกข้อมูล...';
+                        } else {
+                            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> กำลังส่งเรื่อง...';
+                        }
+                        
+                        btn.disabled = true;
+
+                        const saveRes = await callAPI("saveMarchRecord", { 
+                            memberId: currentUser.memberId, 
+                            steps: detectedSteps, 
+                            imageRaw: base64Compressed, 
+                            imageName: fileName,
+                            isFlagged: result.isDenied 
+                        });
+
+                        btn.innerHTML = originalText;
+                        btn.disabled = false;
+
+                        if(saveRes.success) {
+                            setDailyLimit('march'); 
+                            
+                            if (result.isConfirmed) {
+                                Swal.fire('ยอดเยี่ยม!', `บันทึก <b>${detectedSteps.toLocaleString()}</b> ก้าว เรียบร้อย 🚶‍♂️`, 'success').then(() => {
+                                    document.getElementById('march-image-ai').value = '';
+                                    openMarchTracker(); 
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'ส่งเรื่องตรวจสอบแล้ว!',
+                                    html: `ระบบบันทึกยอด <b>${detectedSteps.toLocaleString()}</b> ก้าว (ชั่วคราว)<br><br>ทีมงานจะตรวจสอบและแก้ไขก้าวเดินของท่านภายใน 24 ชั่วโมง`,
+                                    icon: 'success',
+                                    confirmButtonColor: '#10b981'
+                                }).then(() => {
+                                    document.getElementById('march-image-ai').value = '';
+                                    openMarchTracker(); 
+                                });
+                            }
+                        } else {
+                            Swal.fire('เกิดข้อผิดพลาด', saveRes.message, 'error');
+                        }
+                    }
+                });
+
+            } else {
+                Swal.fire('ภาพไม่ถูกต้อง', 'ตรวจพบว่านี่อาจไม่ใช่ภาพหน้าจอแอปนับก้าว หรือตัวเลขไม่ชัดเจน กรุณาลองอัปโหลดใหม่อีกครั้ง', 'error');
             }
         }
         
