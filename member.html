@@ -322,7 +322,7 @@
                     2. ทีมงานคำนวณมูลค่าขยะและอัปเดตลงระบบให้ทันที<br>
                     3. เงินจะถูกสะสมในสมุด <strong class="text-emerald-600">สะสมครบทุกๆ 100 บาท รับสิทธิ์ส่วนลดสินค้าทันที</strong>
                 </div>
-                <p class="text-xs font-bold text-gray-500 mb-2 mt-4">กรุณาระบุที่อยู่จุดรับขยะของท่าน:</p>
+                <p class="text-xs font-bold text-gray-500 mb-2 mt-4">กรุณาระบุที่อยู่จุดรับขยะของคุณ:</p>
                 <div class="space-y-2">
                     <div class="grid grid-cols-2 gap-2"><input type="text" id="wm-house" class="form-input bg-gray-50" placeholder="บ้านเลขที่"><input type="text" id="wm-moo" class="form-input bg-gray-50" placeholder="หมู่"></div>
                     <input type="text" id="wm-road" class="form-input bg-gray-50" placeholder="ซอย/ถนน">
@@ -555,7 +555,7 @@
                         <div><label class="text-[11px] font-bold text-gray-500 mb-1 block">อายุร่างกาย (ปี)</label><input type="number" id="wiz-bodyage" class="form-input"></div>
                         <div><label class="text-[11px] font-bold text-gray-500 mb-1 block">BMR (Kcal)</label><input type="number" id="wiz-bmr" class="form-input"></div>
                     </div>
-                    <div><label class="text-xs font-bold text-gray-500 mb-1 block">ผู้แนะนำของท่าน *</label><input type="text" id="wiz-ambassador" class="form-input" placeholder="ชื่อ-นามสกุล ผู้แนะนำ"></div>
+                    <div><label class="text-xs font-bold text-gray-500 mb-1 block">ผู้แนะนำของคุณ *</label><input type="text" id="wiz-ambassador" class="form-input" placeholder="ชื่อ-นามสกุล ผู้แนะนำ"></div>
                 </div>
                 <div class="fixed bottom-0 left-0 right-0 max-w-md mx-auto p-4 bg-white border-t border-gray-100">
                     <button onclick="nextWiz(4)" class="w-full bg-amber-500 text-white py-3.5 rounded-xl font-bold shadow-lg hover:bg-amber-600 transition">บันทึกข้อมูลร่างกาย</button>
@@ -1035,7 +1035,7 @@
                     <div><label class="text-xs font-bold text-gray-500 mb-1 block">BMR (Kcal)</label><input type="number" id="www-bmr" class="form-input border-amber-200 focus:border-amber-500 font-bold"></div>
                 </div>
                 <div class="pt-2 border-t border-gray-100">
-                    <label class="text-sm font-bold text-gray-600 mb-2 block">ผู้แนะนำของท่าน *</label>
+                    <label class="text-sm font-bold text-gray-600 mb-2 block">ผู้แนะนำของคุณ *</label>
                     <input type="text" id="www-ambassador" class="form-input font-bold" placeholder="ชื่อ-นามสกุล คนดูแล">
                 </div>
                 <div class="mt-4 p-4 bg-amber-50 rounded-xl border border-amber-200">
@@ -1615,7 +1615,7 @@
             if (stepNum === 3) { const msg = document.getElementById('wiz-monthly-goal').value.trim(); if(!msg) { Swal.fire('คำเตือน', 'กรุณาเขียนเป้าหมายประจำเดือนของคุณ', 'warning'); return; } }
             if (stepNum === 4) {
                 const w = document.getElementById('wiz-weight').value; const amb = document.getElementById('wiz-ambassador').value.trim();
-                if (!w || !amb) { Swal.fire('คำเตือน', 'กรุณากรอกน้ำหนัก และ ผู้แนะนำของท่านให้ครบถ้วน', 'warning'); return; }
+                if (!w || !amb) { Swal.fire('คำเตือน', 'กรุณากรอกน้ำหนัก และ ผู้แนะนำของคุณให้ครบถ้วน', 'warning'); return; }
                 if(currentUser && currentUser.email && currentUser.email !== "-") { document.getElementById('wiz-email').value = currentUser.email; }
             }
             document.querySelectorAll('[id^="wiz-step-"]').forEach(el => el.classList.add('hidden')); document.getElementById('wiz-step-' + stepNum).classList.remove('hidden'); window.scrollTo(0, 0);
@@ -2005,9 +2005,9 @@
                 }
 
                 Swal.fire({
-                    title: 'AI สแกนสำเร็จ! 🤖',
+                    title: 'ตรวจสอบสำเร็จ!',
                     html: `
-                        <p class="text-base text-gray-600 mb-2">ระบบอ่านจำนวนก้าวเดินของคุณได้</p>
+                        <p class="text-base text-gray-600 mb-2">ระบบตรวจสอบจำนวนก้าวเดินของคุณได้</p>
                         <div class="text-6xl font-black text-emerald-600 mb-2">${detectedSteps.toLocaleString()}</div>
                         <p class="text-sm text-gray-500 font-bold mb-4">ก้าว</p>
                         <p class="text-xs text-red-500 bg-red-50 p-3 rounded-lg border border-red-100 font-bold">
@@ -2056,7 +2056,7 @@
                             } else {
                                 Swal.fire({
                                     title: 'ส่งเรื่องตรวจสอบแล้ว!',
-                                    html: `ระบบบันทึกยอด <b>${detectedSteps.toLocaleString()}</b> ก้าว (ชั่วคราว)<br><br>ทีมงานจะตรวจสอบและแก้ไขก้าวเดินของท่านภายใน 24 ชั่วโมง`,
+                                    html: `ระบบบันทึกยอด <b>${detectedSteps.toLocaleString()}</b> ก้าว (ชั่วคราว)<br><br>ทีมงานจะตรวจสอบและแก้ไขก้าวเดินของคุณภายใน 24 ชั่วโมง`,
                                     icon: 'success',
                                     confirmButtonColor: '#10b981'
                                 }).then(() => {
@@ -2078,7 +2078,7 @@
         // ฟังก์ชันจำลองเมื่อถึงเป้าหมายชลบุรี (รอเนื้อหาจากพี่นิ)
         function checkChonburiMilestone(totalStepsThisMonth) {
             // สมมติว่าเป้าหมายคือ 15,000 ก้าว
-            if (totalStepsThisMonth >= 15000) {
+            if (totalStepsThisMonth >= 10000) {
                 Swal.fire({
                     title: '🎉 ปลดล็อกความสำเร็จ!',
                     html: `
@@ -2086,7 +2086,7 @@
                             <p class="font-bold text-emerald-800 mb-2">ยินดีด้วย! คุณเดินถึง "สัตหีบ" แล้ว 🌊</p>
                             <img src="https://images.unsplash.com/photo-1588668211019-f53831846b0a?auto=format&fit=crop&w=400&q=80" class="w-full h-32 object-cover rounded-xl mb-3 shadow-sm">
                             <p class="text-sm text-gray-600 bg-gray-50 p-3 rounded-lg border border-gray-100 italic">
-                            "สัตหีบ เป็นสถานที่ท่องเที่ยวยอดฮิตของจังหวัดชลบุรี..." <br><span class="text-[10px] text-gray-400">(รอข้อมูลเกร็ดความรู้)</span>
+                            "สัตหีบ เป็นสถานที่ท่องเที่ยวของจังหวัดชลบุรี..." <br><span class="text-[10px] text-gray-400">(รออัพเดทข้อมูล)</span>
                             </p>
                         </div>
                     `,
