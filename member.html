@@ -1911,48 +1911,45 @@
         // ==========================================
         // 🛠️ ฟังก์ชันบีบอัดรูปภาพอัตโนมัติ (ปรับให้เบาหวิวสุดๆ ป้องกันเบราว์เซอร์ค้าง)
         // ==========================================
-        function resizeImageForAI(file, maxSize = 800) {
-        return new Promise((resolve, reject) => {
-            const objectUrl = URL.createObjectURL(file);
-            const img = new Image();
-    
-            img.onload = function() {
-                try {
-                    let width = img.width;
-                    let height = img.height;
-    
-                    if (width > height) {
-                        if (width > maxSize) { height = Math.round(height *= maxSize / width); width = maxSize; }
-                    } else {
-                        if (height > maxSize) { width = Math.round(width *= maxSize / height); height = maxSize; }
+        function resizeImageForAI(file, maxSize = 1400) {  // เพิ่มจาก 800 → 1400
+            return new Promise((resolve, reject) => {
+                const objectUrl = URL.createObjectURL(file);
+                const img = new Image();
+        
+                img.onload = function() {
+                    try {
+                        let width = img.width;
+                        let height = img.height;
+        
+                        if (width > height) {
+                            if (width > maxSize) { height = Math.round(height *= maxSize / width); width = maxSize; }
+                        } else {
+                            if (height > maxSize) { width = Math.round(width *= maxSize / height); height = maxSize; }
+                        }
+        
+                        const canvas = document.createElement('canvas');
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+        
+                        const dataUrl = canvas.toDataURL('image/jpeg', 0.8); // เพิ่มจาก 0.6 → 0.8
+                        URL.revokeObjectURL(objectUrl);
+                        resolve(dataUrl.split(',')[1]);
+                    } catch (err) {
+                        URL.revokeObjectURL(objectUrl);
+                        reject(err);
                     }
-    
-                    const canvas = document.createElement('canvas');
-                    canvas.width = width;
-                    canvas.height = height;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, width, height);
-    
-                    const dataUrl = canvas.toDataURL('image/jpeg', 0.6);
-                    URL.revokeObjectURL(objectUrl); // คืน memory ทันทีหลังใช้เสร็จ
-                    resolve(dataUrl.split(',')[1]);
-                } catch (err) {
+                };
+        
+                img.onerror = function(e) {
                     URL.revokeObjectURL(objectUrl);
-                    console.error("Canvas draw error:", err);
-                    reject(err);
-                }
-            };
-    
-            img.onerror = function(e) {
-                URL.revokeObjectURL(objectUrl);
-                console.error("Image load error:", e, "file size:", file.size, "file type:", file.type);
-                reject(new Error("ไม่สามารถโหลดรูปภาพได้ (อาจเกิดจากไฟล์ใหญ่เกินไปสำหรับเบราว์เซอร์นี้)"));
-            };
-    
-            img.src = objectUrl;
-        });
-    }
-
+                    reject(new Error("ไม่สามารถโหลดรูปภาพได้"));
+                };
+        
+                img.src = objectUrl;
+            });
+        }
         // ==========================================
         // 🤖 ปุ่มส่งภาพให้ AI ตรวจสอบ (เพิ่มระบบ Auto-Retry กดซ้ำอัตโนมัติถ้าสะดุด)
         // ==========================================
@@ -2020,19 +2017,14 @@
             btn.disabled = false;
         
             if (scanRes && scanRes.success && scanRes.steps !== "Error" && scanRes.steps !== "") {
-                let detectedSteps = parseInt(scanRes.steps);
-                if (isNaN(detectedSteps)) {
-                    Swal.fire('สแกนไม่สำเร็จ', 'ระบบมองไม่เห็นตัวเลขก้าวเดิน ลองอัปโหลดรูปใหม่อีกครั้ง', 'error');
-                    return;
-                }
-                // ... โค้ดแสดงผล Swal.fire('ตรวจสอบสำเร็จ!', ...) และบันทึกข้อมูล เหมือนเดิม
-            } else if (lastError) {
-                // มี exception จริง (network timeout, abort, ฯลฯ)
-                Swal.fire('หมดเวลาเชื่อมต่อ', 'เซิร์ฟเวอร์ใช้เวลาประมวลผลนานเกินไป กรุณาลองใหม่อีกครั้ง (แนะนำให้ต่อ Wi-Fi หากเป็นไปได้)', 'warning');
-            } else if (scanRes && scanRes.message === "เชื่อมต่อฐานข้อมูลไม่ได้") {
-                Swal.fire('เชื่อมต่อไม่สำเร็จ', 'เซิร์ฟเวอร์อาจกำลังเริ่มทำงาน กรุณาลองกดส่งอีกครั้ง', 'warning');
+                // ... โค้ดแสดงผลสำเร็จเหมือนเดิม
+            } else if (scanRes && scanRes.success && scanRes.steps === "Error") {
+                // Gemini อ่านภาพไม่ออกจริง ๆ (ภาพไม่ชัด/ไม่ใช่แอปนับก้าว)
+                Swal.fire('ภาพไม่ถูกต้อง', 'ตรวจพบว่านี่อาจไม่ใช่ภาพหน้าจอแอปนับก้าว หรือตัวเลขไม่ชัดเจน กรุณาถ่ายภาพให้ชัดเจนแล้วลองใหม่', 'error');
             } else {
-                Swal.fire('ภาพไม่ถูกต้อง', 'ตรวจพบว่านี่อาจไม่ใช่ภาพหน้าจอแอปนับก้าว หรือตัวเลขไม่ชัดเจน กรุณาลองอัปโหลดใหม่อีกครั้ง', 'error');
+                // success: false จาก backend เช่น API error, quota, model ผิด ฯลฯ — โชว์ message จริงเพื่อ debug
+                console.error("Backend error:", scanRes ? scanRes.message : "no response");
+                Swal.fire('เกิดข้อผิดพลาดในระบบ', scanRes && scanRes.message ? scanRes.message.substring(0, 200) : 'กรุณาลองใหม่อีกครั้ง หรือแจ้งทีมงาน', 'error');
             }
         }
         
@@ -2373,6 +2365,56 @@
             }
             
             imgElement.src = newImageSrc;
+        }
+        // ==========================================
+        // 🥦 ฟังก์ชันเปิดป๊อปอัพ เกร็ดความรู้ (มีรูปภาพด้านล่าง)
+        // ==========================================
+        function openFoodTip(icon, title, detail, imageUrl) {
+            // โครงสร้างข้อความหลัก
+            let htmlContent = `<div class="text-sm text-gray-600 leading-relaxed font-medium mb-2">${detail}</div>`;
+
+            // 🌟 ถ้าระบบเจอว่ามีใส่ลิงก์รูปภาพมาด้วย ให้ต่อท้ายด้วยรูปภาพ
+            if (imageUrl && imageUrl.trim() !== "") {
+                htmlContent += `
+                    <div class="mt-4 pt-4 border-t border-gray-100">
+                        <p class="text-xs text-gray-400 font-bold mb-2 animate-pulse"><i class="fa-solid fa-magnifying-glass-plus"></i> แตะที่ภาพเพื่อขยาย</p>
+                        <img src="${imageUrl}" 
+                             onclick="enlargeTipImage('${imageUrl}')" 
+                             class="w-full rounded-2xl cursor-pointer shadow-sm border border-gray-200 hover:shadow-md transition transform hover:scale-[1.02]" 
+                             alt="Infographic">
+                    </div>
+                `;
+            }
+
+            // เรียก SweetAlert2 อันหลัก
+            Swal.fire({
+                title: `<div class="text-5xl mb-3">${icon}</div><div class="text-lg font-black text-gray-800 leading-tight">${title}</div>`,
+                html: htmlContent,
+                confirmButtonText: 'เข้าใจแล้ว!',
+                confirmButtonColor: '#f59e0b', // สีส้มตามภาพที่พี่ส่งมาเลยครับ
+                customClass: { popup: 'rounded-[30px] p-4' },
+                showClass: { popup: 'animate__animated animate__fadeInUp animate__faster' },
+                hideClass: { popup: 'animate__animated animate__fadeOutDown animate__faster' }
+            });
+        }
+
+        // ==========================================
+        // 🔍 ฟังก์ชันขยายรูปภาพ (เมื่อผู้ใช้แตะที่รูปอินโฟกราฟิก)
+        // ==========================================
+        function enlargeTipImage(imageUrl) {
+            Swal.fire({
+                imageUrl: imageUrl,
+                imageAlt: 'Infographic Enlarged',
+                showConfirmButton: false,
+                showCloseButton: true,
+                width: '95%',
+                background: 'transparent', // ทำให้พื้นหลังใสโชว์แต่รูป
+                backdrop: `rgba(0,0,0,0.85)`, // พื้นหลังดำมืดๆ ให้รูปเด่น
+                customClass: {
+                    image: 'rounded-2xl max-w-full h-auto',
+                    closeButton: 'text-white text-3xl' // ปุ่ม X สีขาว
+                }
+            });
         }
     </script>
 </body>
