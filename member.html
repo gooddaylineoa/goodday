@@ -2415,13 +2415,16 @@
             imgElement.src = newImageSrc;
         }
         // ==========================================
-        // 🥦 ฟังก์ชันเปิดป๊อปอัพ เกร็ดความรู้ (มีรูปภาพด้านล่าง)
+        // 🥦 ฟังก์ชันเปิดป๊อปอัพ เกร็ดความรู้ (อัปเกรดระบบจำหน้าเดิม)
         // ==========================================
+        let currentFoodTip = null; // ตัวแปรสำหรับจำว่ากำลังเปิดเกร็ดความรู้อันไหนอยู่
+
         function openFoodTip(icon, title, detail, imageUrl) {
-            // โครงสร้างข้อความหลัก
+            // บันทึกข้อมูลปัจจุบันไว้ เผื่อตอนกดย้อนกลับจากรูปขยาย
+            currentFoodTip = { icon, title, detail, imageUrl };
+
             let htmlContent = `<div class="text-sm text-gray-600 leading-relaxed font-medium mb-2">${detail}</div>`;
 
-            // 🌟 ถ้าระบบเจอว่ามีใส่ลิงก์รูปภาพมาด้วย ให้ต่อท้ายด้วยรูปภาพ
             if (imageUrl && imageUrl.trim() !== "") {
                 htmlContent += `
                     <div class="mt-4 pt-4 border-t border-gray-100">
@@ -2434,12 +2437,11 @@
                 `;
             }
 
-            // เรียก SweetAlert2 อันหลัก
             Swal.fire({
                 title: `<div class="text-5xl mb-3">${icon}</div><div class="text-lg font-black text-gray-800 leading-tight">${title}</div>`,
                 html: htmlContent,
                 confirmButtonText: 'เข้าใจแล้ว!',
-                confirmButtonColor: '#f59e0b', // สีส้มตามภาพที่พี่ส่งมาเลยครับ
+                confirmButtonColor: '#f59e0b',
                 customClass: { popup: 'rounded-[30px] p-4' },
                 showClass: { popup: 'animate__animated animate__fadeInUp animate__faster' },
                 hideClass: { popup: 'animate__animated animate__fadeOutDown animate__faster' }
@@ -2447,7 +2449,7 @@
         }
 
         // ==========================================
-        // 🔍 ฟังก์ชันขยายรูปภาพ (เมื่อผู้ใช้แตะที่รูปอินโฟกราฟิก)
+        // 🔍 ฟังก์ชันขยายรูปภาพ (พอกดปิด ให้เด้งกลับไปหน้าข้อความ)
         // ==========================================
         function enlargeTipImage(imageUrl) {
             Swal.fire({
@@ -2456,11 +2458,18 @@
                 showConfirmButton: false,
                 showCloseButton: true,
                 width: '95%',
-                background: 'transparent', // ทำให้พื้นหลังใสโชว์แต่รูป
-                backdrop: `rgba(0,0,0,0.85)`, // พื้นหลังดำมืดๆ ให้รูปเด่น
+                background: 'transparent', 
+                backdrop: `rgba(0,0,0,0.85)`, 
                 customClass: {
                     image: 'rounded-2xl max-w-full h-auto',
-                    closeButton: 'text-white text-3xl' // ปุ่ม X สีขาว
+                    closeButton: 'text-white text-3xl outline-none' 
+                }
+            }).then(() => {
+                // เวทมนตร์อยู่ตรงนี้ครับ: พอกดปิดรูป (หรือกดพื้นที่สีดำ) ให้เรียกป๊อปอัพเดิมกลับมา
+                if (currentFoodTip) {
+                    setTimeout(() => {
+                        openFoodTip(currentFoodTip.icon, currentFoodTip.title, currentFoodTip.detail, currentFoodTip.imageUrl);
+                    }, 50); // หน่วงเวลา 0.05 วินาทีให้แอนิเมชันปิดรูปทำงานจบก่อน จะได้ดูเนียนตา
                 }
             });
         }
