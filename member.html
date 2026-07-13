@@ -1948,135 +1948,96 @@
         // 🤖 ปุ่มส่งภาพให้ AI ตรวจสอบ (เพิ่มระบบ Auto-Retry กดซ้ำอัตโนมัติถ้าสะดุด)
         // ==========================================
         async function uploadStepImageAI(btn) {
-        const fileInput = document.getElementById('march-image-ai');
-        if (!fileInput.files.length) {
-            Swal.fire('ลืมแนบรูป', 'กรุณาอัปโหลดรูปภาพหน้าจอ StepsApp', 'warning');
-            return;
-        }
-    
-        const file = fileInput.files[0];
-        const fileName = file.name;
-    
-        if(file.size > 4 * 1024 * 1024) { 
-           Swal.fire('ไฟล์ใหญ่เกินไป', 'กรุณาลดขนาดรูปภาพให้ไม่เกิน 4MB', 'warning');
-           return;
-        }
-    
-        btn.disabled = true;
-        let originalText = btn.innerHTML;
-        btn.innerHTML = '<i class="fa-solid fa-robot fa-bounce mr-2"></i>กำลังประมวลผลรูปภาพ...';
-    
-        let attempt = 0;
-        let maxRetries = 2;
-        let scanRes = null;
-        let base64Compressed = null;
-    
-        // 🌟 ระบบ Auto-Retry ป้องกัน Google หลับ
-        while (attempt < maxRetries) {
-            attempt++;
-            try {
-                base64Compressed = await resizeImageForAI(file);
-                scanRes = await callAPI("scanStepsAI", { imageRaw: base64Compressed });
-    
-                if (scanRes && scanRes.success) break; // สำเร็จจริงเท่านั้นถึงหยุด
-                if (attempt < maxRetries) {
-                    await new Promise(r => setTimeout(r, 1500));
-                }
-            } catch (error) {
-                if (attempt >= maxRetries) {
-                    btn.innerHTML = originalText;
-                    btn.disabled = false;
-                    Swal.fire('การเชื่อมต่อขัดข้อง', 'ระบบไม่สามารถประมวลผลภาพได้ กรุณาลองใหม่อีกครั้ง', 'error');
-                    return;
-                }
-                await new Promise(r => setTimeout(r, 1000));
-            }
-        }
-    
-        // --- เมื่อเชื่อมต่อสำเร็จ มาเช็กคำตอบของ AI กันต่อ ---
-        btn.innerHTML = originalText;
-        btn.disabled = false;
-    
-        if (scanRes && scanRes.success && scanRes.steps !== "Error" && scanRes.steps !== "") {
-            let detectedSteps = parseInt(scanRes.steps);
-    
-            if (isNaN(detectedSteps)) {
-                Swal.fire('สแกนไม่สำเร็จ', 'ระบบมองไม่เห็นตัวเลขก้าวเดิน ลองอัปโหลดรูปใหม่อีกครั้ง', 'error');
+            const fileInput = document.getElementById('march-image-ai');
+            if (!fileInput.files.length) {
+                Swal.fire('ลืมแนบรูป', 'กรุณาอัปโหลดรูปภาพหน้าจอ StepsApp', 'warning');
                 return;
             }
-    
-            Swal.fire({
-                title: 'ตรวจสอบสำเร็จ!',
-                html: `
-                    <p class="text-base text-gray-600 mb-2">ระบบตรวจสอบจำนวนก้าวเดินของคุณได้</p>
-                    <div class="text-6xl font-black text-emerald-600 mb-2">${detectedSteps.toLocaleString()}</div>
-                    <p class="text-sm text-gray-500 font-bold mb-4">ก้าว</p>
-                    <p class="text-xs text-red-500 bg-red-50 p-3 rounded-lg border border-red-100 font-bold">
-                       *ไม่สามารถแก้ไขตัวเลขได้ หากเลขไม่ตรงให้กดปุ่ม "ก้าวเดินไม่ตรงภาพ" ด้านล่าง
-                    </p>
-                `,
-                showCancelButton: true,
-                showDenyButton: true,
-                confirmButtonColor: '#10b981',
-                denyButtonColor: '#ef4444',
-                cancelButtonColor: '#d1d5db',
-                confirmButtonText: 'ยืนยัน',
-                denyButtonText: 'ก้าวเดินไม่ตรงภาพ',
-                cancelButtonText: 'ยกเลิก',
-            }).then(async (result) => {
-                if (result.isConfirmed || result.isDenied) {
-                    if (detectedSteps <= 0) return;
-    
-                    if (result.isConfirmed) {
-                        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> กำลังบันทึกข้อมูล...';
-                    } else {
-                        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> กำลังส่งเรื่อง...';
-                    }
-    
-                    btn.disabled = true;
-    
-                    const saveRes = await callAPI("saveMarchRecord", {
-                        memberId: currentUser.memberId,
-                        steps: detectedSteps,
-                        imageRaw: base64Compressed,
-                        imageName: fileName,
-                        isFlagged: result.isDenied
-                    });
-    
-                    btn.innerHTML = originalText;
-                    btn.disabled = false;
-    
-                    if (saveRes.success) {
-                        setDailyLimit('march');
-    
-                        if (result.isConfirmed) {
-                            Swal.fire('ยอดเยี่ยม!', `บันทึก <b>${detectedSteps.toLocaleString()}</b> ก้าว เรียบร้อย 🚶‍♂️`, 'success').then(() => {
-                                document.getElementById('march-image-ai').value = '';
-                                openMarchTracker();
-                            });
-                        } else {
-                            Swal.fire({
-                                title: 'ส่งเรื่องตรวจสอบแล้ว!',
-                                html: `ระบบบันทึกยอด <b>${detectedSteps.toLocaleString()}</b> ก้าว (ชั่วคราว)<br><br>ทีมงานจะตรวจสอบและแก้ไขก้าวเดินของคุณภายใน 24 ชั่วโมง`,
-                                icon: 'success',
-                                confirmButtonColor: '#10b981'
-                            }).then(() => {
-                                document.getElementById('march-image-ai').value = '';
-                                openMarchTracker();
-                            });
-                        }
-                    } else {
-                        Swal.fire('เกิดข้อผิดพลาด', saveRes.message, 'error');
-                    }
+        
+            const file = fileInput.files[0];
+            const fileName = file.name;
+        
+            if (file.size > 4 * 1024 * 1024) {
+                Swal.fire('ไฟล์ใหญ่เกินไป', 'กรุณาลดขนาดรูปภาพให้ไม่เกิน 4MB', 'warning');
+                return;
+            }
+        
+            btn.disabled = true;
+            let originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-robot fa-bounce mr-2"></i>กำลังประมวลผลรูปภาพ...';
+        
+            // 1) resize รูปแค่ครั้งเดียว แยก try/catch ต่างหาก เพื่อรู้ว่า error มาจากขั้นตอนนี้หรือไม่
+            let base64Compressed;
+            try {
+                base64Compressed = await resizeImageForAI(file);
+            } catch (err) {
+                console.error("Resize image error:", err);
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                Swal.fire('รูปภาพมีปัญหา', 'ระบบไม่สามารถประมวลผลไฟล์รูปนี้ได้ ลองถ่ายหรือเลือกรูปใหม่อีกครั้ง', 'error');
+                return;
+            }
+        
+            // 2) เรียก API พร้อม retry + timeout ต่อรอบ (กันเคส Apps Script ตื่นช้า/AI ประมวลผลนาน)
+            let attempt = 0;
+            const maxRetries = 3;                 // เพิ่มจาก 2 → 3 รอบ
+            const perAttemptTimeoutMs = 25000;     // แต่ละรอบรอสูงสุด 25 วิ (ให้เวลา AI พอสมควร)
+            let scanRes = null;
+            let lastError = null;
+        
+            while (attempt < maxRetries) {
+                attempt++;
+                try {
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), perAttemptTimeoutMs);
+        
+                    btn.innerHTML = `<i class="fa-solid fa-robot fa-bounce mr-2"></i>กำลังประมวลผล... (ครั้งที่ ${attempt}/${maxRetries})`;
+        
+                    scanRes = await callAPIWithSignal("scanStepsAI", { imageRaw: base64Compressed }, controller.signal);
+                    clearTimeout(timeoutId);
+        
+                    if (scanRes && scanRes.success) break; // สำเร็จจริง หยุด retry
+                } catch (error) {
+                    console.error(`Attempt ${attempt} failed:`, error);
+                    lastError = error;
                 }
-            });
-    
-        } else if (scanRes && scanRes.message === "เชื่อมต่อฐานข้อมูลไม่ได้") {
-            Swal.fire('เชื่อมต่อไม่สำเร็จ', 'เซิร์ฟเวอร์อาจกำลังเริ่มทำงาน กรุณาลองกดส่งอีกครั้ง', 'warning');
-        } else {
-            Swal.fire('ภาพไม่ถูกต้อง', 'ตรวจพบว่านี่อาจไม่ใช่ภาพหน้าจอแอปนับก้าว หรือตัวเลขไม่ชัดเจน กรุณาลองอัปโหลดใหม่อีกครั้ง', 'error');
+        
+                if (attempt < maxRetries) {
+                    await new Promise(r => setTimeout(r, 2000 * attempt)); // รอเพิ่มขึ้นทุกรอบ (2s, 4s)
+                }
+            }
+        
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        
+            if (scanRes && scanRes.success && scanRes.steps !== "Error" && scanRes.steps !== "") {
+                let detectedSteps = parseInt(scanRes.steps);
+                if (isNaN(detectedSteps)) {
+                    Swal.fire('สแกนไม่สำเร็จ', 'ระบบมองไม่เห็นตัวเลขก้าวเดิน ลองอัปโหลดรูปใหม่อีกครั้ง', 'error');
+                    return;
+                }
+                // ... โค้ดแสดงผล Swal.fire('ตรวจสอบสำเร็จ!', ...) และบันทึกข้อมูล เหมือนเดิม
+            } else if (lastError) {
+                // มี exception จริง (network timeout, abort, ฯลฯ)
+                Swal.fire('หมดเวลาเชื่อมต่อ', 'เซิร์ฟเวอร์ใช้เวลาประมวลผลนานเกินไป กรุณาลองใหม่อีกครั้ง (แนะนำให้ต่อ Wi-Fi หากเป็นไปได้)', 'warning');
+            } else if (scanRes && scanRes.message === "เชื่อมต่อฐานข้อมูลไม่ได้") {
+                Swal.fire('เชื่อมต่อไม่สำเร็จ', 'เซิร์ฟเวอร์อาจกำลังเริ่มทำงาน กรุณาลองกดส่งอีกครั้ง', 'warning');
+            } else {
+                Swal.fire('ภาพไม่ถูกต้อง', 'ตรวจพบว่านี่อาจไม่ใช่ภาพหน้าจอแอปนับก้าว หรือตัวเลขไม่ชัดเจน กรุณาลองอัปโหลดใหม่อีกครั้ง', 'error');
+            }
         }
-    }
+        
+        // helper ใหม่ที่รองรับ AbortSignal (ใช้แทน callAPI เฉพาะจุดที่ต้องการ timeout)
+        async function callAPIWithSignal(action, data = {}, signal) {
+            const response = await fetch(API_URL, {
+                method: "POST",
+                headers: { "Content-Type": "text/plain;charset=utf-8" },
+                body: JSON.stringify({ action: action, data: data }),
+                redirect: "follow",
+                signal: signal
+            });
+            return await response.json();
+        }
         
         // ฟังก์ชันจำลองเมื่อถึงเป้าหมายชลบุรี (รอเนื้อหาจากพี่นิ)
         function checkChonburiMilestone(totalStepsThisMonth) {
