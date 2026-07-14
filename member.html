@@ -1149,7 +1149,7 @@
         // ==========================================
         function openExternalLink(url) {
             if (typeof liff !== 'undefined' && liff.isLoggedIn()) {
-                liff.openWindow({ url: url, external: true });f
+                liff.openWindow({ url: url, external: true });
             } else {
                 window.open(url, '_blank');
             }
@@ -2316,7 +2316,6 @@
         let marchStepsChartObj = null;
         let globalMarchTotal = 0; // ตัวแปรจำก้าวรวม
         
-        // 📌 ข้อมูล 22 สถานที่ของชลบุรี
         // 📌 ข้อมูล 22 สถานที่ของชลบุรี
         const chonburiMilestones = [
             { steps: 3500, q: "คำขวัญของจังหวัดชลบุรีคืออะไร?", a: "ทะเลงาม ข้าวหลามอร่อย อ้อยหวาน จักสานดี ประเพณีวิ่งควาย", icon: "fa-book-open" },
