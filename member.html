@@ -635,7 +635,7 @@
                 </div>
             </div>
             
-            <div onclick="openMarchDashboard()" class="bg-gradient-to-r from-emerald-400 to-teal-500 rounded-xl p-4 mb-4 text-white cursor-pointer shadow-sm hover:shadow-md transition transform hover:-translate-y-1">
+            <div onclick="showPage('www-march')" class="bg-gradient-to-r from-emerald-400 to-teal-500 rounded-xl p-4 mb-4 text-white cursor-pointer shadow-sm hover:shadow-md transition transform hover:-translate-y-1">
                 <div class="flex items-center gap-4">
                     <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center text-2xl shrink-0"><i class="fa-solid fa-shoe-prints"></i></div>
                     <div class="flex-1">
@@ -2431,6 +2431,13 @@
             });
             document.getElementById('walkathon-icons-grid').innerHTML = gridHtml;
             renderMarchLineChart(recordsData);
+        }
+
+        async function openMarchDashboard() {
+            if (!currentUser) return;
+            const res = await callAPI("getMarchRecords", { memberId: currentUser.memberId });
+            let recordsData = (res && res.success && Array.isArray(res.data)) ? res.data : (Array.isArray(res) ? res : []);
+            renderMarchDashboard(recordsData);
         }
 
         // --- ฟังก์ชันเปิดป๊อปอัพแสดงความลับสถานที่ ---
