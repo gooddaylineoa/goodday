@@ -1857,9 +1857,12 @@
         // ==========================================
         async function uploadStepImageAI(btn) {
             const fileInput = document.getElementById('march-image-ai');
-            if (!fileInput.files.length) { ... }
+            if (!fileInput.files.length) { 
+                Swal.fire('ลืมแนบรูป', 'กรุณาอัปโหลดรูปหน้าจอ StepsApp', 'warning'); 
+                return; 
+            }
             const file = fileInput.files[0];
-            await new Promise(r => setTimeout(r, 400));
+            await new Promise(r => setTimeout(r, 400)); // หน่วงเวลาให้ไฟล์นิ่งก่อนอ่าน (ตามที่แนะนำไว้ก่อนหน้า)
             if(file.size > 4*1024*1024) { Swal.fire('ไฟล์ใหญ่เกินไป', 'กรุณาลดขนาดไม่เกิน 4MB', 'warning'); return; }
 
             btn.disabled = true; let originalText = btn.innerHTML;
@@ -1875,7 +1878,7 @@
                 } catch (error) {
                     if (attempt >= maxRetries) {
                         btn.innerHTML = originalText; btn.disabled = false;
-                        Swal.fire('ขัดข้อง', 'ระบบประมวลผลไม่ได้ ลองใหม่อีกครั้งครับ', 'error'); return;
+                        Swal.fire('ขัดข้อง', 'ระบบประมวลผลไม่ได้ ลองใหม่อีกครั้ง', 'error'); return;
                     }
                     await new Promise(r => setTimeout(r, 1000));
                 }
@@ -1948,7 +1951,7 @@
                     }
                 });
             } else {
-                Swal.fire('ภาพไม่ชัดเจน', 'กรุณาครอปหรือใช้ภาพที่ตัวเลขชัดเจนขึ้นครับ', 'error');
+                Swal.fire('ภาพไม่ชัดเจน', 'กรุณาครอปหรือใช้ภาพที่ตัวเลขชัดเจนขึ้น', 'error');
             }
         }
 
