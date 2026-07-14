@@ -1212,6 +1212,8 @@
         // ==========================================
         // ⚙️ ระบบ LIFF & ควบคุมหน้าจอ
         // ==========================================
+        let liffReady = false;
+
         document.addEventListener("DOMContentLoaded", function() {
             const selects = ['reg-prov', 'edit-prov', 'wm-prov'];
             selects.forEach(id => {
@@ -1223,7 +1225,7 @@
                     });
                 }
             });
-
+        
             const saved = localStorage.getItem('gooddaySession');
             if(saved) {
                 try {
@@ -1233,29 +1235,51 @@
                     localStorage.removeItem('gooddaySession');
                 }
             }
-
-            liff.init({ liffId: LIFF_ID }).then(() => {
-                if(liff.isLoggedIn()) {
-                    liff.getProfile().then(async profile => {
-                        currentLineUid = profile.userId;
-                        const res = await callAPI("autoLoginByUid", { uid: currentLineUid });
-                        if(res && res.memberId) {
-                            currentUser = res;
-                            localStorage.setItem('gooddaySession', JSON.stringify(currentUser));
-                            renderProfile();
-                        } else {
+        
+            // 🛡️ ตัวกันชนสำคัญ: ไม่ว่า LIFF จะเชื่อมติดหรือไม่ หลัง 3 วิต้องซ่อนโหลดดิ้งเสมอ
+            setTimeout(() => {
+                hideLoader();
+                if (!liffReady && !currentUser) showPage('login');
+            }, 3000);
+        
+            try {
+                if (typeof liff === 'undefined') throw new Error("LIFF SDK โหลดไม่สำเร็จ");
+        
+                liff.init({ liffId: LIFF_ID }).then(() => {
+                    liffReady = true;
+                    if(liff.isLoggedIn()) {
+                        liff.getProfile().then(async profile => {
+                            currentLineUid = profile.userId;
+                            const res = await callAPI("autoLoginByUid", { uid: currentLineUid });
+                            if(res && res.memberId) {
+                                currentUser = res;
+                                localStorage.setItem('gooddaySession', JSON.stringify(currentUser));
+                                renderProfile();
+                            } else {
+                                if(!currentUser) showPage('login');
+                                updateHeaderUser();
+                            }
+                            hideLoader();
+                        }).catch(() => {
+                            hideLoader();
                             if(!currentUser) showPage('login');
-                            updateHeaderUser();
-                        }
+                        });
+                    } else {
                         hideLoader();
-                    });
-                } else { liff.login(); }
-            }).catch(err => {
+                        if(!currentUser) showPage('login');
+                        // liff.login(); // ถ้าอยากบังคับ login ผ่าน LINE ค่อยเปิดใช้ตอน deploy จริง
+                    }
+                }).catch(err => {
+                    liffReady = true;
+                    hideLoader();
+                    if(!currentUser) showPage('login');
+                });
+            } catch (e) {
+                console.error("LIFF init failed:", e);
+                liffReady = true;
                 hideLoader();
                 if(!currentUser) showPage('login');
-            });
-
-            setTimeout(hideLoader, 3000);
+            }
         });
 
         function hideLoader() {
