@@ -1875,7 +1875,7 @@
                 base64Compressed = await resizeImageForAI(file);
             } catch (err) {
                 btn.innerHTML = originalText; btn.disabled = false;
-                Swal.fire('ขัดข้อง', 'ไม่สามารถอ่านไฟล์รูปภาพได้ ลองอัปโหลดใหม่', 'error'); return;
+                Swal.fire('ขัดข้อง', 'ไม่สามารถอ่านไฟล์รูปภาพได้ ลองกดปุ่มอัปโหลดใหม่อีกครั้ง', 'error'); return;
             }
             
             let attempt = 0, maxRetries = 3, scanRes = null;
@@ -1887,7 +1887,7 @@
                 } catch (error) {
                     if (attempt >= maxRetries) {
                         btn.innerHTML = originalText; btn.disabled = false;
-                        Swal.fire('ขัดข้อง', 'ระบบประมวลผลไม่ได้ ลองใหม่อีกครั้ง', 'error'); return;
+                        Swal.fire('ขัดข้อง', 'ระบบประมวลผลไม่ได้ กรุณากดปุ่มอัปโหลดภาพใหม่อีกครั้ง', 'error'); return;
                     }
                 }
                 if (attempt < maxRetries) await new Promise(r => setTimeout(r, 800));
