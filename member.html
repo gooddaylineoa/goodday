@@ -755,16 +755,16 @@
                 <h2 class="text-xl font-bold text-emerald-700">The Long March</h2>
             </div>
 
-            <!-- วงแหวนสะสมก้าวเดินรายเดือน -->
+            <!-- วงแหวนสะสมก้าวเดินรายเดือน (ขยายร่างใหญ่ขึ้น) -->
             <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 mb-6 flex flex-col items-center justify-center relative overflow-hidden">
-                <h3 class="font-bold text-gray-500 mb-4 text-sm uppercase tracking-wider">เป้าหมายประจำเดือนนี้</h3>
-                <div class="relative w-48 h-48 flex items-center justify-center mb-2">
-                    <!-- วงแหวนกราฟฟิก -->
+                <h3 class="font-bold text-gray-500 mb-6 text-sm uppercase tracking-wider">เป้าหมายประจำเดือนนี้</h3>
+                <div class="relative w-64 h-64 flex items-center justify-center mb-2">
+                    <!-- วงแหวนกราฟฟิก (ปรับขนาดเป็น w-64 h-64) -->
                     <div id="march-circle-progress" class="absolute inset-0 rounded-full bg-gray-100" style="background: conic-gradient(#10b981 0%, #f3f4f6 0);"></div>
-                    <div class="absolute inset-2 bg-white rounded-full flex flex-col items-center justify-center shadow-inner">
-                        <p class="text-[10px] text-gray-400 font-bold mb-1">ก้าวสะสมทั้งหมด</p>
-                        <p id="march-total-month" class="text-3xl font-black text-emerald-600 leading-none">0</p>
-                        <p class="text-xs text-gray-400 mt-1 font-medium">/ 210,000</p>
+                    <div class="absolute inset-3 bg-white rounded-full flex flex-col items-center justify-center shadow-inner">
+                        <p class="text-xs text-gray-400 font-bold mb-1">ก้าวสะสมทั้งหมด</p>
+                        <p id="march-total-month" class="text-5xl font-black text-emerald-600 leading-none">0</p>
+                        <p class="text-sm text-gray-400 mt-2 font-medium">/ 210,000</p>
                     </div>
                 </div>
             </div>
@@ -794,7 +794,7 @@
 
                 <div onclick="showPage('march-playlist')" class="bg-white rounded-3xl p-5 shadow-sm border border-gray-100 flex items-center gap-4 cursor-pointer">
                     <div class="w-14 h-14 bg-purple-50 text-purple-500 rounded-2xl flex items-center justify-center text-2xl shrink-0"><i class="fa-solid fa-music"></i></div>
-                    <div class="flex-1"><h4 class="font-black text-gray-800 text-lg">Personal Playlist</h4></div>
+                    <div class="flex-1"><h4 class="font-black text-gray-800 text-base leading-tight">เพลย์ลิสเพลงออกกำลังกายส่วนตัวของคุณ</h4></div>
                     <i class="fa-solid fa-chevron-right text-gray-300 text-lg"></i>
                 </div>
             </div>
@@ -805,13 +805,30 @@
         <!-- ========================================== -->
         <div id="page-walkathon-intro" class="page-section bg-gray-900 min-h-screen relative pb-24">
             <button onclick="showPage('www-march')" class="absolute top-6 left-6 w-10 h-10 bg-white/20 backdrop-blur-md rounded-full text-white z-50 flex items-center justify-center"><i class="fa-solid fa-arrow-left"></i></button>
-            <img src="https://i.ibb.co/Xfw7mJNF/DSC-0114.jpg" class="w-full h-[60vh] object-cover opacity-80" alt="Walkathon">
-            <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/80 to-transparent"></div>
-            <div class="absolute bottom-10 left-0 right-0 px-6 text-center">
-                <span class="bg-amber-500 text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full mb-3 inline-block">แคมเปญพิเศษ</span>
-                <h1 class="text-4xl font-black text-white mb-2 leading-tight">Thailand<br><span class="text-amber-400">Walkathon</span></h1>
-                <p class="text-gray-300 font-medium text-sm mb-8">30 วัน มาราธอนทั่วไทย<br>สะสมก้าวเดิน ปลดล็อก 22 เรื่องลับที่คุณอาจไม่เคยรู้!</p>
-                <button onclick="showPage('walkathon-map')" class="w-full bg-amber-500 text-gray-900 py-4 rounded-2xl font-black text-lg shadow-lg hover:bg-amber-400 transition animate-pulse">เริ่มออกเดินทาง!</button>
+            <img src="https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?auto=format&fit=crop&w=800&q=80" class="w-full h-[45vh] object-cover opacity-60" alt="Walkathon">
+            <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/90 to-transparent"></div>
+            
+            <div class="absolute top-[35vh] left-0 right-0 px-6 text-center z-10">
+                <span class="bg-amber-500 text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full mb-3 inline-block shadow-lg">แคมเปญพิเศษ</span>
+                <h1 class="text-5xl font-black text-white mb-2 leading-tight drop-shadow-md">Thailand<br><span class="text-amber-400">Walkathon</span></h1>
+                
+                <p class="text-gray-200 font-medium text-sm mb-6 leading-relaxed">
+                    30 วัน มาราธอนทั่วไทย<br>
+                    สะสมก้าวเดินเพื่อปลดล็อก 22 เรื่องลับ!<br>
+                    <span class="text-amber-300 font-bold">สัมผัสเอกลักษณ์ท้องถิ่น และฟีล Unseen ที่คุณอาจไม่เคยรู้</span>
+                </p>
+                
+                <!-- แผนที่และไอคอนจำลอง -->
+                <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 mb-8 shadow-xl relative">
+                    <img src="https://www.dropbox.com/scl/fi/keavybl356zanlufhpupm/okn8AzDAAISAFBFekofEbi8H778ydu7fJEDKxE-tplv-sdweummd6v-text-logo-v1_QGtodW4yNzAwMw-_q75.jpeg?rlkey=odr6hrqyjjm6ivolpf2uprzzh&st=jqc74xxd&raw=1" class="w-full h-32 object-cover rounded-xl opacity-80 mix-blend-overlay">
+                    <div class="absolute inset-0 flex items-center justify-center gap-4">
+                        <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg animate-bounce text-2xl"><i class="fa-solid fa-cow text-amber-600"></i></div>
+                        <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg animate-bounce delay-100 text-xl"><i class="fa-solid fa-bowl-rice text-orange-500"></i></div>
+                        <div class="w-14 h-14 bg-white rounded-full flex items-center justify-center shadow-lg animate-bounce delay-200 text-3xl"><i class="fa-solid fa-umbrella-beach text-blue-500"></i></div>
+                    </div>
+                </div>
+
+                <button onclick="showPage('walkathon-map')" class="w-full bg-amber-500 text-gray-900 py-4 rounded-2xl font-black text-xl shadow-lg hover:bg-amber-400 transition animate-pulse">เริ่มออกเดินทาง!</button>
             </div>
         </div>
 
@@ -859,8 +876,8 @@
                         <p id="walkathon-total-text" class="text-xl font-black text-blue-600">0</p>
                     </div>
                 </div>
-                <!-- วาดกริดไอคอน -->
-                <div id="walkathon-icons-grid" class="grid grid-cols-4 gap-2"></div>
+                <!-- แก้ตรงคลาสจาก 4 เป็น 3 และเปลี่ยน gap เป็น 3 ครับ -->
+                <div id="walkathon-icons-grid" class="grid grid-cols-3 gap-3"></div>
             </div>
 
             <!-- ปุ่มเปิดแอป และ ส่งรูป AI -->
@@ -1897,7 +1914,7 @@
 
             if(scanRes && scanRes.success && scanRes.steps !== "Error" && scanRes.steps !== "") {
                 let detectedSteps = parseInt(scanRes.steps);
-                if(isNaN(detectedSteps)) { Swal.fire('ไม่สำเร็จ', 'AI มองไม่เห็นตัวเลข ลองอัปโหลดใหม่', 'error'); return; }
+                if(isNaN(detectedSteps)) { Swal.fire('ไม่สำเร็จ', 'ระบบมองไม่เห็นตัวเลข ลองอัปโหลดใหม่', 'error'); return; }
 
                 Swal.fire({
                     title: 'ตรวจพบก้าวเดิน',
@@ -1931,17 +1948,26 @@
                                 const showNextUnlocked = () => {
                                     if(i < newlyUnlocked.length) {
                                         let m = newlyUnlocked[i];
+                                        // สกัดรูปให้ใหญ่ยักษ์เหมือนหน้าอ่านรายละเอียด
+                                        let popHeader = (m.image && m.image.startsWith('http'))
+                                            ? `<img src="${m.image}" class="w-32 h-32 object-contain drop-shadow-xl">`
+                                            : `<i class="fa-solid ${m.image || 'fa-star'} text-7xl text-amber-500 drop-shadow-md"></i>`;
+
                                         Swal.fire({
-                                            title: `🎉 พิชิต ${m.steps.toLocaleString()} ก้าว!`,
+                                            title: `<div class="flex justify-center mb-4 mt-2">${popHeader}</div><span class="text-2xl font-black text-gray-800">🎉 พิชิต ${m.steps.toLocaleString()} ก้าว!</span>`,
                                             html: `
-                                                <div class="bg-blue-50 p-4 rounded-xl mb-3 text-left border border-blue-100">
-                                                    <h4 class="font-bold text-blue-900 text-sm mb-2">Q: ${m.q}</h4>
-                                                    <p class="text-blue-700 font-medium text-sm">A: ${m.a}</p>
+                                                <div class="bg-blue-50 p-5 rounded-2xl mb-3 text-left border border-blue-100 shadow-inner mt-2">
+                                                    <h4 class="font-black text-blue-900 text-base mb-3 leading-relaxed">Q: ${m.q}</h4>
+                                                    <p class="text-blue-700 font-medium text-base leading-relaxed"><i class="fa-solid fa-check-circle text-green-500 mr-2 text-lg"></i>A: ${m.a}</p>
                                                 </div>
                                             `,
-                                            icon: 'success',
+                                            icon: '', // ซ่อนไอคอนสำเร็จอันเล็กๆ ทิ้งไป เพื่อให้รูปใหญ่ของเราเด่นที่สุด
                                             confirmButtonText: 'เก็บเข้ากระดานสะสม',
-                                            confirmButtonColor: '#10b981'
+                                            confirmButtonColor: '#10b981',
+                                            customClass: { 
+                                                popup: 'rounded-[2rem] pb-6',
+                                                confirmButton: 'text-lg font-bold px-8 py-3 rounded-xl' 
+                                            }
                                         }).then(() => { i++; showNextUnlocked(); });
                                     } else {
                                         openWalkathonBoard(); // โชว์ครบแล้วค่อยรีเฟรชหน้ากระดาน
@@ -2558,23 +2584,20 @@
                 let boxClass = isUnlocked ? 'bg-white border-blue-300 text-blue-500 shadow-sm cursor-pointer hover:bg-blue-50' : 'bg-gray-100 border-gray-200 text-gray-300 opacity-70';
                 let clickAction = isUnlocked ? `onclick="showAchievementDetail(${index})"` : `onclick="Swal.fire('ยังไม่ปลดล็อก', 'สะสมให้ถึง ${m.steps.toLocaleString()} ก้าวเพื่อเปิดอ่าน', 'info')"`;
                 
-                // 🌟 ระบบตรวจจับอัตโนมัติ: ถ้าขึ้นต้นด้วย http ให้โชว์เป็นรูปภาพ ถ้าไม่ใช่ให้โชว์เป็นไอคอน
-                let iconDisplay = `<i class="fa-solid fa-lock text-2xl mb-1 text-gray-300"></i>`; // ค่าเริ่มต้นตอนล็อก
-                
+                // ขยายไอคอนและรูปภาพให้เบิ้มๆ 
+                let iconDisplay = `<i class="fa-solid fa-lock text-3xl mb-1 text-gray-300"></i>`; 
                 if (isUnlocked) {
                     if (m.image && m.image.startsWith('http')) {
-                        // ด่านที่มีรูปภาพจริง
-                        iconDisplay = `<img src="${m.image}" class="w-8 h-8 object-contain mb-1 drop-shadow-sm" alt="icon">`;
+                        iconDisplay = `<img src="${m.image}" class="w-16 h-16 object-contain mb-2 drop-shadow-md" alt="icon">`;
                     } else {
-                        // ด่านที่ยังไม่มีรูป ให้ดึงไอคอน Font Awesome มาแสดงแทน
-                        iconDisplay = `<i class="fa-solid ${m.image || 'fa-star'} text-2xl mb-1"></i>`;
+                        iconDisplay = `<i class="fa-solid ${m.image || 'fa-star'} text-4xl mb-2"></i>`;
                     }
                 }
-
+                
                 gridHtml += `
-                    <div ${clickAction} class="relative w-full aspect-square rounded-2xl border-2 flex flex-col items-center justify-center ${boxClass} transition transform ${isUnlocked ? 'hover:scale-105' : ''}">
+                    <div ${clickAction} class="relative w-full aspect-square rounded-2xl border-2 flex flex-col items-center justify-center ${boxClass} transition transform ${isUnlocked ? 'hover:scale-105' : ''} p-2">
                         ${iconDisplay}
-                        <p class="text-[9px] font-bold text-center leading-tight px-1">${(m.steps/1000).toFixed(0)}k</p>
+                        <p class="text-xs font-black text-center leading-tight px-1">${(m.steps/1000).toFixed(0)}k</p>
                     </div>
                 `;
             });
@@ -2592,20 +2615,26 @@
         // --- ฟังก์ชันเปิดป๊อปอัพแสดงความลับสถานที่ ---
         function showAchievementDetail(index) {
             const m = chonburiMilestones[index];
+            
+            // ทำให้รูปใหญ่เบิ้ม (w-32 h-32 หรือ text-7xl)
             let popHeader = (m.image && m.image.startsWith('http'))
-                ? `<img src="${m.image}" class="w-16 h-16 object-contain drop-shadow-md">`
-                : `<i class="fa-solid ${m.image || 'fa-star'} text-5xl text-blue-500 shadow-sm"></i>`;
+                ? `<img src="${m.image}" class="w-32 h-32 object-contain drop-shadow-xl">`
+                : `<i class="fa-solid ${m.image || 'fa-star'} text-7xl text-blue-500 drop-shadow-md"></i>`;
 
             Swal.fire({
-                title: `<div class="flex justify-center mb-3">${popHeader}</div><span class="text-lg font-black text-gray-800">พิชิต ${m.steps.toLocaleString()} ก้าว</span>`,
-                // ... (โค้ด html, confirmButton ข้างล่างปล่อยไว้เหมือนเดิมเลยครับ)
+                title: `<div class="flex justify-center mb-4 mt-2">${popHeader}</div><span class="text-2xl font-black text-gray-800">พิชิต ${m.steps.toLocaleString()} ก้าว!</span>`,
                 html: `
-                    <div class="bg-blue-50 p-4 rounded-2xl border border-blue-100 text-left">
-                        <p class="text-sm font-black text-blue-900 mb-2">Q: ${m.q}</p>
-                        <p class="text-sm font-medium text-blue-700 leading-relaxed"><i class="fa-solid fa-check text-green-500 mr-1"></i>A: ${m.a}</p>
+                    <div class="bg-blue-50 p-5 rounded-2xl border border-blue-100 text-left mt-2 shadow-inner">
+                        <p class="text-base font-black text-blue-900 mb-3 leading-relaxed">Q: ${m.q}</p>
+                        <p class="text-base font-medium text-blue-700 leading-relaxed"><i class="fa-solid fa-check-circle text-green-500 mr-2 text-lg"></i>A: ${m.a}</p>
                     </div>
                 `,
-                confirmButtonText: 'ยอดเยี่ยม!', confirmButtonColor: '#3b82f6', customClass: { popup: 'rounded-3xl' }
+                confirmButtonText: 'ปิด', // เปลี่ยนคำตรงนี้
+                confirmButtonColor: '#10b981',
+                customClass: { 
+                    popup: 'rounded-[2rem] pb-6',
+                    confirmButton: 'text-lg font-bold px-10 py-3 rounded-xl' // ขยายปุ่มให้ใหญ่ขึ้น
+                }
             });
         }
 
