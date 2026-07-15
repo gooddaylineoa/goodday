@@ -1878,14 +1878,15 @@
                 try {
                     base64Compressed = await resizeImageForAI(file);
                     scanRes = await callAPI("scanStepsAI", { imageRaw: base64Compressed });
-                    if (scanRes && scanRes.success) break; // ต้องเช็ค success ด้วย ไม่ใช่แค่มี object
+                    if (scanRes && scanRes.success) break;
                 } catch (error) {
-                if (attempt >= maxRetries) {
-                    btn.innerHTML = originalText; btn.disabled = false;
-                    const errMsg = (scanRes && scanRes.message) ? scanRes.message : 'ระบบประมวลผลไม่ได้ ลองใหม่อีกครั้ง';
-                    Swal.fire('ขัดข้อง', errMsg, 'error'); return;
+                    if (attempt >= maxRetries) {
+                        btn.innerHTML = originalText; btn.disabled = false;
+                        const errMsg = (scanRes && scanRes.message) ? scanRes.message : 'ระบบประมวลผลไม่ได้ ลองใหม่อีกครั้ง';
+                        Swal.fire('ขัดข้อง', errMsg, 'error'); return;
+                    }
+                    await new Promise(r => setTimeout(r, 1000));
                 }
-                await new Promise(r => setTimeout(r, 1000));
             }
 
             btn.innerHTML = originalText; btn.disabled = false;
