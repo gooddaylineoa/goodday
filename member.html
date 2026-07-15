@@ -1880,14 +1880,18 @@
             
             let attempt = 0, maxRetries = 3, scanRes = null;
             while (attempt < maxRetries) {
-            attempt++;
-            try {
-                base64Compressed = await resizeImageForAI(file);
-                scanRes = await callAPI("scanStepsAI", { imageRaw: base64Compressed });
-                if (scanRes && scanRes.success && scanRes.steps !== "Error" && scanRes.steps !== "") break;
-            } catch (error) { ... }
-            if (attempt < maxRetries) await new Promise(r => setTimeout(r, 800));
-        }
+                attempt++;
+                try {
+                    scanRes = await callAPI("scanStepsAI", { imageRaw: base64Compressed });
+                    if (scanRes && scanRes.success && scanRes.steps !== "Error" && scanRes.steps !== "") break;
+                } catch (error) {
+                    if (attempt >= maxRetries) {
+                        btn.innerHTML = originalText; btn.disabled = false;
+                        Swal.fire('ขัดข้อง', 'ระบบประมวลผลไม่ได้ ลองใหม่อีกครั้ง', 'error'); return;
+                    }
+                }
+                if (attempt < maxRetries) await new Promise(r => setTimeout(r, 800));
+            }
             
             btn.innerHTML = originalText; btn.disabled = false;
 
@@ -1896,7 +1900,7 @@
                 if(isNaN(detectedSteps)) { Swal.fire('ไม่สำเร็จ', 'AI มองไม่เห็นตัวเลข ลองอัปโหลดใหม่', 'error'); return; }
 
                 Swal.fire({
-                    title: 'ตรวจพบก้าวเดิน 🤖',
+                    title: 'ตรวจพบก้าวเดิน',
                     html: `<div class="text-5xl font-black text-blue-600 mb-2">${detectedSteps.toLocaleString()}</div><p class="text-sm font-bold text-gray-500 mb-2">ก้าว</p>`,
                     showCancelButton: true, showDenyButton: true, 
                     confirmButtonColor: '#3b82f6', denyButtonColor: '#ef4444', cancelButtonColor: '#d1d5db',  
