@@ -1831,10 +1831,10 @@
        // ==========================================
         // 🛠️ ฟังก์ชันบีบอัดรูปภาพอัตโนมัติ (เพิ่มกลับเข้าไปเพื่อให้ AI อ่านภาพได้)
         // ==========================================
-        function resizeImageForAI(file, maxSize = 800) {
+        function resizeImageForAI(file, maxSize = 1200) {  // ⭐ เพิ่มจาก 800 เป็น 1200
             return new Promise(async (resolve, reject) => {
                 try {
-                    const bitmap = await createImageBitmap(file); // decode ตรงๆ ไม่ผ่าน <img>
+                    const bitmap = await createImageBitmap(file);
                     let { width, height } = bitmap;
                     if (width > height) {
                         if (width > maxSize) { height = Math.round(height * maxSize / width); width = maxSize; }
@@ -1845,10 +1845,8 @@
                     canvas.width = width; canvas.height = height;
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(bitmap, 0, 0, width, height);
-                    resolve(canvas.toDataURL('image/jpeg', 0.6).split(',')[1]);
-                } catch (err) {
-                    reject(err);
-                }
+                    resolve(canvas.toDataURL('image/jpeg', 0.8).split(',')[1]);  // ⭐ เพิ่มจาก 0.6 เป็น 0.8
+                } catch (err) { reject(err); }
             });
         }
 
@@ -1871,24 +1869,26 @@
 
             btn.disabled = true; let originalText = btn.innerHTML;
             btn.innerHTML = '<i class="fa-solid fa-robot fa-bounce mr-2"></i>กำลังประมวลผล...';
-
-            let attempt = 0, maxRetries = 2, scanRes = null, base64Compressed = null;
-            while (attempt < maxRetries) {
-                attempt++;
-                try {
-                    base64Compressed = await resizeImageForAI(file);
-                    scanRes = await callAPI("scanStepsAI", { imageRaw: base64Compressed });
-                    if (scanRes && scanRes.success) break;
-                } catch (error) {
-                    if (attempt >= maxRetries) {
-                        btn.innerHTML = originalText; btn.disabled = false;
-                        const errMsg = (scanRes && scanRes.message) ? scanRes.message : 'ระบบประมวลผลไม่ได้ ลองใหม่อีกครั้ง';
-                        Swal.fire('ขัดข้อง', errMsg, 'error'); return;
-                    }
-                    await new Promise(r => setTimeout(r, 1000));
-                }
+            
+            let base64Compressed;
+            try {
+                base64Compressed = await resizeImageForAI(file);
+            } catch (err) {
+                btn.innerHTML = originalText; btn.disabled = false;
+                Swal.fire('ขัดข้อง', 'ไม่สามารถอ่านไฟล์รูปภาพได้ ลองอัปโหลดใหม่', 'error'); return;
             }
-
+            
+            let attempt = 0, maxRetries = 3, scanRes = null;
+            while (attempt < maxRetries) {
+            attempt++;
+            try {
+                base64Compressed = await resizeImageForAI(file);
+                scanRes = await callAPI("scanStepsAI", { imageRaw: base64Compressed });
+                if (scanRes && scanRes.success && scanRes.steps !== "Error" && scanRes.steps !== "") break;
+            } catch (error) { ... }
+            if (attempt < maxRetries) await new Promise(r => setTimeout(r, 800));
+        }
+            
             btn.innerHTML = originalText; btn.disabled = false;
 
             if(scanRes && scanRes.success && scanRes.steps !== "Error" && scanRes.steps !== "") {
