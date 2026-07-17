@@ -865,14 +865,14 @@
             </div>
 
             <div class="bg-white rounded-3xl p-5 shadow-sm border border-blue-100 mb-6">
-                <div class="flex justify-between items-end mb-4">
-                    <h3 class="font-bold text-gray-800 text-lg">ตารางของสะสม <span class="text-sm font-normal text-gray-400">(22 ไอเทม)</span></h3>
-                    <div class="text-right">
+                <div class="flex justify-between items-start mb-6">
+                    <h3 class="font-bold text-gray-800 text-lg leading-tight w-1/2">ตารางของสะสม<br><span class="text-sm font-medium text-gray-400">(22 ไอเทม)</span></h3>
+                    <div class="text-right w-1/2">
                         <p class="text-xs text-gray-400 font-bold uppercase">ก้าวสะสมรวม</p>
                         <p id="walkathon-total-text" class="text-4xl font-black text-blue-600 leading-none mt-1">0</p>
                     </div>
                 </div>
-                <div id="walkathon-icons-grid" class="grid grid-cols-3 gap-3"></div>
+                <div id="walkathon-icons-grid" class="grid grid-cols-3 gap-4"></div>
             </div>
 
             <button onclick="openStepsApp()" class="w-full mb-4 bg-gray-900 text-white font-bold py-4 rounded-2xl shadow-sm text-base hover:bg-black transition">
@@ -2572,26 +2572,36 @@
                 fileInputEl.disabled = false;
             }
         
+            // วาด 22 กล่องแบบใหม่ (รูปคือกรอบ ตัวเลขอยู่ข้างล่าง)
             let gridHtml = '';
             chonburiMilestones.forEach((m, index) => {
                 let isUnlocked = globalMarchTotal >= m.steps;
-                let boxClass = isUnlocked ? 'bg-white border-blue-300 text-blue-500 shadow-sm cursor-pointer hover:bg-blue-50' : 'bg-gray-100 border-gray-200 text-gray-300 opacity-70';
                 let clickAction = isUnlocked ? `onclick="showAchievementDetail(${index})"` : `onclick="Swal.fire('ยังไม่ปลดล็อก', 'สะสมให้ถึง ${m.steps.toLocaleString()} ก้าวเพื่อเปิดอ่าน', 'info')"`;
                 
-                // ขยายไอคอนและรูปภาพให้เบิ้มๆ 
-                let iconDisplay = `<i class="fa-solid fa-lock text-3xl mb-1 text-gray-300"></i>`; 
+                // จัดการแสดงผลรูป/ไอคอน
+                let iconDisplay = `<i class="fa-solid fa-lock text-4xl text-gray-300"></i>`; 
+                let boxStyle = 'bg-gray-100 border-2 border-gray-200 opacity-60'; // สไตล์ตอนยังล็อก
+
                 if (isUnlocked) {
                     if (m.image && m.image.startsWith('http')) {
-                        iconDisplay = `<img src="${m.image}" class="w-16 h-16 object-contain mb-2 drop-shadow-md" alt="icon">`;
+                        // 📸 ถ้ารูปมาแล้ว ให้รูปขยายเต็มพื้นที่ไปเลย (เป็นกรอบในตัว)
+                        boxStyle = 'bg-transparent shadow-md';
+                        iconDisplay = `<img src="${m.image}" class="w-full h-full object-cover rounded-2xl" alt="achievement">`;
                     } else {
-                        iconDisplay = `<i class="fa-solid ${m.image || 'fa-star'} text-4xl mb-2"></i>`;
+                        // 🎨 ถ้ายังเป็นไอคอน ใส่พื้นหลังสีขาวและขยายไอคอนให้ใหญ่สุดๆ
+                        boxStyle = 'bg-white border-2 border-blue-200 shadow-md';
+                        iconDisplay = `<i class="fa-solid ${m.image || 'fa-star'} text-5xl text-blue-500 drop-shadow-sm"></i>`;
                     }
                 }
                 
                 gridHtml += `
-                    <div ${clickAction} class="relative w-full aspect-square rounded-2xl border-2 flex flex-col items-center justify-center ${boxClass} transition transform ${isUnlocked ? 'hover:scale-105' : ''} p-2">
-                        ${iconDisplay}
-                        <p class="text-sm font-black text-center leading-tight px-1 mt-1">${(m.steps/1000).toFixed(0)}k</p>
+                    <div ${clickAction} class="flex flex-col items-center justify-start cursor-pointer transition transform ${isUnlocked ? 'hover:scale-105' : ''}">
+                        <!-- กล่องรูปภาพ -->
+                        <div class="w-full aspect-square rounded-2xl flex items-center justify-center overflow-hidden ${boxStyle}">
+                            ${iconDisplay}
+                        </div>
+                        <!-- ตัวเลขก้าวเดินด้านล่าง (ใหญ่และเด่นมาก) -->
+                        <p class="text-xl font-black text-center mt-2 tracking-wide ${isUnlocked ? 'text-blue-600' : 'text-gray-400'}">${(m.steps/1000).toFixed(0)}k</p>
                     </div>
                 `;
             });
