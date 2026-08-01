@@ -1900,7 +1900,9 @@
                 base64Compressed = await resizeImageForAI(file);
             } catch (err) {
                 btn.innerHTML = originalText; btn.disabled = false;
-                Swal.fire('ขัดข้อง', 'ไม่สามารถอ่านไฟล์รูปภาพได้ ลองกดปุ่มอัปโหลดใหม่อีกครั้ง', 'error'); return;
+                // ดึงข้อความ err.message ที่ส่งมาจาก reject() มาแสดงผล
+                Swal.fire('ขัดข้อง', err.message || 'ไม่สามารถอ่านไฟล์รูปภาพได้', 'error'); 
+                return;
             }
             
             let attempt = 0, maxRetries = 3, scanRes = null;
