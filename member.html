@@ -2016,7 +2016,14 @@
                     }
                 });
             } else {
-                Swal.fire('ภาพไม่ชัดเจน', 'กรุณาครอปหรือใช้ภาพที่ตัวเลขชัดเจนขึ้น', 'error');
+                // ดึงข้อความ Error จากหลังบ้านมาแสดง ถ้าไม่มีให้ใช้ข้อความเริ่มต้น
+                let errorMsg = 'กรุณาครอปหรือใช้ภาพที่ตัวเลขชัดเจนขึ้น';
+                if (scanRes && scanRes.message) {
+                    errorMsg = scanRes.message; 
+                }
+                
+                Swal.fire('ประมวลผลไม่สำเร็จ', errorMsg, 'error');
+                console.log("Debug ข้อมูลหลังบ้าน:", scanRes); // ปริ้นทิ้งไว้ใน Console เผื่อดูในคอม
             }
         }
 
