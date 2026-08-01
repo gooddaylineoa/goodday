@@ -1920,13 +1920,33 @@
             
             btn.innerHTML = originalText; btn.disabled = false;
 
-            if(scanRes && scanRes.success && scanRes.steps !== "Error" && scanRes.steps !== "") {
-                let detectedSteps = parseInt(scanRes.steps);
-                if(isNaN(detectedSteps)) { Swal.fire('ไม่สำเร็จ', 'ระบบมองไม่เห็นตัวเลข ลองอัปโหลดใหม่', 'error'); return; }
+            if(scanRes && scanRes.success && scanRes.scanData && scanRes.scanData.success) {
+                let scanData = scanRes.scanData;
+                let detectedSteps = scanData.detected_steps;
+
+                // ตรวจสอบข้อมูลขั้นพื้นฐาน
+                if(detectedSteps === null || isNaN(parseInt(detectedSteps))) {
+                    Swal.fire('ไม่สำเร็จ', 'ระบบมองไม่เห็นตัวเลขก้าวเดิน ลองอัปโหลดใหม่', 'error'); return;
+                }
+
+                // 🤩 แสดงข้อมูลสุขภาพเพิ่มเติม (Kcal, Km) ในหน้าต่าง SweetAlert
+                let extraInfoHtml = '';
+                if(scanData.metrics) {
+                    const metrics = scanData.metrics;
+                    extraInfoHtml = `
+                    <div class="grid grid-cols-2 gap-3 text-sm text-gray-600 border-t border-gray-100 pt-3 mt-1">
+                        ${metrics.kcal ? `<div><i class="fa-solid fa-fire text-amber-500 mr-1.5"></i>แคลอรี: <span class="font-bold text-gray-800">${metrics.kcal} kcal</span></div>` : ''}
+                        ${metrics.km ? `<div><i class="fa-solid fa-road text-emerald-500 mr-1.5"></i>ระยะทาง: <span class="font-bold text-gray-800">${metrics.km} กม.</span></div>` : ''}
+                    </div>`;
+                }
 
                 Swal.fire({
                     title: 'ตรวจพบก้าวเดิน',
-                    html: `<div class="text-5xl font-black text-blue-600 mb-2">${detectedSteps.toLocaleString()}</div><p class="text-sm font-bold text-gray-500 mb-2">ก้าว</p>`,
+                    html: `
+                        <div class="text-5xl font-black text-blue-600 mb-2">${parseInt(detectedSteps).toLocaleString()}</div>
+                        <p class="text-sm font-bold text-gray-500 mb-2">ก้าว</p>
+                        ${extraInfoHtml}
+                    `,
                     showCancelButton: true, showDenyButton: true, 
                     confirmButtonColor: '#3b82f6', denyButtonColor: '#ef4444', cancelButtonColor: '#d1d5db',  
                     confirmButtonText: 'ยืนยัน', denyButtonText: 'ก้าวไม่ตรง', cancelButtonText: 'ยกเลิก',
