@@ -1866,16 +1866,14 @@
                         canvas.width = width; canvas.height = height;
                         const ctx = canvas.getContext('2d');
                         ctx.drawImage(img, 0, 0, width, height);
-                        
-                        // ดึงข้อมูลรูปภาพออกมา
+        
                         const base64Data = canvas.toDataURL('image/jpeg', 0.8).split(',')[1];
-                        
-                        // 🧹 คืนหน่วยความจำ (Garbage Collection) ป้องกัน LIFF ค้างเมื่อใช้หลายวัน
+        
                         ctx.clearRect(0, 0, width, height);
-                        canvas.width = 0; 
+                        canvas.width = 0;
                         canvas.height = 0;
-                        img.src = ''; 
-                        
+                        img.src = '';
+        
                         resolve(base64Data);
                     };
                     img.onerror = function() {
@@ -1883,10 +1881,12 @@
                     };
                     img.src = e.target.result;
                 };
-                reader.onerror = function() { 
-                reject(new Error('ไม่สามารถอ่านไฟล์นี้ได้ อาจเป็นเพราะไฟล์เป็นรูปแบบ HEIC จากกล้อง iPhone กรุณาแคปหน้าจอ (screenshot) แทนการเลือกรูปจากอัลบั้มโดยตรง')); 
-            };
-        }
+                reader.onerror = function() {
+                    reject(new Error('ไม่สามารถอ่านไฟล์นี้ได้ อาจเป็นเพราะไฟล์เป็นรูปแบบ HEIC จากกล้อง iPhone กรุณาแคปหน้าจอ (screenshot) แทนการเลือกรูปจากอัลบั้มโดยตรง'));
+                };
+                reader.readAsDataURL(file);   // ✅ เพิ่มบรรทัดนี้ (หายไปในของเดิม)
+            });   // ✅ ปิด Promise executor
+        }         // ✅ ปิดฟังก์ชัน resizeImageForAI
 
         function preprocessForOCR(imgEl) {
             const canvas = document.createElement('canvas');
