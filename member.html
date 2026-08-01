@@ -9,7 +9,8 @@
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation"></script>
-    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap');
@@ -1122,6 +1123,17 @@
             </div>
         </div> 
 
+        <div id="crop-modal" class="fixed inset-0 bg-black/80 z-[9999] hidden flex-col items-center justify-center p-4">
+        <div class="bg-white rounded-2xl p-4 w-full max-w-sm">
+            <p class="text-sm font-bold text-gray-700 mb-3 text-center">ลากกรอบให้ครอบเฉพาะ "ตัวเลขก้าวเดิน" เท่านั้น</p>
+            <div class="max-h-[60vh] overflow-hidden">
+                <img id="crop-target-img" class="max-w-full">
+            </div>
+            <button onclick="confirmCrop()" class="w-full bg-blue-500 text-white py-3 rounded-xl font-bold mt-4">ยืนยันกรอบ</button>
+            <button onclick="cancelCrop()" class="w-full text-gray-400 text-xs font-bold mt-2">ยกเลิก</button>
+        </div>
+    </div>
+
     </div> <div id="recap-overlay" class="fixed inset-0 bg-gray-900 z-[9999] hidden flex-col font-['Sarabun']">
         <div class="absolute top-4 left-4 right-12 flex gap-1 z-50" id="recap-progress-container"></div>
         <button onclick="closeRecap()" class="absolute top-2 right-2 w-10 h-10 text-white text-2xl z-50 drop-shadow-md hover:text-gray-300"><i class="fa-solid fa-xmark"></i></button>
@@ -1871,14 +1883,45 @@
                     };
                     img.src = e.target.result;
                 };
-                reader.onerror = function() { reject(new Error('ไม่สามารถอ่านไฟล์ได้')); };
-                reader.readAsDataURL(file);
-            });
+                reader.onerror = function() { 
+                reject(new Error('ไม่สามารถอ่านไฟล์นี้ได้ อาจเป็นเพราะไฟล์เป็นรูปแบบ HEIC จากกล้อง iPhone กรุณาแคปหน้าจอ (screenshot) แทนการเลือกรูปจากอัลบั้มโดยตรง')); 
+            };
+        }
+
+        function preprocessForOCR(imgEl) {
+            const canvas = document.createElement('canvas');
+            // ขยายภาพขึ้น 2 เท่า - Tesseract อ่านตัวเลขตัวใหญ่ชัดเจนได้แม่นกว่าตัวเล็ก
+            canvas.width = imgEl.width * 2;
+            canvas.height = imgEl.height * 2;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(imgEl, 0, 0, canvas.width, canvas.height);
+        
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const data = imageData.data;
+        
+            // คำนวณความสว่างเฉลี่ยทั้งภาพ เพื่อเช็คว่าเป็นธีมมืดหรือสว่าง
+            let totalBrightness = 0;
+            for (let i = 0; i < data.length; i += 4) {
+                totalBrightness += (data[i] + data[i+1] + data[i+2]) / 3;
+            }
+            const avgBrightness = totalBrightness / (data.length / 4);
+            const isDarkTheme = avgBrightness < 128;
+        
+            // แปลงเป็นขาวดำ + threshold (binarize) ให้ตัวอักษรเด่นชัด
+            for (let i = 0; i < data.length; i += 4) {
+                let gray = (data[i] + data[i+1] + data[i+2]) / 3;
+                if (isDarkTheme) gray = 255 - gray; // กลับสีถ้าธีมมืด ให้กลายเป็นตัวดำพื้นขาวเสมอ
+                const value = gray > 140 ? 255 : 0; // threshold ปรับตัวเลขนี้ได้ถ้ายังไม่ชัด
+                data[i] = data[i+1] = data[i+2] = value;
+            }
+            ctx.putImageData(imageData, 0, 0);
+            return canvas;
         }
 
         async function ocrDetectSteps(imageElement) {
             const result = await Tesseract.recognize(imageElement, 'eng', {
-                tessedit_char_whitelist: '0123456789'
+                tessedit_char_whitelist: '0123456789',
+                tessedit_pageseg_mode: '11' // 11 = Sparse Text: หาตัวอักษร/ตัวเลขที่กระจายอยู่คนละจุด
             });
             const numberWords = result.data.words
                 .filter(w => /^\d{2,}$/.test(w.text))
@@ -1893,9 +1936,10 @@
             return numberWords[0].value;
         }
 
-        // ==========================================
-        // 🤖 อัปเกรดปุ่ม AI ตรวจสอบภาพ (ดักจับการปลดล็อกใหม่)
-        // ==========================================
+        let pendingFile = null;
+        let pendingBase64 = null;
+        let pendingBtn = null;
+        
         async function uploadStepImageAI(btn) {
             if(checkDailyLimit('march')) {
                 Swal.fire('อัปโหลดไปแล้ว', 'คุณสามารถอัปโหลดหลักฐานก้าวเดินได้วันละ 1 ครั้งเท่านั้น', 'info');
@@ -1904,47 +1948,81 @@
             const fileInput = document.getElementById('march-image-ai');
             if (!fileInput.files.length) { Swal.fire('ลืมแนบรูป', 'กรุณาอัปโหลดรูปหน้าจอ StepsApp', 'warning'); return; }
             const file = fileInput.files[0];
+            if (file.type === 'image/heic' || file.type === 'image/heif' || /\.heic$|\.heif$/i.test(file.name)) {
+                Swal.fire('ไฟล์ไม่รองรับ', 'กรุณาแคปหน้าจอ (screenshot) แทนการเลือกรูปจากกล้องโดยตรง', 'warning');
+                return;
+            }
             if(file.size > 4*1024*1024) { Swal.fire('ไฟล์ใหญ่เกินไป', 'กรุณาลดขนาดไม่เกิน 4MB', 'warning'); return; }
         
             btn.disabled = true; let originalText = btn.innerHTML;
-            btn.innerHTML = '<i class="fa-solid fa-magnifying-glass fa-bounce mr-2"></i>กำลังอ่านตัวเลข...';
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>กำลังโหลดรูป...';
         
-            let base64Compressed, imgEl;
+            let base64Compressed;
             try {
-                base64Compressed = await resizeImageForAI(file); // ใช้ฟังก์ชันเดิมที่มีอยู่แล้ว
-                imgEl = new Image();
-                imgEl.src = "data:image/jpeg;base64," + base64Compressed;
-                await new Promise(r => imgEl.onload = r);
+                base64Compressed = await resizeImageForAI(file);
             } catch (err) {
                 btn.innerHTML = originalText; btn.disabled = false;
                 Swal.fire('ขัดข้อง', err.message || 'ไม่สามารถอ่านไฟล์รูปภาพได้', 'error');
                 return;
             }
         
+            // เก็บค่าไว้ใช้ต่อตอนกดยืนยันกรอบ
+            pendingFile = file;
+            pendingBase64 = base64Compressed;
+            pendingBtn = btn;
+            btn.innerHTML = originalText; btn.disabled = false;
+        
+            openCropModal(base64Compressed);
+        }
+
+        let cropperInstance = null;
+
+        function openCropModal(base64Compressed) {
+            const modal = document.getElementById('crop-modal');
+            const imgTarget = document.getElementById('crop-target-img');
+            imgTarget.src = "data:image/jpeg;base64," + base64Compressed;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            imgTarget.onload = () => {
+                if (cropperInstance) cropperInstance.destroy();
+                cropperInstance = new Cropper(imgTarget, { viewMode: 1, autoCropArea: 0.4 });
+            };
+        }
+        
+        function cancelCrop() {
+            if (cropperInstance) { cropperInstance.destroy(); cropperInstance = null; }
+            document.getElementById('crop-modal').classList.add('hidden');
+            document.getElementById('crop-modal').classList.remove('flex');
+            pendingFile = null; pendingBase64 = null; pendingBtn = null;
+        }
+        
+        async function confirmCrop() {
+            const croppedCanvas = cropperInstance.getCroppedCanvas();
+            cropperInstance.destroy(); cropperInstance = null;
+            document.getElementById('crop-modal').classList.add('hidden');
+            document.getElementById('crop-modal').classList.remove('flex');
+        
+            const btn = pendingBtn;
+            const file = pendingFile;
+            const base64Compressed = pendingBase64;
+            btn.disabled = true; let originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-magnifying-glass fa-bounce mr-2"></i>กำลังอ่านตัวเลข...';
+        
             let detectedSteps = null;
-            try {
-                detectedSteps = await ocrDetectSteps(imgEl);
-            } catch (e) {
-                detectedSteps = null;
-            }
+            try { detectedSteps = await ocrDetectSteps(croppedCanvas); } catch (e) { detectedSteps = null; }
         
             btn.innerHTML = originalText; btn.disabled = false;
         
-            // ถ้า OCR หาตัวเลขไม่เจอ หรือมั่นใจต่ำ ให้ผู้ใช้กรอกเอง (กันไม่ให้ระบบตัน)
             if (detectedSteps === null) {
                 const { value: manualSteps } = await Swal.fire({
-                    title: 'ระบบอ่านตัวเลขไม่ชัด',
-                    input: 'number',
-                    inputLabel: 'กรุณากรอกจำนวนก้าวเดินด้วยตนเอง',
-                    inputPlaceholder: 'เช่น 8500',
-                    showCancelButton: true,
-                    confirmButtonText: 'ยืนยัน', cancelButtonText: 'ยกเลิก'
+                    title: 'ระบบอ่านตัวเลขไม่ชัด', input: 'number',
+                    inputLabel: 'กรุณากรอกจำนวนก้าวเดินด้วยตนเอง', inputPlaceholder: 'เช่น 8500',
+                    showCancelButton: true, confirmButtonText: 'ยืนยัน', cancelButtonText: 'ยกเลิก'
                 });
                 if (!manualSteps) return;
                 detectedSteps = parseInt(manualSteps);
             }
         
-            // ใช้ SweetAlert ยืนยันแบบเดิมที่มีอยู่แล้ว (โค้ดส่วนนี้เหมือนเดิม ไม่ต้องแก้)
             Swal.fire({
                 title: 'ตรวจพบก้าวเดิน',
                 html: `<div class="text-5xl font-black text-blue-600 mb-2">${detectedSteps.toLocaleString()}</div><p class="text-sm font-bold text-gray-500 mb-2">ก้าว (ถ้าไม่ตรง กดแก้ไขได้)</p>`,
@@ -1962,12 +2040,36 @@
                     btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> บันทึกข้อมูล...'; btn.disabled = true;
                     const saveRes = await callAPI("saveMarchRecord", {
                         memberId: currentUser.memberId, steps: detectedSteps,
-                        imageRaw: base64Compressed, imageName: file.name, isFlagged: false
+                        imageRaw: base64Compressed, imageName: file.name, isFlagged: result.isDenied
                     });
                     btn.innerHTML = originalText; btn.disabled = false;
+        
                     if(saveRes.success) {
                         setDailyLimit('march');
-                        // ...ส่วน logic ปลดล็อก achievement เหมือนเดิมทุกอย่าง ก็อปมาวางต่อได้เลย
+                        let newTotal = globalMarchTotal + detectedSteps;
+                        let newlyUnlocked = chonburiMilestones.filter(m => globalMarchTotal < m.steps && newTotal >= m.steps);
+                        globalMarchTotal = newTotal;
+        
+                        if (newlyUnlocked.length > 0) {
+                            let i = 0;
+                            const showNextUnlocked = () => {
+                                if(i < newlyUnlocked.length) {
+                                    let m = newlyUnlocked[i];
+                                    let popHeader = (m.image && m.image.startsWith('http'))
+                                        ? `<img src="${m.image}" class="w-32 h-32 object-contain drop-shadow-xl">`
+                                        : `<i class="fa-solid ${m.image || 'fa-star'} text-7xl text-amber-500 drop-shadow-md"></i>`;
+                                    Swal.fire({
+                                        title: `<div class="flex justify-center mb-4 mt-2">${popHeader}</div><span class="text-2xl font-black text-gray-800">🎉 พิชิต ${m.steps.toLocaleString()} ก้าว!</span>`,
+                                        html: `<div class="bg-blue-50 p-5 rounded-2xl mb-3 text-left border border-blue-100 shadow-inner mt-2"><h4 class="font-black text-blue-900 text-base mb-3 leading-relaxed">Q: ${m.q}</h4><p class="text-blue-700 font-medium text-base leading-relaxed"><i class="fa-solid fa-check-circle text-green-500 mr-2 text-lg"></i>A: ${m.a}</p></div>`,
+                                        icon: '', confirmButtonText: 'เก็บเข้ากระดานสะสม', confirmButtonColor: '#10b981',
+                                        customClass: { popup: 'rounded-[2rem] pb-6', confirmButton: 'text-lg font-bold px-8 py-3 rounded-xl' }
+                                    }).then(() => { i++; showNextUnlocked(); });
+                                } else { openWalkathonBoard(); }
+                            };
+                            showNextUnlocked();
+                        } else {
+                            Swal.fire('เยี่ยมมาก!', `บันทึก <b>${detectedSteps.toLocaleString()}</b> ก้าวเรียบร้อย`, 'success').then(() => { openWalkathonBoard(); });
+                        }
                     } else {
                         Swal.fire('ข้อผิดพลาด', saveRes.message, 'error');
                     }
