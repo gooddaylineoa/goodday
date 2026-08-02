@@ -271,7 +271,8 @@
             liff.init({ liffId: LIFF_ID_SHOP }).then(() => {
                 if (liff.isLoggedIn()) {
                     liff.getProfile().then(async profile => {
-                        const res = await callAPI("autoLoginByUid", { uid: profile.userId });
+                        const idToken = liff.getIDToken(); // ✅ ดึง ID Token มาด้วย
+                        const res = await callAPI("autoLoginByUid", { uid: profile.userId, idToken: idToken });
                         if (res && res.memberId) {
                             currentUser = res;
                             localStorage.setItem('gooddaySession', JSON.stringify(currentUser));
