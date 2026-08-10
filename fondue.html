@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Goodday แจ้งเหตุ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+    <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+    <script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Sarabun', sans-serif; background-color: #F3F4F6; }
+        .theme-pink { background-color: #d81b60; }
+        .theme-text { color: #d81b60; }
+        .theme-border { border-color: #d81b60; }
+
+        .page-section { display: none; animation: fadeIn 0.3s ease-out; }
+        .page-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .cat-radio:checked + label { background-color: #fce4ec; border-color: #d81b60; color: #d81b60; font-weight: bold; }
+        .form-input { width: 100%; border: 1px solid #D1D5DB; border-radius: 0.75rem; padding: 0.75rem; font-size: 0.875rem; background-color: white; font-family: 'Sarabun'; color: #374151; transition: all 0.2s; }
+        .form-input:focus { outline: none; border-color: #d81b60; box-shadow: 0 0 0 2px #fce4ec; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        #liff-loading { position:fixed; inset:0; background:#fff; z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; }
+
+        .leaflet-container { z-index: 10 !important; font-family: 'Sarabun'; }
+
+        .stat-pill { padding: 0.9rem 0.5rem; border-radius: 1rem; text-align:center; font-weight:800; }
+        .star-btn { font-size: 1.75rem; color:#e5e7eb; transition: color .15s; cursor:pointer; }
+        .star-btn.active { color:#f59e0b; }
+    </style>
+</head>
+<body class="antialiased text-gray-800 pb-20">
+
+    <div id="liff-loading">
+        <div class="w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center mb-2">
+            <i class="fa-solid fa-bullhorn text-3xl text-pink-500"></i>
+        </div>
+        <p class="text-gray-500 font-medium text-sm">กำลังโหลดข้อมูล...</p>
+    </div>
+
+    <div class="max-w-md mx-auto bg-white min-h-screen shadow-lg relative">
+
+        <div class="theme-pink text-white p-4 sticky top-0 z-50 shadow-md flex justify-between items-center">
+            <h1 class="text-lg font-semibold tracking-wide"><i class="fa-solid fa-bullhorn mr-2"></i>แจ้งปัญหาชุมชน</h1>
+            <div id="login-status" class="w-9 h-9 bg-white rounded-full flex items-center justify-center theme-text font-bold shadow-sm transition">
+                <i class="fa-solid fa-spinner fa-spin"></i>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 📊 PAGE 1: DASHBOARD (สไตล์ Traffy Fondue)                    -->
+        <!-- ============================================================ -->
+        <div id="page-dashboard" class="page-section active bg-gray-50 min-h-screen">
+
+            <div class="bg-white p-3 border-b border-gray-100 flex flex-wrap gap-x-3 gap-y-1 items-center text-[11px] text-gray-500 font-medium">
+                <span id="dash-month" class="font-bold text-gray-700">-</span>
+                <span>รับแจ้ง <b id="dash-monthcount" class="theme-text">0</b> จาก <b id="dash-total" class="theme-text">0</b> เรื่อง</span>
+                <span class="text-gray-300">|</span>
+                <span>คำชม <b id="dash-positive" class="text-green-600">0%</b></span>
+                <span class="text-gray-300">|</span>
+                <span class="flex items-center gap-1"><i class="fa-solid fa-star text-amber-400"></i> <b id="dash-avgrating">0.00</b> (<span id="dash-ratingcount">0</span> เรื่อง)</span>
+            </div>
+
+            <!-- Feed การ์ดที่ได้รับคะแนนแล้ว -->
+            <div class="p-3">
+                <div id="feed-scroll" class="flex gap-3 overflow-x-auto no-scrollbar pb-1">
+                    <div class="text-center text-gray-400 py-8 w-full">
+                        <i class="fa-solid fa-spinner fa-spin theme-text"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search / Filter -->
+            <div class="px-3 pb-2 flex gap-2">
+                <input type="text" id="dash-search" oninput="renderFeed()" class="form-input text-xs flex-1" placeholder="ค้นหาคำสำคัญ...">
+                <select id="dash-category" onchange="renderFeed()" class="form-input text-xs w-32">
+                    <option value="">ทุกหมวดหมู่</option>
+                    <option value="กิจกรรม">กิจกรรม</option>
+                    <option value="สถานที่">สถานที่</option>
+                    <option value="ระบบเว็บไซต์">เว็บไซต์</option>
+                    <option value="อื่นๆ">อื่นๆ</option>
+                </select>
+            </div>
+
+            <!-- แผนที่ -->
+            <div class="px-3 pb-2">
+                <div class="flex gap-2 mb-2">
+                    <button onclick="setMapMode('markers')" id="map-btn-markers" class="flex-1 text-xs font-bold py-2 rounded-full border theme-border theme-text bg-pink-50">Marker</button>
+                    <button onclick="setMapMode('heat')" id="map-btn-heat" class="flex-1 text-xs font-bold py-2 rounded-full border border-gray-200 text-gray-500">Heatmap</button>
+                    <button onclick="setMapMode('cluster')" id="map-btn-cluster" class="flex-1 text-xs font-bold py-2 rounded-full border border-gray-200 text-gray-500">Clustering</button>
+                </div>
+                <div id="dash-map" class="w-full h-64 rounded-xl overflow-hidden border border-gray-100 bg-gray-100"></div>
+            </div>
+
+            <!-- สถานะรวม -->
+            <div class="px-3 pb-8 grid grid-cols-2 gap-2">
+                <div class="stat-pill bg-orange-50 text-orange-600 border border-orange-100">
+                    <p class="text-xl" id="dash-pending">0</p>
+                    <p class="text-[11px] font-bold">รอรับเรื่อง</p>
+                </div>
+                <div class="stat-pill bg-amber-50 text-amber-600 border border-amber-100">
+                    <p class="text-xl" id="dash-inprogress">0</p>
+                    <p class="text-[11px] font-bold">กำลังดำเนินการ</p>
+                </div>
+                <div class="stat-pill bg-green-50 text-green-600 border border-green-100">
+                    <p class="text-xl" id="dash-done">0</p>
+                    <p class="text-[11px] font-bold">เสร็จสิ้น</p>
+                </div>
+                <div class="stat-pill bg-blue-50 text-blue-600 border border-blue-100">
+                    <p class="text-xl" id="dash-positive2">0%</p>
+                    <p class="text-[11px] font-bold">พอใจการแก้ไข</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 📝 PAGE 2: แจ้งปัญหา (เหมือนเดิม)                              -->
+        <!-- ============================================================ -->
+        <div id="page-fondue" class="page-section p-4 pt-6 bg-gray-50 min-h-screen">
+            <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
+                <div class="text-center mb-6">
+                    <div class="w-16 h-16 bg-pink-50 text-pink-500 rounded-full flex items-center justify-center text-2xl mx-auto mb-3 shadow-sm"><i class="fa-solid fa-bullhorn"></i></div>
+                    <h2 class="text-lg font-bold text-gray-800">แจ้งปัญหาและข้อเสนอแนะ</h2>
+                    <p class="text-xs text-gray-500 mt-1 font-medium">ร่วมปรับปรุงชุมชนให้ดียิ่งขึ้นด้วยข้อมูลของท่าน</p>
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-sm font-bold text-gray-700 mb-2">1. อัปโหลดภาพถ่ายประกอบ *</label>
+                    <label for="fondue-image" class="border-2 border-dashed border-gray-300 rounded-xl h-40 flex flex-col items-center justify-center bg-gray-50 text-gray-400 cursor-pointer hover:bg-gray-100 relative overflow-hidden transition-all">
+                        <img id="img-preview" class="absolute inset-0 w-full h-full object-cover hidden">
+                        <div id="img-placeholder" class="text-center">
+                            <i class="fa-solid fa-image-text text-3xl mb-2 text-gray-300"></i>
+                            <p class="text-xs font-bold text-gray-500">กดเพื่อถ่ายรูป หรือ เลือกจากคลังภาพ</p>
+                        </div>
+                        <input type="file" id="fondue-image" accept="image/*" class="hidden" onchange="previewAndCompressImage(this)">
+                    </label>
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-sm font-bold text-gray-700 mb-2">2. หมวดหมู่ปัญหาที่พบ *</label>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <input type="radio" name="fondue-cat" id="cat-1" value="กิจกรรม" onchange="handleCategoryChange()" class="cat-radio hidden">
+                            <label for="cat-1" class="border border-gray-200 rounded-xl p-3 flex items-center gap-2 text-xs font-bold text-gray-600 cursor-pointer transition-all"><i class="fa-solid fa-people-group w-5 text-center text-gray-400"></i> กิจกรรม</label>
+                        </div>
+                        <div>
+                            <input type="radio" name="fondue-cat" id="cat-2" value="สถานที่" onchange="handleCategoryChange()" class="cat-radio hidden">
+                            <label for="cat-2" class="border border-gray-200 rounded-xl p-3 flex items-center gap-2 text-xs font-bold text-gray-600 cursor-pointer transition-all"><i class="fa-solid fa-building w-5 text-center text-gray-400"></i> สถานที่</label>
+                        </div>
+                        <div>
+                            <input type="radio" name="fondue-cat" id="cat-3" value="ระบบเว็บไซต์" onchange="handleCategoryChange()" class="cat-radio hidden">
+                            <label for="cat-3" class="border border-gray-200 rounded-xl p-3 flex items-center gap-2 text-xs font-bold text-gray-600 cursor-pointer transition-all"><i class="fa-solid fa-laptop-code w-5 text-center text-gray-400"></i> เว็บไซต์</label>
+                        </div>
+                        <div>
+                            <input type="radio" name="fondue-cat" id="cat-4" value="อื่นๆ" onchange="handleCategoryChange()" class="cat-radio hidden">
+                            <label for="cat-4" class="border border-gray-200 rounded-xl p-3 flex items-center gap-2 text-xs font-bold text-gray-600 cursor-pointer transition-all"><i class="fa-solid fa-circle-ellipsis w-5 text-center text-gray-400"></i> อื่นๆ</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="custom-cat-box" class="mb-4 hidden animate-fadeIn">
+                    <label class="block text-xs font-bold text-gray-500 mb-1">ระบุหมวดหมู่ปัญหาเพิ่มเติม *</label>
+                    <input type="text" id="fondue-custom-cat" class="form-input" placeholder="พิมพ์หมวดหมู่ปัญหา...">
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-sm font-bold text-gray-700 mb-2">3. สถานที่ / ปักหมุดจุดที่พบปัญหา *</label>
+
+                    <button type="button" onclick="openMapModal()" class="w-full bg-blue-50 border border-blue-200 text-blue-600 py-3 rounded-xl font-bold shadow-md hover:bg-blue-100 flex items-center justify-center gap-2 transition-all active:scale-95 mb-3">
+                        <i class="fa-solid fa-map-location-dot text-lg"></i> กดเพื่อเปิดแผนที่ปักหมุด
+                    </button>
+
+                    <input type="text" id="fondue-gps" class="form-input text-xs bg-pink-50 text-pink-600 font-bold border-pink-200 mb-2" placeholder="พิกัด GPS จะแสดงที่นี่..." readonly>
+                    <input type="text" id="fondue-location" class="form-input" placeholder="พิมพ์ชื่อสถานที่ ตึก หรือจุดสังเกตเพิ่มเติมให้ชัดเจน...">
+                </div>
+
+                <div class="mb-6">
+                    <label class="block text-sm font-bold text-gray-700 mb-2">4. รายละเอียดข้อเท็จจริง *</label>
+                    <textarea id="fondue-detail" rows="3" class="form-input" placeholder="อธิบายปัญหาหรือสิ่งที่ต้องการเสนอแนะอย่างละเอียด..."></textarea>
+                </div>
+
+                <button onclick="submitFondueBtn(this)" class="w-full theme-pink text-white py-3.5 rounded-xl font-semibold text-sm shadow-md hover:bg-pink-700 transition active:scale-95">🚀 ส่งเรื่องแจ้งเหตุ</button>
+            </div>
+        </div>
+
+        <div id="map-modal" class="hidden fixed inset-0 bg-white z-[9999] flex flex-col">
+            <div class="theme-pink text-white p-4 flex justify-between items-center shadow-md z-10">
+                <h3 class="font-bold text-lg"><i class="fa-solid fa-map-location-dot mr-2"></i>เลื่อนพิกัดปักหมุด</h3>
+                <button type="button" onclick="closeMapModal()" class="text-white text-2xl px-2 active:scale-90 transition"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="p-2 bg-pink-50 text-pink-600 text-xs font-bold text-center z-10 shadow-sm">
+                <i class="fa-solid fa-hand-pointer mr-1"></i> เลื่อนแผนที่ หรือลากหมุดไปยังจุดเกิดเหตุ
+            </div>
+            <div id="map-container" class="flex-1 w-full bg-gray-200 z-0"></div>
+            <div class="p-4 bg-white shadow-[0_-4px_15px_rgba(0,0,0,0.05)] z-10">
+                <button type="button" onclick="closeMapModal()" class="w-full theme-pink text-white py-3.5 rounded-xl font-bold text-sm shadow-md active:scale-95 transition">✅ ยืนยันพิกัดนี้</button>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 🕓 PAGE 3: ประวัติการแจ้งเหตุ + ให้คะแนน                         -->
+        <!-- ============================================================ -->
+        <div id="page-history" class="page-section p-4 pt-6 bg-gray-50 min-h-screen">
+            <h2 class="text-lg font-bold text-gray-800 mb-4 text-center">ประวัติการแจ้งเรื่องร้องเรียน</h2>
+            <div id="history-list" class="space-y-4 pb-10"></div>
+        </div>
+
+        <!-- Modal ให้คะแนน -->
+        <div id="rating-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-[9999] flex items-end">
+            <div class="w-full max-w-md mx-auto bg-white rounded-t-2xl p-5 animate-fadeIn">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-gray-800 text-base"><i class="fa-solid fa-star text-amber-400 mr-1"></i>ให้คะแนนการแก้ไขปัญหา</h3>
+                    <button onclick="closeRatingModal()" class="text-gray-400 text-xl"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <div class="flex justify-center gap-2 mb-4" id="rating-stars">
+                    <i class="fa-solid fa-star star-btn" data-val="1" onclick="setRatingStar(1)"></i>
+                    <i class="fa-solid fa-star star-btn" data-val="2" onclick="setRatingStar(2)"></i>
+                    <i class="fa-solid fa-star star-btn" data-val="3" onclick="setRatingStar(3)"></i>
+                    <i class="fa-solid fa-star star-btn" data-val="4" onclick="setRatingStar(4)"></i>
+                    <i class="fa-solid fa-star star-btn" data-val="5" onclick="setRatingStar(5)"></i>
+                </div>
+                <textarea id="rating-review" rows="3" class="form-input mb-4" placeholder="เล่าประสบการณ์ของท่าน (ไม่บังคับ)..."></textarea>
+                <button onclick="submitRatingBtn(this)" class="w-full theme-pink text-white py-3 rounded-xl font-bold text-sm shadow-md active:scale-95 transition">ส่งคะแนน</button>
+            </div>
+        </div>
+
+        <div class="fixed bottom-0 w-full max-w-md bg-white border-t flex justify-around py-2.5 text-[11px] font-medium text-gray-400 z-50 shadow-[0_-4px_15px_rgba(0,0,0,0.03)]">
+            <button onclick="showPage('dashboard')" id="nav-dashboard" class="nav-btn flex flex-col items-center theme-text w-1/3 transition">
+                <i class="fa-solid fa-chart-simple text-xl mb-1.5"></i> หน้าหลัก
+            </button>
+            <button onclick="showPage('fondue')" id="nav-fondue" class="nav-btn flex flex-col items-center w-1/3 transition">
+                <i class="fa-solid fa-comment-medical text-xl mb-1.5"></i> แจ้งปัญหา
+            </button>
+            <button onclick="showPage('history')" id="nav-history" class="nav-btn flex flex-col items-center w-1/3 transition">
+                <i class="fa-solid fa-clock-rotate-left text-xl mb-1.5"></i> ประวัติคำร้อง
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        const API_URL = "https://script.google.com/macros/s/AKfycbwPGR0J7K5yMYQfE5R6DzfNHQB9V4STEP3N15OJPqlq12WhsNf0mFJk1TWBAVmww7fP/exec";
+        const LIFF_ID = "2009970638-OWA0kYml"; // 🌟 สร้าง LIFF แยกสำหรับหน้านี้ แล้วใส่ ID ตรงนี้
+
+        let currentUser = null;
+        let base64Image = null;
+        let map = null;       // แผนที่ในฟอร์มปักหมุด
+        let marker = null;
+
+        let dashMap = null;   // แผนที่หน้า Dashboard
+        let dashMarkersLayer = null;
+        let dashClusterLayer = null;
+        let dashHeatLayer = null;
+        let dashMapMode = 'markers';
+        let dashPoints = [];
+        let feedData = [];
+        let currentRatingTicket = null;
+        let currentRatingValue = 0;
+
+        document.addEventListener("DOMContentLoaded", function() {
+            showPage('dashboard');
+            loadDashboard();
+
+            liff.init({ liffId: LIFF_ID }).then(() => {
+                if (liff.isLoggedIn()) {
+                    liff.getProfile().then(async profile => {
+                        const res = await callAPI("autoLoginByUid", { uid: profile.userId });
+                        if(res && res.success !== false && res.name) {
+                            currentUser = res;
+                            currentUser.lineUid = profile.userId;
+                            updateHeaderUser();
+                            loadDashboard();
+                            if(document.getElementById('page-history').classList.contains('active')) fetchHistory();
+                        } else {
+                            document.getElementById('login-status').innerHTML = `<i class="fa-solid fa-user-xmark"></i>`;
+                            alert("กรุณาสมัครสมาชิกผ่านระบบสมาชิกก่อนการแจ้งปัญหาเพื่อสิทธิประโยชน์ในการติดตามเรื่อง");
+                            window.location.href = "https://liff.line.me/2009970638-dqNKJ4CJ";
+                        }
+                        hideLoader();
+                    });
+                } else {
+                    liff.login();
+                }
+            }).catch(err => {
+                document.getElementById('login-status').innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i>`;
+                hideLoader();
+            });
+
+            setTimeout(hideLoader, 3000);
+        });
+
+        function hideLoader() {
+            const loader = document.getElementById('liff-loading');
+            if (loader) loader.style.display = 'none';
+        }
+
+        function updateHeaderUser() {
+            const header = document.getElementById('login-status');
+            if(currentUser) {
+                header.innerHTML = `<i class="fa-solid fa-circle-check mr-1 text-green-300"></i> <span class="truncate max-w-[100px] inline-block align-bottom">${currentUser.name}</span>`;
+                header.className = "text-xs font-bold bg-white bg-opacity-20 px-3 py-1.5 rounded-full text-white";
+            } else {
+                header.innerHTML = `<i class="fa-solid fa-user"></i>`;
+            }
+        }
+
+        async function callAPI(action, data = {}) {
+            try {
+                const response = await fetch(API_URL, {
+                    method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" },
+                    body: JSON.stringify({ action: action, data: data }), redirect: "follow"
+                });
+                return await response.json();
+            } catch (error) { return null; }
+        }
+
+        function showPage(pageId) {
+            document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
+            document.getElementById('page-' + pageId).classList.add('active');
+            window.scrollTo(0, 0);
+
+            document.querySelectorAll('.nav-btn').forEach(el => { el.classList.remove('theme-text', 'font-medium'); el.classList.add('text-gray-400'); });
+            const targetNav = document.getElementById('nav-' + pageId);
+            if(targetNav) {
+                targetNav.classList.remove('text-gray-400');
+                targetNav.classList.add('theme-text', 'font-medium');
+            }
+
+            if(pageId === 'history') fetchHistory();
+            if(pageId === 'dashboard' && dashMap) setTimeout(() => dashMap.invalidateSize(), 200);
+        }
+
+        // ==========================================
+        // 📊 DASHBOARD
+        // ==========================================
+        async function loadDashboard() {
+            const stats = await callAPI("getDashboardStats");
+            if (stats && stats.success) {
+                document.getElementById('dash-month').innerText = stats.monthLabel;
+                document.getElementById('dash-monthcount').innerText = stats.thisMonthCount;
+                document.getElementById('dash-total').innerText = stats.total;
+                document.getElementById('dash-positive').innerText = stats.positivePercent + '%';
+                document.getElementById('dash-positive2').innerText = stats.positivePercent + '%';
+                document.getElementById('dash-avgrating').innerText = stats.avgRating;
+                document.getElementById('dash-ratingcount').innerText = stats.ratingCount;
+                document.getElementById('dash-pending').innerText = stats.pending;
+                document.getElementById('dash-inprogress').innerText = stats.inProgress;
+                document.getElementById('dash-done').innerText = stats.done;
+            }
+
+            const feed = await callAPI("getPublicFeed", { uid: currentUser ? currentUser.lineUid : "" });
+            feedData = Array.isArray(feed) ? feed : [];
+            renderFeed();
+
+            const points = await callAPI("getFondueMapPoints");
+            dashPoints = Array.isArray(points) ? points : [];
+            initDashMap();
+        }
+
+        function renderFeed() {
+            const search = document.getElementById('dash-search').value.trim().toLowerCase();
+            const cat = document.getElementById('dash-category').value;
+            const scroll = document.getElementById('feed-scroll');
+
+            let list = feedData.filter(f => {
+                if (cat && f.category !== cat) return false;
+                if (search && !((f.detail||'').toLowerCase().includes(search) || (f.category||'').toLowerCase().includes(search))) return false;
+                return true;
+            });
+
+            if (list.length === 0) {
+                scroll.innerHTML = `<div class="text-center text-gray-400 py-8 w-full text-xs font-medium"><i class="fa-regular fa-comments text-3xl text-pink-200 mb-2 block"></i>ยังไม่มีเรื่องที่ได้รับการให้คะแนน</div>`;
+                return;
+            }
+
+            scroll.innerHTML = list.map(f => `
+                <div class="min-w-[240px] max-w-[240px] bg-white border border-gray-100 rounded-xl shadow-sm overflow-hidden flex-shrink-0">
+                    <div class="h-28 w-full bg-gray-100">
+                        ${f.image ? `<img src="${f.image}" class="w-full h-full object-cover">` : `<div class="w-full h-full flex items-center justify-center text-gray-300"><i class="fa-solid fa-image text-3xl"></i></div>`}
+                    </div>
+                    <div class="p-3">
+                        <span class="text-[10px] bg-pink-50 text-pink-600 font-bold px-2 py-0.5 rounded border border-pink-100">${f.category}</span>
+                        <p class="text-xs font-bold text-gray-800 mt-2 line-clamp-2">${f.detail}</p>
+                        ${f.review ? `<p class="text-[11px] text-gray-500 mt-1 italic line-clamp-2">"${f.review}"</p>` : ''}
+                        <div class="flex items-center justify-between mt-2 text-[10px] text-gray-400">
+                            <span>โดย ${f.name}</span>
+                            <span class="text-amber-500 font-bold">${'★'.repeat(f.rating)}${'☆'.repeat(5-f.rating)}</span>
+                        </div>
+                        <div class="flex items-center justify-between mt-2 pt-2 border-t border-gray-50">
+                            <span class="text-[10px] text-gray-400"><i class="fa-regular fa-clock mr-1"></i>${f.ratedAt}</span>
+                            <button onclick="toggleLike('${f.id}', this)" class="flex items-center gap-1 text-xs font-bold ${f.likedByMe ? 'text-pink-600' : 'text-gray-400'}">
+                                <i class="fa-solid fa-heart"></i> <span>${f.likes}</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function toggleLike(ticketId, btn) {
+            if (!currentUser) { alert("กรุณาเข้าสู่ระบบก่อนกดถูกใจ"); return; }
+            const res = await callAPI("toggleLikeFondue", { ticketId: ticketId, uid: currentUser.lineUid });
+            if (res && res.success) {
+                const item = feedData.find(f => f.id === ticketId);
+                if (item) { item.likes = res.likes; item.likedByMe = res.liked; }
+                renderFeed();
+            }
+        }
+
+        // --- แผนที่ Dashboard ---
+        function initDashMap() {
+            if (!dashMap) {
+                dashMap = L.map('dash-map').setView([13.7563, 100.5018], 11);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(dashMap);
+            }
+            drawDashMapLayer();
+            setTimeout(() => dashMap.invalidateSize(), 200);
+        }
+
+        function statusColor(status) {
+            if (status === "เสร็จสิ้น") return "#16a34a";
+            if (status === "กำลังดำเนินการ") return "#f59e0b";
+            return "#ea580c";
+        }
+
+        function drawDashMapLayer() {
+            if (dashMarkersLayer) { dashMap.removeLayer(dashMarkersLayer); dashMarkersLayer = null; }
+            if (dashClusterLayer) { dashMap.removeLayer(dashClusterLayer); dashClusterLayer = null; }
+            if (dashHeatLayer) { dashMap.removeLayer(dashHeatLayer); dashHeatLayer = null; }
+
+            if (dashPoints.length === 0) return;
+
+            if (dashMapMode === 'heat') {
+                const heatPoints = dashPoints.map(p => [p.lat, p.lng, 0.6]);
+                dashHeatLayer = L.heatLayer(heatPoints, { radius: 22, blur: 18 }).addTo(dashMap);
+                return;
+            }
+
+            const makeMarker = (p) => L.circleMarker([p.lat, p.lng], {
+                radius: 7, color: statusColor(p.status), fillColor: statusColor(p.status), fillOpacity: 0.85, weight: 2
+            }).bindPopup(`<b>${p.category}</b><br>${p.detail}<br><span style="color:${statusColor(p.status)}">${p.status}</span>`);
+
+            if (dashMapMode === 'cluster') {
+                dashClusterLayer = L.markerClusterGroup();
+                dashPoints.forEach(p => dashClusterLayer.addLayer(makeMarker(p)));
+                dashMap.addLayer(dashClusterLayer);
+            } else {
+                dashMarkersLayer = L.layerGroup();
+                dashPoints.forEach(p => makeMarker(p).addTo(dashMarkersLayer));
+                dashMarkersLayer.addTo(dashMap);
+            }
+        }
+
+        function setMapMode(mode) {
+            dashMapMode = mode;
+            ['markers','heat','cluster'].forEach(m => {
+                const btn = document.getElementById('map-btn-' + m);
+                if (m === mode) { btn.className = "flex-1 text-xs font-bold py-2 rounded-full border theme-border theme-text bg-pink-50"; }
+                else { btn.className = "flex-1 text-xs font-bold py-2 rounded-full border border-gray-200 text-gray-500"; }
+            });
+            drawDashMapLayer();
+        }
+
+        // ==========================================
+        // 🗺️ แผนที่ในฟอร์มแจ้งปัญหา (ปักหมุด)
+        // ==========================================
+        function openMapModal() {
+            document.getElementById('map-modal').classList.remove('hidden');
+            setTimeout(() => {
+                initMap();
+                if (map) { map.invalidateSize(); }
+            }, 300);
+        }
+
+        function closeMapModal() {
+            document.getElementById('map-modal').classList.add('hidden');
+            const gpsInput = document.getElementById('fondue-gps');
+            if(gpsInput.value !== "") {
+                gpsInput.classList.replace('text-pink-600', 'text-green-600');
+                gpsInput.classList.replace('bg-pink-50', 'bg-green-50');
+                gpsInput.classList.replace('border-pink-200', 'border-green-200');
+            }
+        }
+
+        function initMap() {
+            if (map) { map.invalidateSize(); return; }
+
+            let defaultLatLng = [13.7563, 100.5018];
+
+            map = L.map('map-container').setView(defaultLatLng, 10);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap'
+            }).addTo(map);
+
+            marker = L.marker(defaultLatLng, {draggable: true}).addTo(map);
+            updateGpsInput(defaultLatLng[0], defaultLatLng[1]);
+
+            marker.on('dragend', function(e) {
+                let pos = marker.getLatLng();
+                updateGpsInput(pos.lat, pos.lng);
+            });
+
+            map.on('click', function(e) {
+                marker.setLatLng(e.latlng);
+                updateGpsInput(e.latlng.lat, e.latlng.lng);
+            });
+
+            if (navigator.geolocation) {
+                document.getElementById('fondue-gps').value = "กำลังค้นหาตำแหน่งของคุณ...";
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        let userLat = position.coords.latitude;
+                        let userLng = position.coords.longitude;
+                        map.setView([userLat, userLng], 16);
+                        marker.setLatLng([userLat, userLng]);
+                        updateGpsInput(userLat, userLng);
+                    },
+                    function(error) {
+                        updateGpsInput(defaultLatLng[0], defaultLatLng[1]);
+                    }
+                );
+            }
+        }
+
+        function updateGpsInput(lat, lng) {
+            document.getElementById('fondue-gps').value = `📍 [ ${lat.toFixed(6)}, ${lng.toFixed(6)} ]`;
+        }
+
+        function handleCategoryChange() {
+            const cat = document.querySelector('input[name="fondue-cat"]:checked').value;
+            const customBox = document.getElementById('custom-cat-box');
+            if(cat === "อื่นๆ") {
+                customBox.classList.remove('hidden');
+            } else {
+                customBox.classList.add('hidden');
+                document.getElementById('fondue-custom-cat').value = "";
+            }
+        }
+
+        function previewAndCompressImage(input) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.src = e.target.result;
+
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+
+                        const MAX_WIDTH = 800;
+                        const MAX_HEIGHT = 800;
+                        let width = img.width;
+                        let height = img.height;
+
+                        if (width > height) {
+                            if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
+                        } else {
+                            if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; }
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        base64Image = canvas.toDataURL('image/jpeg', 0.7);
+
+                        document.getElementById('img-preview').src = base64Image;
+                        document.getElementById('img-preview').classList.remove('hidden');
+                        document.getElementById('img-placeholder').classList.add('hidden');
+                    }
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        async function submitFondueBtn(btn) {
+            if(!currentUser) { alert("กรุณาเชื่อมต่อบัญชีสมาชิกก่อนการส่งข้อมูลแจ้งปัญหา"); return; }
+
+            const categoryRadio = document.querySelector('input[name="fondue-cat"]:checked');
+            const detail = document.getElementById('fondue-detail').value.trim();
+            const locationText = document.getElementById('fondue-location').value.trim();
+            const gpsData = document.getElementById('fondue-gps').value.trim();
+
+            if (!base64Image) { alert("กรุณาแนบรูปภาพถ่ายประกอบสถานการณ์"); return; }
+            if (!categoryRadio) { alert("กรุณาเลือกประเภทหมวดหมู่หลัก"); return; }
+            if (!detail) { alert("กรุณาระบุรายละเอียดคำอธิบาย"); return; }
+
+            let finalCategory = categoryRadio.value;
+            if(finalCategory === "อื่นๆ") {
+                const customInput = document.getElementById('fondue-custom-cat').value.trim();
+                if(!customInput) { alert("กรุณาระบุพิมพ์ชื่อหมวดหมู่ที่พบปัญหาเพิ่มเติม"); return; }
+                finalCategory = customInput;
+            }
+
+            let finalLocation = gpsData + " " + locationText;
+
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> ระบบกำลังส่งข้อมูล...';
+            btn.disabled = true;
+
+            const payload = {
+                image: base64Image,
+                category: finalCategory,
+                location: finalLocation,
+                detail: detail,
+                memberId: currentUser.memberId,
+                name: currentUser.name,
+                phone: currentUser.phone,
+                lineUid: currentUser.lineUid
+            };
+
+            const res = await callAPI("submitFondue", payload);
+            btn.innerHTML = '🚀 ส่งเรื่องแจ้งเหตุ';
+            btn.disabled = false;
+
+            if(res && res.success) {
+                alert("รับเรื่องสำเร็จ! หมายเลขติดตามคือ: " + res.ticketId);
+
+                document.getElementById('img-preview').classList.add('hidden');
+                document.getElementById('img-placeholder').classList.remove('hidden');
+                document.getElementById('fondue-image').value = '';
+                categoryRadio.checked = false;
+                document.getElementById('fondue-custom-cat').value = "";
+                document.getElementById('custom-cat-box').classList.add('hidden');
+                document.getElementById('fondue-detail').value = '';
+                document.getElementById('fondue-location').value = '';
+
+                initMap();
+                base64Image = null;
+                showPage('history');
+                loadDashboard();
+            } else { alert("เกิดข้อผิดพลาด: " + (res ? res.message : "ไม่สามารถเชื่อมต่อระบบได้")); }
+        }
+
+        // ==========================================
+        // 🕓 ประวัติ + ให้คะแนน
+        // ==========================================
+        async function fetchHistory() {
+            if(!currentUser) {
+                document.getElementById('history-list').innerHTML = `
+                    <div class="text-center py-12 bg-white border border-gray-100 rounded-xl shadow-sm">
+                        <i class="fa-solid fa-id-card-clip text-4xl text-gray-300 mb-3"></i>
+                        <p class="text-sm font-bold text-gray-500">กรุณาเข้าสู่ระบบเพื่อตรวจสอบประวัติคำร้อง</p>
+                    </div>`;
+                return;
+            }
+
+            document.getElementById('history-list').innerHTML = '<div class="text-center py-10"><i class="fa-solid fa-spinner fa-spin theme-text text-2xl"></i></div>';
+            const logs = await callAPI("getMyReports", { uid: currentUser.lineUid });
+
+            let html = !logs || logs.length === 0
+                ? '<div class="text-center py-12 bg-white border border-gray-100 rounded-xl text-gray-400 text-sm font-medium"><i class="fa-solid fa-clipboard-question text-4xl text-gray-200 mb-2 block"></i>ไม่พบบันทึกประวัติการร้องแจ้งเหตุในบัญชีของท่าน</div>'
+                : logs.map(l => {
+                    let statusColorCls = "bg-orange-50 text-orange-600 border-orange-100";
+                    if(l.status === "กำลังดำเนินการ") statusColorCls = "bg-amber-50 text-amber-600 border-amber-100";
+                    if(l.status === "เสร็จสิ้น") statusColorCls = "bg-green-50 text-green-600 border-green-100";
+
+                    let locHtml = l.location;
+                    if(l.location.includes("📍 [")) {
+                        let match = l.location.match(/\[(.*?)\]/);
+                        if(match) {
+                            let coords = match[1].trim();
+                            let desc = l.location.replace(/📍 \[.*?\]/, '').trim();
+                            locHtml = `<a href="https://www.google.com/maps/search/?api=1&query=${coords}" target="_blank" class="text-pink-500 underline font-bold"><i class="fa-solid fa-map-location-dot"></i> ดูแผนที่</a> ${desc}`;
+                        }
+                    }
+
+                    let ratingBlock = "";
+                    if (l.status === "เสร็จสิ้น") {
+                        if (l.rating) {
+                            ratingBlock = `
+                            <div class="bg-amber-50 border border-amber-100 rounded-lg p-2.5 mt-1">
+                                <p class="text-[11px] font-bold text-amber-600">คะแนนที่คุณให้ไว้: <span class="text-sm">${'★'.repeat(l.rating)}${'☆'.repeat(5-l.rating)}</span></p>
+                                ${l.review ? `<p class="text-[11px] text-gray-500 mt-1 italic">"${l.review}"</p>` : ''}
+                            </div>`;
+                        } else {
+                            ratingBlock = `
+                            <button onclick="openRatingModal('${l.id}')" class="w-full theme-pink text-white text-xs font-bold py-2.5 rounded-lg mt-1 active:scale-95 transition">
+                                <i class="fa-solid fa-star mr-1"></i> ให้คะแนนการแก้ไขปัญหานี้
+                            </button>`;
+                        }
+                    }
+
+                    return `
+                    <div class="bg-white border border-gray-100 rounded-xl p-4 shadow-sm space-y-3 relative">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <span class="text-[10px] bg-pink-50 text-pink-600 font-bold px-2.5 py-1 rounded border border-pink-100">${l.category}</span>
+                                <p class="text-[10px] text-gray-400 mt-2 font-medium"><i class="fa-solid fa-hashtag mr-0.5"></i> ${l.id}</p>
+                            </div>
+                            <span class="text-[10px] font-bold px-2 py-0.5 rounded border ${statusColorCls}">${l.status}</span>
+                        </div>
+                        <p class="text-sm text-gray-800 leading-relaxed font-semibold">${l.detail}</p>
+                        <p class="text-xs text-gray-500 font-medium"><i class="fa-solid fa-map-pin text-gray-300 mr-1"></i> ${locHtml}</p>
+                        <div class="flex justify-between items-center text-xs text-gray-400 pt-3 border-t border-gray-50 mt-2 font-medium">
+                            <span><i class="fa-regular fa-clock mr-1"></i>${l.date}</span>
+                            ${l.image ? `<a href="${l.image}" target="_blank" class="theme-text font-bold"><i class="fa-solid fa-images mr-1"></i>ดูภาพถ่าย</a>` : ''}
+                        </div>
+                        ${ratingBlock}
+                    </div>`;
+                }).join('');
+            document.getElementById('history-list').innerHTML = html;
+        }
+
+        function openRatingModal(ticketId) {
+            currentRatingTicket = ticketId;
+            currentRatingValue = 0;
+            document.getElementById('rating-review').value = "";
+            document.querySelectorAll('.star-btn').forEach(s => s.classList.remove('active'));
+            document.getElementById('rating-modal').classList.remove('hidden');
+        }
+
+        function closeRatingModal() {
+            document.getElementById('rating-modal').classList.add('hidden');
+        }
+
+        function setRatingStar(val) {
+            currentRatingValue = val;
+            document.querySelectorAll('.star-btn').forEach(s => {
+                s.classList.toggle('active', parseInt(s.dataset.val) <= val);
+            });
+        }
+
+        async function submitRatingBtn(btn) {
+            if (!currentRatingValue) { alert("กรุณาเลือกจำนวนดาว"); return; }
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังส่ง...';
+
+            const res = await callAPI("submitFondueRating", {
+                ticketId: currentRatingTicket,
+                lineUid: currentUser.lineUid,
+                rating: currentRatingValue,
+                review: document.getElementById('rating-review').value.trim()
+            });
+
+            btn.disabled = false;
+            btn.innerHTML = 'ส่งคะแนน';
+
+            if (res && res.success) {
+                closeRatingModal();
+                fetchHistory();
+                loadDashboard();
+            } else {
+                alert("เกิดข้อผิดพลาด: " + (res ? res.message : "ไม่สามารถเชื่อมต่อระบบได้"));
+            }
+        }
+    </script>
+</body>
+</html>
