@@ -1391,18 +1391,38 @@
 
             const a = currentUser.address;
             if(a) {
-                document.getElementById('edit-house').value = a.house; document.getElementById('edit-moo').value = a.moo; document.getElementById('edit-road').value = a.road; document.getElementById('edit-subdist').value = a.subdist; document.getElementById('edit-dist').value = a.dist; document.getElementById('edit-prov').value = a.prov; document.getElementById('edit-zip').value = a.zip;
-                if (document.getElementById('wm-house')) { document.getElementById('wm-house').value = a.house; document.getElementById('wm-moo').value = a.moo; document.getElementById('wm-road').value = a.road; document.getElementById('wm-subdist').value = a.subdist; document.getElementById('wm-dist').value = a.dist; document.getElementById('wm-prov').value = a.prov; document.getElementById('wm-zip').value = a.zip; }
+                document.getElementById('edit-subdist').value = a.subdist;
+                document.getElementById('edit-dist').value = a.dist;
+                document.getElementById('edit-prov').value = a.prov;
+                document.getElementById('edit-zip').value = a.zip;
+                if (document.getElementById('wm-house')) {
+                    document.getElementById('wm-house').value = a.house;
+                    document.getElementById('wm-moo').value = a.moo;
+                    document.getElementById('wm-road').value = a.road;
+                    document.getElementById('wm-subdist').value = a.subdist;
+                    document.getElementById('wm-dist').value = a.dist;
+                    document.getElementById('wm-prov').value = a.prov;
+                    document.getElementById('wm-zip').value = a.zip;
+                }
             }
             showPage('profile');
         }
 
         async function saveAddress(btn) {
             btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> บันทึก...';
-            const newData = { phone: currentUser.phone, house: document.getElementById('edit-house').value, moo: document.getElementById('edit-moo').value, road: document.getElementById('edit-road').value, subdist: document.getElementById('edit-subdist').value, dist: document.getElementById('edit-dist').value, prov: document.getElementById('edit-prov').value, zip: document.getElementById('edit-zip').value };
+            const oldA = currentUser.address || {};
+            const newData = {
+                phone: currentUser.phone,
+                house: oldA.house, moo: oldA.moo, road: oldA.road,
+                subdist: document.getElementById('edit-subdist').value,
+                dist: document.getElementById('edit-dist').value,
+                prov: document.getElementById('edit-prov').value,
+                zip: document.getElementById('edit-zip').value
+            };
             const res = await callAPI("updateProfileAddress", newData);
-            if(res.success) { currentUser.address = newData; localStorage.setItem('gooddaySession', JSON.stringify(currentUser)); alert("อัปเดตที่อยู่เรียบร้อย"); showPage('profile'); } 
-            else { alert("ข้อผิดพลาด: " + res.message); } btn.disabled = false; btn.innerText = "บันทึกข้อมูล";
+            if(res.success) { currentUser.address = newData; localStorage.setItem('gooddaySession', JSON.stringify(currentUser)); alert("อัปเดตที่อยู่เรียบร้อย"); showPage('profile'); }
+            else { alert("ข้อผิดพลาด: " + res.message); }
+            btn.disabled = false; btn.innerText = "บันทึกข้อมูล";
         }
 
         async function doLogout() {
@@ -1868,6 +1888,8 @@
                 img.src = objectUrl;
             });
         }
+
+        function openLibraryMember() { showPage('library'); }
 
         function preprocessForOCR(imgEl) {
             const canvas = document.createElement('canvas');
