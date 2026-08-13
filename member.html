@@ -259,6 +259,19 @@
                 <i class="fa-solid fa-chevron-right text-lg opacity-50"></i>
             </div>
 
+            <div id="box-library" onclick="openLibraryMember()" class="bg-gradient-to-br from-violet-500 to-purple-600 rounded-xl p-4 mb-4 text-white flex items-center justify-between cursor-pointer shadow-sm">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center text-2xl shadow-inner">
+                        <i class="fa-solid fa-book-open-reader text-violet-100"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-base leading-tight">สมาชิกห้องสมุด</h3>
+                        <p class="text-violet-100 text-[10px] mt-0.5">เร็วๆ นี้ ระบบยืม-คืนหนังสือออนไลน์</p>
+                    </div>
+                </div>
+                <i class="fa-solid fa-chevron-right text-lg opacity-50"></i>
+            </div>
+
             <div class="bg-white border border-gray-100 rounded-xl shadow-sm overflow-hidden mb-6 mt-2">
                 <button onclick="showPage('edit-address')" class="w-full flex justify-between items-center p-4 hover:bg-gray-50 transition">
                     <span class="font-semibold text-sm text-gray-700"><i class="fa-solid fa-map-location-dot w-5 text-center text-pink-500 mr-2"></i> แก้ไขที่อยู่จัดส่ง</span>
@@ -274,11 +287,23 @@
                 <h2 class="text-lg font-bold text-gray-800">แก้ไขที่อยู่จัดส่ง</h2>
             </div>
             <div class="space-y-3">
-                <div class="grid grid-cols-2 gap-2"><input type="text" id="edit-house" class="form-input" placeholder="บ้านเลขที่"><input type="text" id="edit-moo" class="form-input" placeholder="หมู่ / หมู่บ้าน"></div>
-                <input type="text" id="edit-road" class="form-input" placeholder="ซอย / ถนน">
-                <div class="grid grid-cols-2 gap-2"><input type="text" id="edit-subdist" class="form-input" placeholder="ตำบล/แขวง"><input type="text" id="edit-dist" class="form-input" placeholder="อำเภอ/เขต"></div>
-                <div class="grid grid-cols-2 gap-2"><select id="edit-prov" class="form-input bg-gray-50 font-bold"><option value="">-- จังหวัด --</option></select><input type="text" id="edit-zip" class="form-input" placeholder="รหัสไปรษณีย์"></div>
+                <div class="grid grid-cols-2 gap-2"><input type="text" id="edit-subdist" class="form-input" placeholder="ตำบล/แขวง *"><input type="text" id="edit-dist" class="form-input" placeholder="อำเภอ/เขต *"></div>
+                <div class="grid grid-cols-2 gap-2"><select id="edit-prov" class="form-input bg-gray-50 font-bold"><option value="">-- จังหวัด * --</option></select><input type="text" id="edit-zip" class="form-input" placeholder="รหัสไปรษณีย์ *"></div>
+                <p class="text-[11px] text-gray-400 font-medium px-1">*หมายเหตุ: ไม่ต้องระบุบ้านเลขที่/ซอย/หมู่บ้าน ในระบบสมาชิกทั่วไป ข้อมูลจุดรับพัสดุแบบละเอียดจะใช้เฉพาะตอนลงทะเบียน Waste for Wealth เท่านั้น</p>
                 <button onclick="saveAddress(this)" class="w-full theme-pink text-white py-3.5 rounded-xl font-semibold shadow-md mt-4 text-sm">บันทึกข้อมูล</button>
+            </div>
+        </div>
+
+        <div id="page-library" class="page-section p-4 pt-6 bg-violet-50 min-h-screen">
+            <div class="flex items-center mb-6">
+                <button onclick="showPage('profile')" class="w-8 h-8 bg-white rounded-full text-gray-600 mr-3 shadow-sm border border-violet-200"><i class="fa-solid fa-arrow-left"></i></button>
+                <h2 class="text-lg font-bold text-violet-700">สมาชิกห้องสมุด</h2>
+            </div>
+            <div class="bg-white rounded-2xl shadow-sm border border-violet-100 p-6 text-center mt-10">
+                <div class="w-20 h-20 bg-violet-100 text-violet-500 rounded-full flex items-center justify-center text-4xl mx-auto mb-4"><i class="fa-solid fa-book-open-reader"></i></div>
+                <h3 class="font-bold text-gray-800 text-lg mb-2">ระบบสมาชิกห้องสมุด</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">ฟีเจอร์นี้กำลังอยู่ระหว่างการพัฒนา<br>เร็วๆ นี้จะสามารถยืม-คืนหนังสือ และติดตามสถานะการยืมได้จากหน้านี้</p>
+                <span class="inline-block mt-4 bg-violet-100 text-violet-700 text-xs font-bold px-4 py-2 rounded-full">🚧 Coming Soon</span>
             </div>
         </div>
 
@@ -509,50 +534,50 @@
                 <div class="flex items-center mb-6">
                     <button onclick="showPage('profile')" class="w-8 h-8 bg-white rounded-full text-gray-600 mr-3 shadow-sm border border-gray-200"><i class="fa-solid fa-arrow-left"></i></button>
                     <div>
-                        <h2 class="text-xl font-bold text-amber-600">ตั้งเป้าหมายสุขภาพ</h2>
+                        <h2 class="text-xl font-bold theme-text">ตั้งเป้าหมายสุขภาพ</h2>
                         <p class="text-xs text-gray-500">เลือกเป้าหมายที่ตรงกับคุณ (เลือกได้มากกว่า 1 ข้อ)</p>
                     </div>
                 </div>
                 <div id="wizard-goals-container" class="space-y-4"></div>
                 <div class="fixed bottom-0 left-0 right-0 max-w-md mx-auto p-4 bg-white border-t border-gray-100">
-                    <button onclick="nextWiz(2)" class="w-full bg-amber-500 text-white py-3.5 rounded-xl font-bold shadow-md hover:bg-amber-600 transition">สรุปเป้าหมาย</button>
+                    <button onclick="nextWiz(2)" class="w-full theme-pink text-white py-3.5 rounded-xl font-bold shadow-md hover:bg-pink-700 transition">สรุปเป้าหมาย</button>
                 </div>
             </div>
 
             <div id="wiz-step-2" class="p-4 pt-8 hidden">
                 <div class="flex items-center mb-6">
                     <button onclick="prevWiz(1)" class="w-8 h-8 bg-white rounded-full text-gray-600 mr-3 shadow-sm border border-gray-200"><i class="fa-solid fa-arrow-left"></i></button>
-                    <h2 class="text-xl font-bold text-amber-600">สรุปเป้าหมายของคุณ</h2>
+                    <h2 class="text-xl font-bold theme-text">สรุปเป้าหมายของคุณ</h2>
                 </div>
                 <div class="bg-white rounded-2xl p-4 mb-6 border border-gray-200 shadow-sm">
-                    <h3 class="text-sm font-bold text-amber-600 mb-3"><i class="fa-solid fa-bullseye mr-1"></i> หมวดหมู่และเป้าหมายที่เลือก</h3>
+                    <h3 class="text-sm font-bold theme-text mb-3"><i class="fa-solid fa-bullseye mr-1"></i> หมวดหมู่และเป้าหมายที่เลือก</h3>
                     <div id="wizard-summary-content" class="space-y-3"></div>
                 </div>
                 <div class="bg-white rounded-2xl p-4 mb-10 border border-gray-200 shadow-sm">
-                    <label class="text-sm font-bold text-amber-600 mb-2 block"><i class="fa-solid fa-pen mr-1"></i> เป้าหมายสุขภาวะที่ดีประจำเดือน</label>
+                    <label class="text-sm font-bold theme-text mb-2 block"><i class="fa-solid fa-pen mr-1"></i> เป้าหมายสุขภาวะที่ดีประจำเดือน</label>
                     <p class="text-[10px] text-gray-500 mb-2">เขียนคำมั่นสัญญา หรือเป้าหมายที่คุณอยากทำให้สำเร็จในเดือนนี้</p>
-                    <textarea id="wiz-monthly-goal" rows="3" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm text-gray-800 focus:border-amber-500 outline-none" placeholder="เช่น เดือนนี้ฉันจะนอนให้ครบ 8 ชม. ทุกวัน..."></textarea>
+                    <textarea id="wiz-monthly-goal" rows="3" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm text-gray-800 focus:border-pink-500 outline-none" placeholder="เช่น เดือนนี้ฉันจะนอนให้ครบ 8 ชม. ทุกวัน..."></textarea>
                 </div>
                 <div class="fixed bottom-0 left-0 right-0 max-w-md mx-auto p-4 bg-white border-t border-gray-100">
-                    <button onclick="nextWiz(3)" class="w-full bg-amber-500 text-white py-3.5 rounded-xl font-bold shadow-md hover:bg-amber-600 transition">ไปขั้นตอนต่อไป</button>
+                    <button onclick="nextWiz(3)" class="w-full theme-pink text-white py-3.5 rounded-xl font-bold shadow-md hover:bg-pink-700 transition">ไปขั้นตอนต่อไป</button>
                 </div>
             </div>
 
             <div id="wiz-step-3" class="p-4 pt-8 hidden bg-white min-h-screen text-gray-800">
                 <div class="flex items-center mb-6">
                     <button onclick="prevWiz(2)" class="w-8 h-8 bg-gray-100 rounded-full text-gray-600 mr-3"><i class="fa-solid fa-arrow-left"></i></button>
-                    <h2 class="text-xl font-bold text-amber-600">ข้อมูลองค์ประกอบร่างกายเริ่มต้น</h2>
+                    <h2 class="text-xl font-bold theme-text">ข้อมูลองค์ประกอบร่างกายเริ่มต้น</h2>
                 </div>
                 <p class="text-xs text-gray-500 mb-4 px-1">กรอกข้อมูลร่างกายเริ่มต้นเพื่อใช้ติดตามผลในโครงการ</p>
                 <div class="space-y-4">
-                    <div><label class="text-xs font-bold text-gray-500 mb-1 block">น้ำหนัก (kg) *</label><input type="number" step="0.1" id="wiz-weight" class="form-input bg-yellow-50 font-bold text-lg text-amber-700"></div>
+                    <div><label class="text-xs font-bold text-gray-500 mb-1 block">น้ำหนัก (kg) *</label><input type="number" step="0.1" id="wiz-weight" class="form-input bg-pink-50 font-bold text-lg theme-text"></div>
                     <div class="grid grid-cols-2 gap-3">
                         <div><label class="text-[11px] font-bold text-gray-500 mb-1 block">ไขมันในร่างกาย (%)</label><input type="number" step="0.1" id="wiz-fat" class="form-input"></div>
                         <div><label class="text-[11px] font-bold text-gray-500 mb-1 block">ไขมันช่องท้อง</label><input type="number" step="0.1" id="wiz-visceral" class="form-input"></div>
                     </div>
                     <div class="grid grid-cols-2 gap-3">
                         <div><label class="text-[11px] font-bold text-gray-500 mb-1 block">มวลกล้ามเนื้อ (kg)</label><input type="number" step="0.1" id="wiz-muscle" class="form-input"></div>
-                        <div><label class="text-[11px] font-bold text-gray-500 mb-1 block text-amber-600">อัตราส่วน ECW</label><input type="number" step="0.001" id="wiz-ecw" class="form-input bg-amber-50"></div>
+                        <div><label class="text-[11px] font-bold text-gray-500 mb-1 block text-pink-600">อัตราส่วน ECW</label><input type="number" step="0.001" id="wiz-ecw" class="form-input bg-pink-50"></div>
                     </div>
                     <div class="grid grid-cols-2 gap-3">
                         <div><label class="text-[11px] font-bold text-gray-500 mb-1 block">อายุร่างกาย (ปี)</label><input type="number" id="wiz-bodyage" class="form-input"></div>
@@ -561,21 +586,21 @@
                     <div><label class="text-xs font-bold text-gray-500 mb-1 block">ผู้แนะนำของคุณ *</label><input type="text" id="wiz-ambassador" class="form-input" placeholder="ชื่อ-นามสกุล ผู้แนะนำ"></div>
                 </div>
                 <div class="fixed bottom-0 left-0 right-0 max-w-md mx-auto p-4 bg-white border-t border-gray-100">
-                    <button onclick="nextWiz(4)" class="w-full bg-amber-500 text-white py-3.5 rounded-xl font-bold shadow-lg hover:bg-amber-600 transition">บันทึกข้อมูลร่างกาย</button>
+                    <button onclick="nextWiz(4)" class="w-full theme-pink text-white py-3.5 rounded-xl font-bold shadow-lg hover:bg-pink-700 transition">บันทึกข้อมูลร่างกาย</button>
                 </div>
             </div>
 
             <div id="wiz-step-4" class="p-4 pt-8 hidden bg-gray-50 min-h-screen text-gray-800">
-                <h2 class="text-2xl font-black text-center text-indigo-800 mb-2">🎉 กิจกรรมพิเศษ!</h2>
+                <h2 class="text-2xl font-black text-center theme-text mb-2">🎉 กิจกรรมพิเศษ!</h2>
                 <p class="text-center text-xs text-gray-500 mb-6">ขอเชิญเข้าร่วมกิจกรรมเปิดตัว และติดตามข่าวสาร</p>
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden mb-5">
-                    <div class="bg-blue-600 p-4 text-center text-white">
+                    <div class="theme-pink p-4 text-center text-white">
                         <i class="fa-brands fa-facebook text-4xl mb-2"></i>
                         <h3 class="font-bold">ติดตามเพจหลักของเรา</h3>
                     </div>
                     <div class="p-4 text-center">
                         <p class="text-xs text-gray-500 mb-3">อัปเดตความรู้สุขภาพ ทริคการกิน และกิจกรรมรับของรางวัลมากมาย!</p>
-                        <button onclick="openExternalLink('https://facebook.com')" class="bg-blue-600 text-white px-6 py-2 rounded-full text-xs font-bold shadow-sm hover:bg-blue-700">กดติดตาม Page</button>
+                        <button onclick="openExternalLink('https://facebook.com')" class="theme-pink text-white px-6 py-2 rounded-full text-xs font-bold shadow-sm hover:bg-pink-700">กดติดตาม Page</button>
                     </div>
                 </div>
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden mb-20">
@@ -583,7 +608,7 @@
                     <div class="p-4 text-center">
                         <h3 class="font-bold text-gray-800 mb-1">กิจกรรม Onsite ประจำเดือน</h3>
                         <p class="text-[11px] text-gray-500 mb-4">มาพบปะรับฟังบรรยายสดจากผู้เชี่ยวชาญแบบใกล้ชิด</p>
-                        <button onclick="openExternalLink('#')" class="w-full bg-amber-500 text-white py-3 rounded-xl font-bold shadow-sm hover:bg-amber-600 mb-2">ลงทะเบียนเข้าร่วมงาน Onsite</button>
+                        <button onclick="openExternalLink('#')" class="w-full theme-pink text-white py-3 rounded-xl font-bold shadow-sm hover:bg-pink-700 mb-2">ลงทะเบียนเข้าร่วมงาน Onsite</button>
                         <button onclick="nextWiz(5)" class="w-full bg-gray-100 text-gray-500 py-3 rounded-xl font-bold text-xs hover:bg-gray-200">ไม่สะดวกเข้าร่วม / ไปขั้นตอนต่อไป</button>
                     </div>
                 </div>
@@ -593,7 +618,7 @@
                 <div class="w-24 h-24 bg-green-100 text-green-500 rounded-full flex items-center justify-center text-5xl mb-6 shadow-inner"><i class="fa-solid fa-check"></i></div>
                 <h2 class="text-2xl font-black text-center text-gray-800 mb-2">เกือบเสร็จแล้ว!</h2>
                 <p class="text-center text-sm text-gray-500 mb-6 leading-relaxed">
-                    ขั้นตอนสุดท้ายสำหรับ Check-in เข้าโครงการ<br>เราจะจัดกิจกรรมออนไลน์ผ่าน <strong class="text-blue-600">Zoom</strong><br>กรุณายืนยันอีเมลเพื่อรับลิงก์เข้าร่วมกิจกรรม
+                    ขั้นตอนสุดท้ายสำหรับ Check-in เข้าโครงการ<br>เราจะจัดกิจกรรมออนไลน์ผ่าน <strong class="theme-text">Zoom</strong><br>กรุณายืนยันอีเมลเพื่อรับลิงก์เข้าร่วมกิจกรรม
                 </p>
                 <div class="w-full bg-gray-50 p-4 rounded-2xl border border-gray-200 mb-6">
                     <label class="text-xs font-bold text-gray-700 mb-1 block">อีเมลของคุณ *</label>
@@ -608,26 +633,26 @@
             </div>
         </div>
 
-        <div id="page-www-dashboard" class="page-section p-4 pt-6 bg-yellow-50 min-h-screen">
+        <div id="page-www-dashboard" class="page-section p-4 pt-6 bg-pink-50 min-h-screen">
             <div class="flex items-center mb-6">
-                <button onclick="showPage('profile')" class="w-8 h-8 bg-white rounded-full text-gray-600 mr-3 shadow-sm border border-yellow-200"><i class="fa-solid fa-arrow-left"></i></button>
-                <h2 class="text-lg font-bold text-amber-700">Well Well Well!</h2>
+                <button onclick="showPage('profile')" class="w-8 h-8 bg-white rounded-full text-gray-600 mr-3 shadow-sm border border-pink-200"><i class="fa-solid fa-arrow-left"></i></button>
+                <h2 class="text-lg font-bold theme-text">Well Well Well!</h2>
             </div>
             
             <div class="grid grid-cols-2 gap-3 mb-6">
-                <div onclick="openWWWForm()" class="bg-white rounded-xl p-4 border-2 border-amber-300 cursor-pointer shadow-sm hover:bg-amber-50 text-center flex flex-col items-center justify-center min-h-[120px]">
-                    <div class="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center text-2xl text-amber-600 mb-3"><i class="fa-solid fa-pen-to-square"></i></div>
-                    <h3 class="font-bold text-sm text-amber-800 leading-tight">อัปเดตข้อมูล<br>องค์ประกอบร่างกาย</h3>
+                <div onclick="openWWWForm()" class="bg-white rounded-xl p-4 border-2 border-pink-300 cursor-pointer shadow-sm hover:bg-pink-50 text-center flex flex-col items-center justify-center min-h-[120px]">
+                    <div class="w-12 h-12 bg-pink-100 rounded-full flex items-center justify-center text-2xl theme-text mb-3"><i class="fa-solid fa-pen-to-square"></i></div>
+                    <h3 class="font-bold text-sm theme-text leading-tight">อัปเดตข้อมูล<br>องค์ประกอบร่างกาย</h3>
                 </div>
-                <div onclick="openWWWHistory()" class="bg-white rounded-xl p-4 border-2 border-amber-300 cursor-pointer shadow-sm hover:bg-amber-50 text-center flex flex-col items-center justify-center min-h-[120px]">
-                    <div class="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center text-2xl text-amber-600 mb-3"><i class="fa-solid fa-chart-pie"></i></div>
-                    <h3 class="font-bold text-sm text-amber-800 leading-tight">โปรไฟล์ร่างกาย</h3>
+                <div onclick="openWWWHistory()" class="bg-white rounded-xl p-4 border-2 border-pink-300 cursor-pointer shadow-sm hover:bg-pink-50 text-center flex flex-col items-center justify-center min-h-[120px]">
+                    <div class="w-12 h-12 bg-pink-100 rounded-full flex items-center justify-center text-2xl theme-text mb-3"><i class="fa-solid fa-chart-pie"></i></div>
+                    <h3 class="font-bold text-sm theme-text leading-tight">โปรไฟล์ร่างกาย</h3>
                 </div>
             </div>
             
-            <h3 class="font-bold text-gray-700 text-base mb-4 ml-1 border-b border-yellow-200 pb-2">กิจกรรมและชาเลนจ์</h3>
+            <h3 class="font-bold text-gray-700 text-base mb-4 ml-1 border-b border-pink-200 pb-2">กิจกรรมและชาเลนจ์</h3>
             
-            <div onclick="openFoodDirectory()" class="bg-gradient-to-r from-orange-400 to-rose-400 rounded-xl p-4 mb-4 text-white cursor-pointer shadow-sm hover:shadow-md transition transform hover:-translate-y-1">
+            <div onclick="openFoodDirectory()" class="bg-gradient-to-r from-pink-500 to-rose-500 rounded-xl p-4 mb-4 text-white cursor-pointer shadow-sm hover:shadow-md transition transform hover:-translate-y-1">
                 <div class="flex items-center gap-4">
                     <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center text-2xl shrink-0"><i class="fa-solid fa-bowl-food"></i></div>
                     <div class="flex-1">
@@ -638,7 +663,7 @@
                 </div>
             </div>
             
-            <div onclick="showPage('www-march')" class="bg-gradient-to-r from-emerald-400 to-teal-500 rounded-xl p-4 mb-4 text-white cursor-pointer shadow-sm hover:shadow-md transition transform hover:-translate-y-1">
+            <div onclick="showPage('www-march')" class="bg-gradient-to-r from-rose-500 to-pink-600 rounded-xl p-4 mb-4 text-white cursor-pointer shadow-sm hover:shadow-md transition transform hover:-translate-y-1">
                 <div class="flex items-center gap-4">
                     <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center text-2xl shrink-0"><i class="fa-solid fa-shoe-prints"></i></div>
                     <div class="flex-1">
@@ -649,7 +674,7 @@
                 </div>
             </div>
             
-            <div onclick="openSleepTracker()" class="bg-gradient-to-r from-indigo-400 to-purple-500 rounded-xl p-4 mb-4 text-white cursor-pointer shadow-sm hover:shadow-md transition transform hover:-translate-y-1">
+            <div onclick="openSleepTracker()" class="bg-gradient-to-r from-fuchsia-500 to-pink-500 rounded-xl p-4 mb-4 text-white cursor-pointer shadow-sm hover:shadow-md transition transform hover:-translate-y-1">
                 <div class="flex items-center gap-4">
                     <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center text-2xl shrink-0"><i class="fa-solid fa-moon"></i></div>
                     <div class="flex-1">
@@ -660,7 +685,7 @@
                 </div>
             </div>
             
-            <div onclick="openExternalLink('https://ourspace.in.th/')" class="bg-gradient-to-r from-cyan-400 to-blue-500 rounded-xl p-4 mb-4 text-white cursor-pointer shadow-sm hover:shadow-md transition transform hover:-translate-y-1">
+            <div onclick="openExternalLink('https://ourspace.in.th/')" class="bg-gradient-to-r from-rose-400 to-red-400 rounded-xl p-4 mb-4 text-white cursor-pointer shadow-sm hover:shadow-md transition transform hover:-translate-y-1">
                 <div class="flex items-center gap-4">
                     <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center text-2xl shrink-0"><i class="fa-solid fa-mobile-screen-button"></i></div>
                     <div class="flex-1">
@@ -671,7 +696,7 @@
                 </div>
             </div>
 
-            <div onclick="checkRecapEligibility(this)" class="bg-gradient-to-r from-fuchsia-600 to-pink-500 rounded-xl p-5 mt-8 text-white flex items-center justify-between cursor-pointer shadow-lg relative overflow-hidden transform transition hover:scale-[1.02]">
+            <div onclick="checkRecapEligibility(this)" class="bg-gradient-to-r from-pink-600 to-rose-600 rounded-xl p-5 mt-8 text-white flex items-center justify-between cursor-pointer shadow-lg relative overflow-hidden transform transition hover:scale-[1.02]">
                 <div class="absolute right-[-10px] bottom-[-10px] opacity-20 text-7xl"><i class="fa-solid fa-clock-rotate-left"></i></div>
                 <div class="flex items-center gap-4 relative z-10">
                     <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center text-2xl shrink-0"><i class="fa-solid fa-star text-yellow-300"></i></div>
@@ -684,88 +709,64 @@
             </div>
         </div>
 
-        <!-- ========================================== -->
-        <!-- 🥗 หน้า Good Food Good Mood (รายการเมนู) -->
-        <!-- ========================================== -->
         <div id="page-www-food" class="page-section p-4 pt-6 bg-gray-50 min-h-screen">
             <div class="flex items-center mb-6">
                 <button onclick="showPage('www-dashboard')" class="w-8 h-8 bg-white rounded-full text-gray-600 mr-3 shadow-sm border border-gray-200"><i class="fa-solid fa-arrow-left"></i></button>
-                <h2 class="text-lg font-bold text-orange-600">Good Food, Good Mood</h2>
+                <h2 class="text-lg font-bold theme-text">Good Food, Good Mood</h2>
             </div>
             
             <div id="food-list" class="space-y-4 pb-10">
-                <!-- ระบบจะวาดรายการเมนูอาหารตรงนี้อัตโนมัติ -->
             </div>
         </div>
 
-        <!-- ========================================== -->
-        <!-- 🍲 หน้ารายละเอียดเมนูอาหาร (Food Detail) -->
-        <!-- ========================================== -->
         <div id="page-food-detail" class="page-section bg-gray-50 min-h-screen pb-20">
-            <!-- Header แบบติดขอบบน -->
             <div class="flex items-center p-4 sticky top-0 bg-white/80 backdrop-blur-md z-40 border-b border-gray-100">
                 <button onclick="showPage('www-food')" class="w-8 h-8 bg-white rounded-full text-gray-600 mr-3 shadow-sm"><i class="fa-solid fa-arrow-left"></i></button>
-                <h2 class="text-lg font-bold text-orange-600 truncate" id="fd-title-header">รายละเอียดเมนู</h2>
+                <h2 class="text-lg font-bold theme-text truncate" id="fd-title-header">รายละเอียดเมนู</h2>
             </div>
             
-            <!-- รูปภาพอาหารขนาดใหญ่ (Hero Image) -->
             <div class="w-full h-56 bg-gray-200 relative">
                 <img id="fd-image" src="" alt="Food" class="w-full h-full object-cover">
-                <!-- กรอบสีดำจางๆ ไล่ระดับเพื่อให้ตัวหนังสือชัดขึ้น -->
                 <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                <!-- ชื่อเมนู -->
                 <h2 id="fd-title" class="absolute bottom-4 left-4 text-2xl font-black text-white shadow-sm leading-tight pr-4">ชื่อเมนู</h2>
             </div>
 
-            <!-- ส่วนรายละเอียดเนื้อหา -->
             <div class="p-4 space-y-6">
-                <!-- คำอธิบาย/คอนเซปต์ -->
-                <p id="fd-concept" class="text-sm font-medium text-gray-600 italic border-l-4 border-orange-500 pl-3 leading-relaxed"></p>
+                <p id="fd-concept" class="text-sm font-medium text-gray-600 italic border-l-4 border-pink-500 pl-3 leading-relaxed"></p>
 
-                <!-- 1. วัตถุดิบ -->
                 <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
-                    <h3 class="font-bold text-orange-800 text-base mb-3"><i class="fa-solid fa-basket-shopping mr-2 text-orange-500"></i>วัตถุดิบและปริมาณ</h3>
-                    <ul id="fd-ingredients" class="space-y-2 text-sm text-gray-700 marker:text-orange-400 list-disc pl-5 leading-relaxed">
-                        <!-- ระบบจะวาดลิสต์วัตถุดิบตรงนี้ -->
+                    <h3 class="font-bold theme-text text-base mb-3"><i class="fa-solid fa-basket-shopping mr-2 text-pink-500"></i>วัตถุดิบและปริมาณ</h3>
+                    <ul id="fd-ingredients" class="space-y-2 text-sm text-gray-700 marker:text-pink-400 list-disc pl-5 leading-relaxed">
                     </ul>
                 </div>
 
-                <!-- 2. วิธีทำ -->
                 <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
-                    <h3 class="font-bold text-orange-800 text-base mb-3"><i class="fa-solid fa-fire-burner mr-2 text-orange-500"></i>วิธีการปรุง</h3>
+                    <h3 class="font-bold theme-text text-base mb-3"><i class="fa-solid fa-fire-burner mr-2 text-pink-500"></i>วิธีการปรุง</h3>
                     <div id="fd-instructions" class="space-y-3 text-sm text-gray-700">
-                        <!-- ระบบจะวาดขั้นตอนตรงนี้ -->
                     </div>
                 </div>
 
-                <!-- 3. กล่องเกร็ดความรู้ (เลื่อนซ้ายขวาได้) -->
                 <div>
-                    <h3 class="font-bold text-orange-800 text-base mb-3 ml-1"><i class="fa-solid fa-lightbulb mr-2 text-yellow-500"></i>เกร็ดความรู้ <span class="text-[10px] text-gray-400 font-normal">(ปัดเลื่อนและแตะเพื่ออ่าน)</span></h3>
-                    <!-- กล่อง Container แบบ Horizontal Scroll (ลากซ้ายขวา) -->
+                    <h3 class="font-bold theme-text text-base mb-3 ml-1"><i class="fa-solid fa-lightbulb mr-2 text-amber-500"></i>เกร็ดความรู้ <span class="text-[10px] text-gray-400 font-normal">(ปัดเลื่อนและแตะเพื่ออ่าน)</span></h3>
                     <div id="fd-tips" class="flex overflow-x-auto gap-3 pb-4 snap-x snap-mandatory hide-scrollbar">
-                        <!-- ระบบจะวาดกล่องสี่เหลี่ยม Tips ตรงนี้ -->
                     </div>
                 </div>
             </div>
         </div>
 
-       <!-- ========================================== -->
-        <!-- 👟 1. หน้า The Long March (Dashboard ใหม่สไตล์ StepsApp) -->
-        <!-- ========================================== -->
         <div id="page-www-march" class="page-section p-4 pt-6 bg-gray-50 min-h-screen pb-24">
             <div class="flex items-center mb-6">
                 <button onclick="showPage('www-dashboard')" class="w-10 h-10 bg-white rounded-full text-gray-600 mr-4 shadow-sm border border-gray-200"><i class="fa-solid fa-arrow-left text-lg"></i></button>
-                <h2 class="text-xl font-bold text-emerald-700">The Long March</h2>
+                <h2 class="text-xl font-bold theme-text">The Long March</h2>
             </div>
 
-            <!-- วงแหวนสะสมก้าวเดินรายเดือน (ขยายร่างใหญ่ขึ้น) -->
             <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 mb-6 flex flex-col items-center justify-center relative overflow-hidden">
                 <h3 class="font-bold text-gray-500 mb-6 text-base uppercase tracking-wider">เป้าหมายประจำเดือนนี้</h3>
                 <div class="relative w-64 h-64 flex items-center justify-center mb-2">
-                    <div id="march-circle-progress" class="absolute inset-0 rounded-full bg-gray-100" style="background: conic-gradient(#10b981 0%, #f3f4f6 0);"></div>
+                    <div id="march-circle-progress" class="absolute inset-0 rounded-full bg-gray-100" style="background: conic-gradient(#d81b60 0%, #f3f4f6 0);"></div>
                     <div class="absolute inset-3 bg-white rounded-full flex flex-col items-center justify-center shadow-inner">
                         <p class="text-sm text-gray-400 font-bold mb-1">ก้าวสะสมทั้งหมด</p>
-                        <p id="march-total-month" class="text-6xl font-black text-emerald-600 leading-none">0</p>
+                        <p id="march-total-month" class="text-6xl font-black theme-text leading-none">0</p>
                         <p class="text-base text-gray-400 mt-2 font-medium">/ 210,000</p>
                     </div>
                 </div>
@@ -775,9 +776,8 @@
             <div class="grid grid-cols-4 gap-2 mb-6" id="streak-badges-container">
                 </div>
 
-            <!-- เมนูหลัก 3 ปุ่ม -->
             <div class="space-y-4">
-                <div onclick="showPage('walkathon-intro')" class="bg-gradient-to-r from-orange-400 to-amber-500 rounded-3xl p-5 shadow-md flex items-center gap-4 cursor-pointer hover:shadow-lg transition transform hover:-translate-y-1">
+                <div onclick="showPage('walkathon-intro')" class="bg-gradient-to-r from-pink-500 to-rose-600 rounded-3xl p-5 shadow-md flex items-center gap-4 cursor-pointer hover:shadow-lg transition transform hover:-translate-y-1">
                     <div class="w-14 h-14 bg-white/20 text-white rounded-2xl flex items-center justify-center text-3xl shrink-0"><i class="fa-solid fa-map-location-dot"></i></div>
                     <div class="flex-1 text-white">
                         <h4 class="font-black text-lg">Thailand Walkathon</h4>
@@ -787,69 +787,61 @@
                 </div>
 
                 <div onclick="showPage('march-zone2')" class="bg-white rounded-3xl p-5 shadow-sm border border-gray-100 flex items-center gap-4 cursor-pointer">
-                    <div class="w-14 h-14 bg-blue-50 text-blue-500 rounded-2xl flex items-center justify-center text-2xl shrink-0"><i class="fa-solid fa-heart-pulse"></i></div>
+                    <div class="w-14 h-14 bg-pink-50 theme-text rounded-2xl flex items-center justify-center text-2xl shrink-0"><i class="fa-solid fa-heart-pulse"></i></div>
                     <div class="flex-1"><h4 class="font-black text-gray-800 text-lg">เช็กการออกกำลังกายโซน 2</h4></div>
                     <i class="fa-solid fa-chevron-right text-gray-300 text-lg"></i>
                 </div>
 
                 <div onclick="showPage('march-playlist')" class="bg-white rounded-3xl p-5 shadow-sm border border-gray-100 flex items-center gap-4 cursor-pointer">
-                    <div class="w-14 h-14 bg-purple-50 text-purple-500 rounded-2xl flex items-center justify-center text-2xl shrink-0"><i class="fa-solid fa-music"></i></div>
+                    <div class="w-14 h-14 bg-pink-50 theme-text rounded-2xl flex items-center justify-center text-2xl shrink-0"><i class="fa-solid fa-music"></i></div>
                     <div class="flex-1"><h4 class="font-black text-gray-800 text-base leading-tight">เพลย์ลิสเพลงออกกำลังกายส่วนตัวของคุณ</h4></div>
                     <i class="fa-solid fa-chevron-right text-gray-300 text-lg"></i>
                 </div>
             </div>
         </div>
 
-        <!-- ========================================== -->
-        <!-- 🗺️ 2. หน้า Walkathon Intro (โปสเตอร์โปรโมท) -->
-        <!-- ========================================== -->
         <div id="page-walkathon-intro" class="page-section bg-gray-900 min-h-screen relative pb-24">
             <button onclick="showPage('www-march')" class="absolute top-6 left-6 w-10 h-10 bg-white/20 backdrop-blur-md rounded-full text-white z-50 flex items-center justify-center"><i class="fa-solid fa-arrow-left"></i></button>
             <img src="https://i.ibb.co/zW6bSqhS/Untitled-design-4.png" class="w-full h-[45vh] object-cover opacity-60" alt="Walkathon">
             <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/90 to-transparent"></div>
             
             <div class="absolute top-[35vh] left-0 right-0 px-6 text-center z-10">
-                <span class="bg-amber-500 text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full mb-3 inline-block shadow-lg">แคมเปญพิเศษ</span>
-                <h1 class="text-5xl font-black text-white mb-2 leading-tight drop-shadow-md">Thailand<br><span class="text-amber-400">Walkathon</span></h1>
+                <span class="bg-pink-500 text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full mb-3 inline-block shadow-lg">แคมเปญพิเศษ</span>
+                <h1 class="text-5xl font-black text-white mb-2 leading-tight drop-shadow-md">Thailand<br><span class="text-pink-400">Walkathon</span></h1>
                 
                 <p class="text-gray-200 font-medium text-sm mb-6 leading-relaxed">
                     สะสมก้าวเดินเพื่อปลดล็อก 22 เรื่องลับประจำท้องถิ่น<br>
                     และไอคอนเอกลักษณ์ประจำจังหวัดทั่วประเทศไทยกัน!<br>
                 </p>
                 
-                <!-- แผนที่และไอคอนจำลอง -->
                 <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 mb-8 shadow-xl relative">
                     <img src="https://i.ibb.co/JwhCPvwb/Untitled-design-5.png" class="w-full h-32 object-cover rounded-xl opacity-80 mix-blend-overlay">
                     <div class="absolute inset-0 flex items-center justify-center gap-4">
-                        <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg animate-bounce text-2xl"><i class="fa-solid fa-cow text-amber-600"></i></div>
-                        <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg animate-bounce delay-100 text-xl"><i class="fa-solid fa-bowl-rice text-orange-500"></i></div>
-                        <div class="w-14 h-14 bg-white rounded-full flex items-center justify-center shadow-lg animate-bounce delay-200 text-3xl"><i class="fa-solid fa-umbrella-beach text-blue-500"></i></div>
+                        <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg animate-bounce text-2xl"><i class="fa-solid fa-cow text-pink-600"></i></div>
+                        <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg animate-bounce delay-100 text-xl"><i class="fa-solid fa-bowl-rice text-rose-500"></i></div>
+                        <div class="w-14 h-14 bg-white rounded-full flex items-center justify-center shadow-lg animate-bounce delay-200 text-3xl"><i class="fa-solid fa-umbrella-beach text-pink-500"></i></div>
                     </div>
                 </div>
 
-                <button onclick="showPage('walkathon-map')" class="w-full bg-amber-500 text-gray-900 py-4 rounded-2xl font-black text-xl shadow-lg hover:bg-amber-400 transition animate-pulse">เริ่มออกเดินทาง!</button>
+                <button onclick="showPage('walkathon-map')" class="w-full bg-pink-500 text-white py-4 rounded-2xl font-black text-xl shadow-lg hover:bg-pink-400 transition animate-pulse">เริ่มออกเดินทาง!</button>
             </div>
         </div>
 
-        <!-- ========================================== -->
-        <!-- 🗺️ 3. หน้าเลือกลงพื้นที่ (เลือกจังหวัด) -->
-        <!-- ========================================== -->
         <div id="page-walkathon-map" class="page-section p-4 pt-6 bg-gray-50 min-h-screen">
             <div class="flex items-center mb-6">
                 <button onclick="showPage('walkathon-intro')" class="w-10 h-10 bg-white rounded-full text-gray-600 mr-4 shadow-sm border border-gray-200"><i class="fa-solid fa-arrow-left text-lg"></i></button>
-                <h2 class="text-xl font-bold text-emerald-700">เลือกพื้นที่ลงเดิน</h2>
+                <h2 class="text-xl font-bold theme-text">เลือกพื้นที่ลงเดิน</h2>
             </div>
             <p class="text-sm font-bold text-gray-500 mb-4 px-2">คุณสามารถเลือกได้ 1 จังหวัดต่อเดือนเท่านั้น</p>
             
-            <div class="bg-white p-3 rounded-3xl shadow-sm border border-emerald-500 ring-2 ring-emerald-100 relative overflow-hidden">
-                <div class="absolute top-4 right-4 bg-emerald-500 text-white text-[10px] font-bold px-2 py-1 rounded-md z-10">เปิดให้เล่นแล้ว</div>
+            <div class="bg-white p-3 rounded-3xl shadow-sm border border-pink-500 ring-2 ring-pink-100 relative overflow-hidden">
+                <div class="absolute top-4 right-4 bg-pink-500 text-white text-[10px] font-bold px-2 py-1 rounded-md z-10">เปิดให้เล่นแล้ว</div>
                 <img src="https://i.ibb.co/zW6bSqhS/Untitled-design-4.png" class="w-full h-40 object-cover rounded-2xl mb-3 border border-gray-100">
                 <h3 class="font-black text-lg text-gray-800 ml-2">📍 จังหวัดชลบุรี</h3>
                 <p class="text-xs text-gray-500 ml-2 mb-4">ปลดล็อก 22 สถานที่และของดีเมืองชลฯ</p>
                 <button onclick="openWalkathonBoard()" class="w-full bg-gray-900 text-white py-3 rounded-xl font-bold shadow-sm">ยืนยันเลือกพื้นที่นี้</button>
             </div>
 
-            <!-- จังหวัดที่ล็อกอยู่ (ตัวอย่าง) -->
             <div class="bg-gray-100 p-3 rounded-3xl shadow-sm border border-gray-200 mt-4 relative opacity-60 grayscale">
                 <div class="absolute inset-0 flex items-center justify-center z-10"><div class="bg-gray-900/80 text-white px-4 py-2 rounded-lg font-bold"><i class="fa-solid fa-lock mr-2"></i>เร็วๆ นี้</div></div>
                 <div class="w-full h-40 bg-gray-300 rounded-2xl mb-3"></div>
@@ -857,21 +849,18 @@
             </div>
         </div>
 
-        <!-- ========================================== -->
-        <!-- 🗺️ 4. หน้ากระดานสะสม 22 ไอคอน & อัปโหลด -->
-        <!-- ========================================== -->
-        <div id="page-walkathon-board" class="page-section p-4 pt-6 bg-blue-50 min-h-screen pb-24">
+        <div id="page-walkathon-board" class="page-section p-4 pt-6 bg-pink-50 min-h-screen pb-24">
             <div class="flex items-center mb-6">
                 <button onclick="showPage('www-march')" class="w-10 h-10 bg-white rounded-full text-gray-600 mr-4 shadow-sm border border-gray-200"><i class="fa-solid fa-arrow-left text-lg"></i></button>
-                <h2 class="text-xl font-black text-blue-900">ตะลอนชลบุรี</h2>
+                <h2 class="text-xl font-black theme-text">ตะลอนชลบุรี</h2>
             </div>
 
-            <div class="bg-white rounded-3xl p-5 shadow-sm border border-blue-100 mb-6">
+            <div class="bg-white rounded-3xl p-5 shadow-sm border border-pink-100 mb-6">
                 <div class="flex justify-between items-start mb-6">
                     <h3 class="font-bold text-gray-800 text-lg leading-tight w-1/2">ตารางของสะสม<br><span class="text-sm font-medium text-gray-400">(22 ไอเทม)</span></h3>
                     <div class="text-right w-1/2">
                         <p class="text-xs text-gray-400 font-bold uppercase">ก้าวสะสมรวม</p>
-                        <p id="walkathon-total-text" class="text-4xl font-black text-blue-600 leading-none mt-1">0</p>
+                        <p id="walkathon-total-text" class="text-4xl font-black theme-text leading-none mt-1">0</p>
                     </div>
                 </div>
                 <div id="walkathon-icons-grid" class="grid grid-cols-3 gap-4"></div>
@@ -881,11 +870,11 @@
                 <i class="fa-solid fa-mobile-screen mr-2"></i> เปิดแอป StepsApp
             </button>
 
-            <div class="bg-white p-5 rounded-3xl shadow-sm border border-blue-100 mb-6 text-center">
+            <div class="bg-white p-5 rounded-3xl shadow-sm border border-pink-100 mb-6 text-center">
                 <h3 class="font-black text-gray-800 text-lg mb-1">อัปโหลดหลักฐานก้าวเดิน</h3>
                 <p class="text-xs text-gray-500 font-bold mb-4">AI จะตรวจสอบยอดเดินของคุณอัตโนมัติ</p>
-                <input type="file" id="march-image-ai" accept="image/*" class="w-full text-sm text-gray-500 file:mr-4 file:py-2.5 file:px-5 file:rounded-full file:border-0 file:text-sm file:font-bold file:bg-blue-50 file:text-blue-700 mb-5 bg-gray-50 p-2 rounded-xl">
-                <button onclick="uploadStepImageAI(this)" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-4 rounded-xl font-bold shadow-sm text-lg transition">ตรวจสอบภาพและอัปเดตยอด</button>
+                <input type="file" id="march-image-ai" accept="image/*" class="w-full text-sm text-gray-500 file:mr-4 file:py-2.5 file:px-5 file:rounded-full file:border-0 file:text-sm file:font-bold file:bg-pink-50 file:text-pink-700 mb-5 bg-gray-50 p-2 rounded-xl">
+                <button onclick="uploadStepImageAI(this)" class="w-full theme-pink hover:bg-pink-700 text-white py-4 rounded-xl font-bold shadow-sm text-lg transition">ตรวจสอบภาพและอัปเดตยอด</button>
             </div>
 
             <div class="bg-white p-5 rounded-3xl shadow-sm border border-gray-200">
@@ -893,82 +882,74 @@
                 <div class="w-full h-48 relative bg-gray-50 rounded-xl border border-gray-100 p-2"><canvas id="marchStepsChart"></canvas></div>
             </div>
         </div>
-        <!-- ========================================== -->
-        <!-- 🎧 เมนูย่อย 1: หน้าเช็ก Zone 2 -->
-        <!-- ========================================== -->
         <div id="page-march-zone2" class="page-section bg-white min-h-screen pb-24 relative">
             <button onclick="showPage('www-march')" class="absolute top-6 left-6 w-10 h-10 bg-gray-100 rounded-full text-gray-600 z-50 flex items-center justify-center shadow-sm"><i class="fa-solid fa-arrow-left text-lg"></i></button>
             
             <div id="zone2-intro" class="flex flex-col items-center justify-center min-h-[85vh] p-6 text-center animate-fadeInUp">
-                <img src="https://i.ibb.co/HTJKfJTV/IMG-0436.jpg" class="w-56 h-56 object-cover rounded-full shadow-lg mb-8 border-4 border-blue-100">
-                <h2 class="text-3xl font-black text-blue-800 mb-4 leading-tight">เช็กการออกกำลังกาย<br>โซน 2 ของคุณ</h2>
-                <p class="text-base font-bold text-gray-600 mb-6 bg-blue-50 p-4 rounded-xl border border-blue-100">ผ่านการปรับจังหวะของร่างกาย<br>(Rhythmic Entrainment)</p>
-                <p class="text-xl italic font-medium text-blue-600 mb-10">"เมื่อก้าวเดิน หัวใจ สัมพันธ์ด้วยเสียงเพลง"</p>
-                <button onclick="startZone2Selection()" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold shadow-lg hover:bg-blue-700 transition text-xl">เริ่มต้นค้นหาจังหวะ <i class="fa-solid fa-arrow-right ml-2"></i></button>
+                <img src="https://i.ibb.co/HTJKfJTV/IMG-0436.jpg" class="w-56 h-56 object-cover rounded-full shadow-lg mb-8 border-4 border-pink-100">
+                <h2 class="text-3xl font-black theme-text mb-4 leading-tight">เช็กการออกกำลังกาย<br>โซน 2 ของคุณ</h2>
+                <p class="text-base font-bold text-gray-600 mb-6 bg-pink-50 p-4 rounded-xl border border-pink-100">ผ่านการปรับจังหวะของร่างกาย<br>(Rhythmic Entrainment)</p>
+                <p class="text-xl italic font-medium theme-text mb-10">"เมื่อก้าวเดิน หัวใจ สัมพันธ์ด้วยเสียงเพลง"</p>
+                <button onclick="startZone2Selection()" class="w-full theme-pink text-white py-4 rounded-2xl font-bold shadow-lg hover:bg-pink-700 transition text-xl">เริ่มต้นค้นหาจังหวะ <i class="fa-solid fa-arrow-right ml-2"></i></button>
             </div>
 
             <div id="zone2-selection" class="hidden pt-24 p-6">
                 <div class="text-center mb-8">
-                    <h2 class="text-2xl font-black text-blue-800 mb-3">โจทย์ของเราวันนี้</h2>
-                    <p class="text-base font-bold text-gray-700 bg-yellow-50 p-4 rounded-xl border border-yellow-200 leading-relaxed">"เลือกความเร็วของเพลง<br>ที่ทำให้คุณรู้สึกเหนื่อยขึ้นมาสักนิด!"</p>
+                    <h2 class="text-2xl font-black theme-text mb-3">โจทย์ของเราวันนี้</h2>
+                    <p class="text-base font-bold text-gray-700 bg-amber-50 p-4 rounded-xl border border-amber-200 leading-relaxed">"เลือกความเร็วของเพลง<br>ที่ทำให้คุณรู้สึกเหนื่อยขึ้นมาสักนิด!"</p>
                     <p class="text-sm text-gray-500 font-bold mt-4">(กดฟังตัวอย่างเสียง แล้วเลือกจังหวะที่ใช่สำหรับคุณ)</p>
                 </div>
 
                 <div class="space-y-4">
-                    <!-- ตัวเลือกที่ 1-4 (ขยายฟอนต์) -->
                     <div class="bg-white border border-gray-200 p-5 rounded-2xl shadow-sm flex flex-col gap-4">
                         <div class="flex justify-between items-center">
                             <span class="font-black text-gray-800 text-lg">ระดับ 1 (BPM 90-100)</span>
-                            <button onclick="togglePreviewAudio('audio-1', this)" class="bg-gray-100 text-blue-600 w-10 h-10 rounded-full flex items-center justify-center text-lg"><i class="fa-solid fa-play"></i></button>
+                            <button onclick="togglePreviewAudio('audio-1', this)" class="bg-pink-50 theme-text w-10 h-10 rounded-full flex items-center justify-center text-lg"><i class="fa-solid fa-play"></i></button>
                             <audio id="audio-1" class="bpm-audio hidden" src="https://www.dropbox.com/scl/fi/f7m71xm4azpncffsnl5iy/1.mp3?rlkey=d6o2r7y84p67kra3i3vp82tdh&st=h6klrwsb&raw=1"></audio>
                         </div>
-                        <button onclick="confirmBPM('ระดับ 1 (BPM 90-100)')" class="w-full bg-blue-50 text-blue-700 py-3 rounded-xl text-base font-bold border border-blue-200">เลือกระดับนี้</button>
+                        <button onclick="confirmBPM('ระดับ 1 (BPM 90-100)')" class="w-full bg-pink-50 theme-text py-3 rounded-xl text-base font-bold border border-pink-200">เลือกระดับนี้</button>
                     </div>
                     
                     <div class="bg-white border border-gray-200 p-5 rounded-2xl shadow-sm flex flex-col gap-4">
                         <div class="flex justify-between items-center">
                             <span class="font-black text-gray-800 text-lg">ระดับ 2 (BPM 100-120)</span>
-                            <button onclick="togglePreviewAudio('audio-2', this)" class="bg-gray-100 text-blue-600 w-10 h-10 rounded-full flex items-center justify-center text-lg"><i class="fa-solid fa-play"></i></button>
+                            <button onclick="togglePreviewAudio('audio-2', this)" class="bg-pink-50 theme-text w-10 h-10 rounded-full flex items-center justify-center text-lg"><i class="fa-solid fa-play"></i></button>
                             <audio id="audio-2" class="bpm-audio hidden" src="https://www.dropbox.com/scl/fi/c6begszcww5fcuix0w4is/2.mp3?rlkey=3zycfu2f7knz0ihbg2ijrkqbe&st=eqhiq2if&raw=1"></audio>
                         </div>
-                        <button onclick="confirmBPM('ระดับ 2 (BPM 100-120)')" class="w-full bg-blue-50 text-blue-700 py-3 rounded-xl text-base font-bold border border-blue-200">เลือกระดับนี้</button>
+                        <button onclick="confirmBPM('ระดับ 2 (BPM 100-120)')" class="w-full bg-pink-50 theme-text py-3 rounded-xl text-base font-bold border border-pink-200">เลือกระดับนี้</button>
                     </div>
 
                     <div class="bg-white border border-gray-200 p-5 rounded-2xl shadow-sm flex flex-col gap-4">
                         <div class="flex justify-between items-center">
                             <span class="font-black text-gray-800 text-lg">ระดับ 3 (BPM 120 ขึ้นไป)</span>
-                            <button onclick="togglePreviewAudio('audio-3', this)" class="bg-gray-100 text-blue-600 w-10 h-10 rounded-full flex items-center justify-center text-lg"><i class="fa-solid fa-play"></i></button>
+                            <button onclick="togglePreviewAudio('audio-3', this)" class="bg-pink-50 theme-text w-10 h-10 rounded-full flex items-center justify-center text-lg"><i class="fa-solid fa-play"></i></button>
                             <audio id="audio-3" class="bpm-audio hidden" src="https://www.dropbox.com/scl/fi/yo75bom9nqcc8dxo3yna4/3.mp3?rlkey=awqr3ifqhcx48qsdfcbjvybg1&st=kl9q0vpv&raw=1"></audio>
                         </div>
-                        <button onclick="confirmBPM('ระดับ 3 (BPM 120 ขึ้นไป)')" class="w-full bg-blue-50 text-blue-700 py-3 rounded-xl text-base font-bold border border-blue-200">เลือกระดับนี้</button>
+                        <button onclick="confirmBPM('ระดับ 3 (BPM 120 ขึ้นไป)')" class="w-full bg-pink-50 theme-text py-3 rounded-xl text-base font-bold border border-pink-200">เลือกระดับนี้</button>
                     </div>
 
                     <div class="bg-white border border-gray-200 p-5 rounded-2xl shadow-sm flex flex-col gap-4">
                         <div class="flex justify-between items-center">
                             <span class="font-black text-gray-800 text-lg">ระดับ 4 (เร็ว - ค่อนวิ่ง)</span>
-                            <button onclick="togglePreviewAudio('audio-4', this)" class="bg-gray-100 text-blue-600 w-10 h-10 rounded-full flex items-center justify-center text-lg"><i class="fa-solid fa-play"></i></button>
+                            <button onclick="togglePreviewAudio('audio-4', this)" class="bg-pink-50 theme-text w-10 h-10 rounded-full flex items-center justify-center text-lg"><i class="fa-solid fa-play"></i></button>
                             <audio id="audio-4" class="bpm-audio hidden" src="https://www.dropbox.com/scl/fi/z0pioh3ahnyfqjq7p43bi/4.mp3?rlkey=2homnxrx9w9tphph86psh5bed&st=hwka4c6e&raw=1"></audio>
                         </div>
-                        <button onclick="confirmBPM('ระดับ 4 (BPM เร็ว - ค่อนวิ่ง)')" class="w-full bg-blue-50 text-blue-700 py-3 rounded-xl text-base font-bold border border-blue-200">เลือกระดับนี้</button>
+                        <button onclick="confirmBPM('ระดับ 4 (BPM เร็ว - ค่อนวิ่ง)')" class="w-full bg-pink-50 theme-text py-3 rounded-xl text-base font-bold border border-pink-200">เลือกระดับนี้</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- ========================================== -->
-        <!-- 🎶 เมนูย่อย 3: Personal Playlist (ขยายฟอนต์) -->
-        <!-- ========================================== -->
         <div id="page-march-playlist" class="page-section p-4 pt-6 bg-gray-50 min-h-screen pb-24">
             <div class="flex items-center mb-6">
                 <button onclick="showPage('www-march')" class="w-10 h-10 bg-white rounded-full text-gray-600 mr-4 shadow-sm border border-gray-200"><i class="fa-solid fa-arrow-left text-lg"></i></button>
-                <h2 class="text-xl font-bold text-purple-700">Personal Playlist</h2>
+                <h2 class="text-xl font-bold theme-text">Personal Playlist</h2>
             </div>
             
             <p class="text-base font-bold text-gray-600 mb-5 px-2">เลือกกล่องเพลย์ลิสต์ที่ตรงกับจังหวะการเดินของคุณ</p>
             
             <div class="grid grid-cols-1 gap-5">
-                <!-- ระดับ 4 -->
-                <div class="bg-gradient-to-r from-red-500 to-rose-500 p-5 rounded-3xl shadow-md text-white">
+                <div class="bg-gradient-to-r from-rose-600 to-pink-600 p-5 rounded-3xl shadow-md text-white">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="font-black text-xl">ระดับ 4</h3>
                         <span class="bg-white/20 text-xs font-bold px-3 py-1.5 rounded-lg">BPM เร็ว - ค่อนวิ่ง</span>
@@ -980,8 +961,7 @@
                     </div>
                 </div>
 
-                <!-- ระดับ 3 -->
-                <div class="bg-gradient-to-r from-orange-400 to-amber-500 p-5 rounded-3xl shadow-md text-white">
+                <div class="bg-gradient-to-r from-pink-500 to-rose-500 p-5 rounded-3xl shadow-md text-white">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="font-black text-xl">ระดับ 3</h3>
                         <span class="bg-white/20 text-xs font-bold px-3 py-1.5 rounded-lg">BPM 120 ขึ้นไป</span>
@@ -993,8 +973,7 @@
                     </div>
                 </div>
 
-                <!-- ระดับ 2 -->
-                <div class="bg-gradient-to-r from-teal-400 to-emerald-500 p-5 rounded-3xl shadow-md text-white">
+                <div class="bg-gradient-to-r from-fuchsia-500 to-pink-500 p-5 rounded-3xl shadow-md text-white">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="font-black text-xl">ระดับ 2</h3>
                         <span class="bg-white/20 text-xs font-bold px-3 py-1.5 rounded-lg">BPM 100-120</span>
@@ -1006,8 +985,7 @@
                     </div>
                 </div>
 
-                <!-- ระดับ 1 -->
-                <div class="bg-gradient-to-r from-blue-400 to-indigo-500 p-5 rounded-3xl shadow-md text-white">
+                <div class="bg-gradient-to-r from-rose-400 to-pink-400 p-5 rounded-3xl shadow-md text-white">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="font-black text-xl">ระดับ 1</h3>
                         <span class="bg-white/20 text-xs font-bold px-3 py-1.5 rounded-lg">BPM 90-100</span>
@@ -1021,21 +999,21 @@
             </div>
         </div>
 
-        <div id="page-www-sleep" class="page-section p-4 pt-6 bg-indigo-50 min-h-screen pb-20">
+        <div id="page-www-sleep" class="page-section p-4 pt-6 bg-pink-50 min-h-screen pb-20">
             <div class="flex items-center mb-6">
-                <button onclick="showPage('www-dashboard')" class="w-8 h-8 bg-white rounded-full text-gray-600 mr-3 shadow-sm border border-indigo-200"><i class="fa-solid fa-arrow-left"></i></button>
-                <h2 class="text-xl font-black text-indigo-800">Sleep well - Wake me up</h2>
+                <button onclick="showPage('www-dashboard')" class="w-8 h-8 bg-white rounded-full text-gray-600 mr-3 shadow-sm border border-pink-200"><i class="fa-solid fa-arrow-left"></i></button>
+                <h2 class="text-xl font-black theme-text">Sleep well - Wake me up</h2>
             </div>
             
-            <div class="bg-white rounded-2xl p-4 shadow-sm border border-indigo-100 mb-6">
-                <h3 class="text-indigo-800 text-sm mb-3 font-bold"><i class="fa-solid fa-chart-line mr-1"></i> กราฟอารมณ์การตื่นนอน (7 วันล่าสุด)</h3>
+            <div class="bg-white rounded-2xl p-4 shadow-sm border border-pink-100 mb-6">
+                <h3 class="theme-text text-sm mb-3 font-bold"><i class="fa-solid fa-chart-line mr-1"></i> กราฟอารมณ์การตื่นนอน (7 วันล่าสุด)</h3>
                 <div class="relative h-40 w-full"><canvas id="sleepMoodChart"></canvas></div>
             </div>
             
-            <div class="bg-white p-5 rounded-2xl shadow-sm border border-indigo-100 mb-6">
-                <h3 class="font-black text-indigo-900 text-lg mb-1 text-center">ประเมินอารมณ์การตื่นนอนของคุณเช้านี้</h3>
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-pink-100 mb-6">
+                <h3 class="font-black theme-text text-lg mb-1 text-center">ประเมินอารมณ์การตื่นนอนของคุณเช้านี้</h3>
                 <p class="text-xs text-gray-500 text-center mb-5 font-medium">How did you wake up?</p>
-                <div class="grid grid-cols-5 gap-2 bg-indigo-50 p-3 rounded-2xl border border-indigo-100">
+                <div class="grid grid-cols-5 gap-2 bg-pink-50 p-3 rounded-2xl border border-pink-100">
                     <button onclick="selectMood(1, this)" class="mood-btn py-3 rounded-xl flex flex-col items-center justify-center transition-all bg-white border border-gray-200 shadow-sm opacity-60 hover:opacity-100 transform hover:scale-105">
                         <i class="fa-solid fa-face-tired text-red-500 text-3xl mb-2"></i><span class="text-[10px] font-bold text-gray-700">แย่มาก</span>
                     </button>
@@ -1055,65 +1033,65 @@
                 <input type="hidden" id="sleep-mood" value="0">
             </div>
             
-            <div class="bg-white p-5 rounded-2xl shadow-sm border border-indigo-100 mb-6">
-                <h3 class="font-bold text-indigo-900 text-base mb-4"><i class="fa-solid fa-bed mr-1"></i> ลักษณะอาการระหว่างคืน</h3>
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-pink-100 mb-6">
+                <h3 class="font-bold theme-text text-base mb-4"><i class="fa-solid fa-bed mr-1"></i> ลักษณะอาการระหว่างคืน</h3>
                 <div class="flex flex-wrap gap-2.5" id="sleep-symptoms-container"></div>
             </div>
-            <button onclick="saveSleepLog(this)" class="w-full bg-indigo-600 text-white py-4 rounded-xl font-bold shadow-md hover:bg-indigo-700 transition text-base">บันทึกข้อมูลการนอน</button>
+            <button onclick="saveSleepLog(this)" class="w-full theme-pink text-white py-4 rounded-xl font-bold shadow-md hover:bg-pink-700 transition text-base">บันทึกข้อมูลการนอน</button>
         </div>
 
         <div id="page-www-form" class="page-section p-4 pt-6 bg-white min-h-screen">
             <div class="flex items-center mb-6">
                 <button onclick="showPage('www-dashboard')" class="w-8 h-8 bg-gray-100 rounded-full text-gray-600 mr-3 shadow-sm"><i class="fa-solid fa-arrow-left"></i></button>
-                <h2 class="text-lg font-bold text-amber-600">บันทึกข้อมูล (องค์ประกอบร่างกาย)</h2>
+                <h2 class="text-lg font-bold theme-text">บันทึกข้อมูล (องค์ประกอบร่างกาย)</h2>
             </div>
             <div class="space-y-4">
-                <div><label class="text-sm font-bold text-gray-600 mb-1 block">น้ำหนัก (kg) *</label><input type="number" step="0.1" id="www-weight" class="form-input bg-yellow-50 font-black text-xl text-amber-700"></div>
+                <div><label class="text-sm font-bold text-gray-600 mb-1 block">น้ำหนัก (kg) *</label><input type="number" step="0.1" id="www-weight" class="form-input bg-pink-50 font-black text-xl theme-text"></div>
                 <div class="grid grid-cols-2 gap-3">
-                    <div><label class="text-xs font-bold text-gray-500 mb-1 block">ไขมันในร่างกาย (%)</label><input type="number" step="0.1" id="www-fat" class="form-input border-amber-200 focus:border-amber-500 font-bold"></div>
-                    <div><label class="text-xs font-bold text-gray-500 mb-1 block">ไขมันช่องท้อง</label><input type="number" step="0.1" id="www-visceral" class="form-input border-amber-200 focus:border-amber-500 font-bold"></div>
+                    <div><label class="text-xs font-bold text-gray-500 mb-1 block">ไขมันในร่างกาย (%)</label><input type="number" step="0.1" id="www-fat" class="form-input border-pink-200 focus:border-pink-500 font-bold"></div>
+                    <div><label class="text-xs font-bold text-gray-500 mb-1 block">ไขมันช่องท้อง</label><input type="number" step="0.1" id="www-visceral" class="form-input border-pink-200 focus:border-pink-500 font-bold"></div>
                 </div>
                 <div class="grid grid-cols-2 gap-3">
-                    <div><label class="text-xs font-bold text-gray-500 mb-1 block">มวลกล้ามเนื้อ (kg)</label><input type="number" step="0.1" id="www-muscle" class="form-input border-amber-200 focus:border-amber-500 font-bold"></div>
-                    <div><label class="text-xs font-bold text-gray-500 mb-1 block text-amber-600">อัตราส่วน ECW</label><input type="number" step="0.001" id="www-ecw" class="form-input border-amber-400 bg-amber-50 focus:border-amber-600 font-bold"></div>
+                    <div><label class="text-xs font-bold text-gray-500 mb-1 block">มวลกล้ามเนื้อ (kg)</label><input type="number" step="0.1" id="www-muscle" class="form-input border-pink-200 focus:border-pink-500 font-bold"></div>
+                    <div><label class="text-xs font-bold text-gray-500 mb-1 block text-pink-600">อัตราส่วน ECW</label><input type="number" step="0.001" id="www-ecw" class="form-input border-pink-400 bg-pink-50 focus:border-pink-600 font-bold"></div>
                 </div>
                 <div class="grid grid-cols-2 gap-3">
-                    <div><label class="text-xs font-bold text-gray-500 mb-1 block">อายุร่างกาย (ปี)</label><input type="number" id="www-bodyage" class="form-input border-amber-200 focus:border-amber-500 font-bold"></div>
-                    <div><label class="text-xs font-bold text-gray-500 mb-1 block">BMR (Kcal)</label><input type="number" id="www-bmr" class="form-input border-amber-200 focus:border-amber-500 font-bold"></div>
+                    <div><label class="text-xs font-bold text-gray-500 mb-1 block">อายุร่างกาย (ปี)</label><input type="number" id="www-bodyage" class="form-input border-pink-200 focus:border-pink-500 font-bold"></div>
+                    <div><label class="text-xs font-bold text-gray-500 mb-1 block">BMR (Kcal)</label><input type="number" id="www-bmr" class="form-input border-pink-200 focus:border-pink-500 font-bold"></div>
                 </div>
                 <div class="pt-2 border-t border-gray-100">
                     <label class="text-sm font-bold text-gray-600 mb-2 block">ผู้แนะนำของคุณ *</label>
                     <input type="text" id="www-ambassador" class="form-input font-bold" placeholder="ชื่อ-นามสกุล คนดูแล">
                 </div>
-                <div class="mt-4 p-4 bg-amber-50 rounded-xl border border-amber-200">
+                <div class="mt-4 p-4 bg-pink-50 rounded-xl border border-pink-200">
                     <label class="flex items-center cursor-pointer">
-                        <input type="checkbox" id="www-confirm" class="w-6 h-6 text-amber-600 rounded border-gray-300">
-                        <span class="ml-3 text-sm font-bold text-amber-800">ข้าพเจ้าตรวจสอบข้อมูลถูกต้องครบถ้วนแล้ว เพื่อใช้แสดงผลในโครงการ Well Well Well!</span>
+                        <input type="checkbox" id="www-confirm" class="w-6 h-6 theme-text rounded border-gray-300">
+                        <span class="ml-3 text-sm font-bold text-pink-800">ข้าพเจ้าตรวจสอบข้อมูลถูกต้องครบถ้วนแล้ว เพื่อใช้แสดงผลในโครงการ Well Well Well!</span>
                     </label>
                 </div>
-                <button onclick="submitWWWRecord(this)" class="w-full bg-amber-500 text-white py-4 rounded-xl font-bold shadow-md hover:bg-amber-600 transition mt-4 text-base">บันทึกและอัปเดตสมุดสุขภาพ</button>
+                <button onclick="submitWWWRecord(this)" class="w-full theme-pink text-white py-4 rounded-xl font-bold shadow-md hover:bg-pink-700 transition mt-4 text-base">บันทึกและอัปเดตสมุดสุขภาพ</button>
             </div>
         </div>
 
         <div id="page-www-history" class="page-section p-4 pt-6 bg-gray-50 min-h-screen">
             <div class="flex items-center mb-4">
                 <button onclick="showPage('www-dashboard')" class="w-8 h-8 bg-white rounded-full text-gray-600 mr-3 shadow-sm border"><i class="fa-solid fa-arrow-left"></i></button>
-                <h2 class="text-xl font-black text-amber-700">ประวัติองค์ประกอบร่างกาย</h2>
+                <h2 class="text-xl font-black theme-text">ประวัติองค์ประกอบร่างกาย</h2>
             </div>
             <div id="www-history-loading" class="text-center py-12">
-                <i class="fa-solid fa-spinner fa-spin text-3xl text-amber-500 mb-3"></i>
+                <i class="fa-solid fa-spinner fa-spin text-3xl text-pink-500 mb-3"></i>
                 <p class="text-gray-500 font-bold text-sm">กำลังโหลดกราฟ...</p>
             </div>
             <div id="www-history-no-data" class="hidden text-center py-12 bg-white rounded-2xl shadow-sm border border-gray-100 mt-4">
                 <div class="text-5xl text-gray-200 mb-4"><i class="fa-solid fa-chart-pie"></i></div>
                 <p class="text-gray-600 font-black text-lg mb-2">ยังไม่มีประวัติตรวจองค์ประกอบร่างกาย</p>
                 <p class="text-gray-500 text-sm mb-6 px-4">กรุณาอัปเดตข้อมูลองค์ประกอบร่างกายอย่างน้อย 1 ครั้ง เพื่อให้ระบบสร้างกราฟประมวลผล</p>
-                <button onclick="openWWWForm()" class="bg-amber-500 text-white px-6 py-3 rounded-xl text-sm font-bold shadow-md hover:bg-amber-600 transition">อัปเดตข้อมูลองค์ประกอบร่างกาย</button>
+                <button onclick="openWWWForm()" class="theme-pink text-white px-6 py-3 rounded-xl text-sm font-bold shadow-md hover:bg-pink-700 transition">อัปเดตข้อมูลองค์ประกอบร่างกาย</button>
             </div>
             <div id="www-history-content" class="hidden">
                 <div class="bg-white p-3 rounded-xl shadow-sm border border-gray-200 mb-4 flex gap-4 justify-center">
-                    <label class="inline-flex items-center cursor-pointer"><input type="radio" name="wwwChartMode" value="current" onchange="loadWWWCharts()" class="w-4 h-4 text-amber-600"><span class="ml-2 text-sm font-bold text-gray-700">ล่าสุด</span></label>
-                    <label class="inline-flex items-center cursor-pointer"><input type="radio" name="wwwChartMode" value="all" onchange="loadWWWCharts()" class="w-4 h-4 text-amber-600" checked><span class="ml-2 text-sm font-bold text-gray-700">รวมสะสม</span></label>
+                    <label class="inline-flex items-center cursor-pointer"><input type="radio" name="wwwChartMode" value="current" onchange="loadWWWCharts()" class="w-4 h-4 theme-text"><span class="ml-2 text-sm font-bold text-gray-700">ล่าสุด</span></label>
+                    <label class="inline-flex items-center cursor-pointer"><input type="radio" name="wwwChartMode" value="all" onchange="loadWWWCharts()" class="w-4 h-4 theme-text" checked><span class="ml-2 text-sm font-bold text-gray-700">รวมสะสม</span></label>
                 </div>
                 <div class="bg-white rounded-xl shadow-sm border border-gray-300 overflow-hidden mb-10 relative">
                     <div class="p-2 border-b border-gray-200 flex items-center bg-gray-50"><div class="w-20 text-[10px] font-bold text-gray-600">น้ำหนัก (kg)</div><div class="flex-1 relative h-16"><canvas id="chart-www-w"></canvas></div></div>
@@ -1130,7 +1108,7 @@
             <div class="max-h-[60vh] overflow-hidden">
                 <img id="crop-target-img" class="max-w-full">
             </div>
-            <button onclick="confirmCrop()" class="w-full bg-blue-500 text-white py-3 rounded-xl font-bold mt-4">ยืนยันกรอบ</button>
+            <button onclick="confirmCrop()" class="w-full theme-pink text-white py-3 rounded-xl font-bold mt-4">ยืนยันกรอบ</button>
             <button onclick="cancelCrop()" class="w-full text-gray-400 text-xs font-bold mt-2">ยกเลิก</button>
         </div>
     </div>
