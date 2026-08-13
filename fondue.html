@@ -60,7 +60,7 @@
         </div>
 
         <!-- ============================================================ -->
-        <!-- 📊 PAGE 1: DASHBOARD (สไตล์ Traffy Fondue)                    -->
+        <!-- PAGE 1: DASHBOARD (สไตล์ Traffy Fondue) -->
         <!-- ============================================================ -->
         <div id="page-dashboard" class="page-section active bg-gray-50 min-h-screen">
 
@@ -73,7 +73,6 @@
                 <span class="flex items-center gap-1"><i class="fa-solid fa-star text-amber-400"></i> <b id="dash-avgrating">0.00</b> (<span id="dash-ratingcount">0</span> เรื่อง)</span>
             </div>
 
-            <!-- Feed การ์ดที่ได้รับคะแนนแล้ว -->
             <div class="p-3">
                 <div id="feed-scroll" class="flex gap-3 overflow-x-auto no-scrollbar pb-1">
                     <div class="text-center text-gray-400 py-8 w-full">
@@ -82,7 +81,6 @@
                 </div>
             </div>
 
-            <!-- Search / Filter -->
             <div class="px-3 pb-2 flex gap-2">
                 <input type="text" id="dash-search" oninput="renderFeed()" class="form-input text-xs flex-1" placeholder="ค้นหาคำสำคัญ...">
                 <select id="dash-category" onchange="renderFeed()" class="form-input text-xs w-32">
@@ -94,7 +92,6 @@
                 </select>
             </div>
 
-            <!-- แผนที่ -->
             <div class="px-3 pb-2">
                 <div class="flex gap-2 mb-2">
                     <button onclick="setMapMode('markers')" id="map-btn-markers" class="flex-1 text-xs font-bold py-2 rounded-full border theme-border theme-text bg-pink-50">Marker</button>
@@ -104,7 +101,6 @@
                 <div id="dash-map" class="w-full h-64 rounded-xl overflow-hidden border border-gray-100 bg-gray-100"></div>
             </div>
 
-            <!-- สถานะรวม -->
             <div class="px-3 pb-8 grid grid-cols-2 gap-2">
                 <div class="stat-pill bg-orange-50 text-orange-600 border border-orange-100">
                     <p class="text-xl" id="dash-pending">0</p>
@@ -126,7 +122,7 @@
         </div>
 
         <!-- ============================================================ -->
-        <!-- 📝 PAGE 2: แจ้งปัญหา (เหมือนเดิม)                              -->
+        <!-- PAGE 2: แจ้งปัญหา (เหมือนเดิม) -->
         <!-- ============================================================ -->
         <div id="page-fondue" class="page-section p-4 pt-6 bg-gray-50 min-h-screen">
             <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
@@ -210,14 +206,13 @@
         </div>
 
         <!-- ============================================================ -->
-        <!-- 🕓 PAGE 3: ประวัติการแจ้งเหตุ + ให้คะแนน                         -->
+        <!-- PAGE 3: ประวัติการแจ้งเหตุ + ให้คะแนน -->
         <!-- ============================================================ -->
         <div id="page-history" class="page-section p-4 pt-6 bg-gray-50 min-h-screen">
             <h2 class="text-lg font-bold text-gray-800 mb-4 text-center">ประวัติการแจ้งเรื่องร้องเรียน</h2>
             <div id="history-list" class="space-y-4 pb-10"></div>
         </div>
 
-        <!-- Modal ให้คะแนน -->
         <div id="rating-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-[9999] flex items-end">
             <div class="w-full max-w-md mx-auto bg-white rounded-t-2xl p-5 animate-fadeIn">
                 <div class="flex justify-between items-center mb-4">
@@ -252,14 +247,14 @@
 
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbwPGR0J7K5yMYQfE5R6DzfNHQB9V4STEP3N15OJPqlq12WhsNf0mFJk1TWBAVmww7fP/exec";
-        const LIFF_ID = "2009970638-OWA0kYml"; // 🌟 สร้าง LIFF แยกสำหรับหน้านี้ แล้วใส่ ID ตรงนี้
+        const LIFF_ID = "PUT-YOUR-REPORT-LIFF-ID-HERE";
 
         let currentUser = null;
         let base64Image = null;
-        let map = null;       // แผนที่ในฟอร์มปักหมุด
+        let map = null;
         let marker = null;
 
-        let dashMap = null;   // แผนที่หน้า Dashboard
+        let dashMap = null;
         let dashMarkersLayer = null;
         let dashClusterLayer = null;
         let dashHeatLayer = null;
@@ -342,9 +337,6 @@
             if(pageId === 'dashboard' && dashMap) setTimeout(() => dashMap.invalidateSize(), 200);
         }
 
-        // ==========================================
-        // 📊 DASHBOARD
-        // ==========================================
         async function loadDashboard() {
             const stats = await callAPI("getDashboardStats");
             if (stats && stats.success) {
@@ -419,7 +411,6 @@
             }
         }
 
-        // --- แผนที่ Dashboard ---
         function initDashMap() {
             if (!dashMap) {
                 dashMap = L.map('dash-map').setView([13.7563, 100.5018], 11);
@@ -473,9 +464,6 @@
             drawDashMapLayer();
         }
 
-        // ==========================================
-        // 🗺️ แผนที่ในฟอร์มแจ้งปัญหา (ปักหมุด)
-        // ==========================================
         function openMapModal() {
             document.getElementById('map-modal').classList.remove('hidden');
             setTimeout(() => {
@@ -646,9 +634,6 @@
             } else { alert("เกิดข้อผิดพลาด: " + (res ? res.message : "ไม่สามารถเชื่อมต่อระบบได้")); }
         }
 
-        // ==========================================
-        // 🕓 ประวัติ + ให้คะแนน
-        // ==========================================
         async function fetchHistory() {
             if(!currentUser) {
                 document.getElementById('history-list').innerHTML = `
