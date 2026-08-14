@@ -267,32 +267,42 @@
         document.addEventListener("DOMContentLoaded", function() {
             showPage('dashboard');
             loadDashboard();
-
-            liff.init({ liffId: LIFF_ID }).then(() => {
-                if (liff.isLoggedIn()) {
-                    liff.getProfile().then(async profile => {
+        
+            liff.init({ liffId: LIFF_ID })
+                .then(async () => {
+                    if (!liff.isLoggedIn()) {
+                        liff.login();
+                        return;
+                    }
+        
+                    try {
+                        const profile = await liff.getProfile();
                         const res = await callAPI("autoLoginByUid", { uid: profile.userId });
-                        if(res && res.success !== false && res.name) {
+        
+                        if (res && res.success !== false && res.name) {
                             currentUser = res;
                             currentUser.lineUid = profile.userId;
                             updateHeaderUser();
                             loadDashboard();
-                            if(document.getElementById('page-history').classList.contains('active')) fetchHistory();
+                            if (document.getElementById('page-history').classList.contains('active')) fetchHistory();
                         } else {
                             document.getElementById('login-status').innerHTML = `<i class="fa-solid fa-user-xmark"></i>`;
                             alert("กรุณาสมัครสมาชิกผ่านระบบสมาชิกก่อนการแจ้งปัญหาเพื่อสิทธิประโยชน์ในการติดตามเรื่อง");
                             window.location.href = "https://liff.line.me/2009970638-dqNKJ4CJ";
                         }
+                    } catch (err) {
+                        console.error("Profile/API error:", err);
+                        document.getElementById('login-status').innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i>`;
+                    } finally {
                         hideLoader();
-                    });
-                } else {
-                    liff.login();
-                }
-            }).catch(err => {
-                document.getElementById('login-status').innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i>`;
-                hideLoader();
-            });
-
+                    }
+                })
+                .catch(err => {
+                    console.error("LIFF init error:", err);
+                    document.getElementById('login-status').innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i>`;
+                    hideLoader();
+                });
+        
             setTimeout(hideLoader, 3000);
         });
 
