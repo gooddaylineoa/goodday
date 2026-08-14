@@ -1958,7 +1958,7 @@
             if (!selected) { err.innerText = "กรุณาเลือกสาขาก่อนยืนยัน"; err.classList.remove('hidden'); return; }
             err.classList.add('hidden');
             btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
-            const res = await callAPI("joinLibrary", { memberId: currentUser.memberId, phone: currentUser.phone, branch: selected.value });
+            const res = await callAPI("joinLibraryMember", { memberId: currentUser.memberId, phone: currentUser.phone, branch: selected.value });
             if (res.success) {
                 currentUser.libraryMember = "ใช่";
                 currentUser.libraryBranch = selected.value;
