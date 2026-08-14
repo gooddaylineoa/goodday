@@ -128,12 +128,15 @@
             <h2 class="text-lg font-bold text-gray-800 mb-4 text-center">จองห้องและพื้นที่</h2>
             
             <div class="bg-gray-50 border border-gray-100 p-4 rounded-2xl shadow-inner space-y-4 mb-6">
-                <div>
-                    <label class="text-xs font-bold text-gray-500 mb-1 block">เลือกสาขาห้องสมุด *</label>
-                    <select id="book-branch" class="form-input bg-white font-bold text-pink-600 border-pink-200" onchange="loadRooms()">
-                        <option value="สัตหีบ">ห้องสมุดประชาชน "เฉลิมราชกุมารี" อำเภอสัตหีบ</option>
-                    </select>
-                </div>
+            <div>
+                <label class="text-xs font-bold text-gray-500 mb-1 block">
+                    เลือกสาขาห้องสมุด *
+                    <span id="book-branch-locked-label" class="text-pink-500 font-bold ml-1"></span>
+                </label>
+                <select id="book-branch" class="form-input bg-white font-bold text-pink-600 border-pink-200" onchange="loadRooms()">
+                    <option value="ชลบุรี">ห้องสมุดประชาชน "เฉลิมราชกุมารี" อำเภอสัตหีบ</option>
+                </select>
+            </div>
                 <div>
                     <label class="text-xs font-bold text-gray-500 mb-1 block">เลือกวันที่ต้องการใช้งาน *</label>
                     <input type="date" id="book-date" class="form-input bg-white text-gray-700 font-medium" onchange="loadRooms()">
@@ -395,16 +398,66 @@
             const header = document.getElementById('login-status');
             header.innerHTML = `<i class="fa-solid fa-circle-check mr-1 text-green-300"></i> <span class="truncate max-w-[80px] inline-block align-bottom text-xs">${currentUser.name}</span>`;
             header.className = "text-xs font-bold bg-white bg-opacity-20 px-3 py-1.5 rounded-full text-white transition";
+        
+            checkLibraryMembership();   // ⬅️ เพิ่มบรรทัดนี้
+        }
+        // ================== เช็คสมาชิกห้องสมุด + ล็อกสาขา ==================
+        function checkLibraryMembership() {
+            if (!currentUser) return false;
+        
+            if (currentUser.libraryMember !== "ใช่") {
+                alert("คุณยังไม่ได้สมัครสมาชิกห้องสมุด กรุณาสมัครสมาชิกก่อนเข้าใช้งานระบบจองพื้นที่และยืมหนังสือ");
+                // 🌟 เปลี่ยน URL นี้เป็น LIFF ID ของหน้าโปรไฟล์หลักที่มีปุ่มสมัครสมาชิกห้องสมุด
+                window.location.href = "https://liff.line.me/2009970638-dqNKJ4CJ";
+                return false;
+            }
+        
+            lockBranchToUser();
+            return true;
+        }
+        
+        function lockBranchToUser() {
+            const branch = currentUser.libraryBranch;
+            if (!branch) return;
+        
+            ['book-branch', 'search-branch', 'modal-ev-branch'].forEach(id => {
+                const sel = document.getElementById(id);
+                if (!sel) return;
+        
+                // ถ้าใน select ยังไม่มี option ของสาขาผู้ใช้ ให้เพิ่มเข้าไปก่อน
+                let opt = Array.from(sel.options).find(o => o.value === branch);
+                if (!opt) {
+                    opt = document.createElement('option');
+                    opt.value = branch;
+                    opt.innerText = branch;
+                    sel.appendChild(opt);
+                }
+        
+                sel.value = branch;
+                sel.disabled = true;
+                sel.classList.add('bg-gray-100', 'text-gray-500', 'cursor-not-allowed');
+            });
+        
+            // แสดง badge บอกสาขาให้ชัดเจนในหน้าจอง
+            const bookBranchLabel = document.getElementById('book-branch-locked-label');
+            if (bookBranchLabel) bookBranchLabel.innerText = `🔒 สมาชิกสาขา: ${branch}`;
         }
 
         function showPage(pageId) {
+            // 🌟 กันไม่ให้เข้าหน้าที่ต้องเป็นสมาชิกห้องสมุดก่อน
+            const memberOnlyPages = ['booking', 'search', 'borrow', 'events', 'history'];
+            if (memberOnlyPages.includes(pageId) && currentUser && currentUser.libraryMember !== "ใช่") {
+                checkLibraryMembership();
+                return;
+            }
+        
             if (pageId === 'news-detail') document.getElementById('main-header').style.display = 'none';
             else document.getElementById('main-header').style.display = 'flex';
-
+        
             document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
             document.getElementById('page-' + pageId).classList.add('active');
             window.scrollTo(0, 0);
-            
+    
             if (['home', 'booking', 'news'].includes(pageId)) {
                 document.querySelectorAll('.nav-btn').forEach(el => { 
                     el.classList.remove('theme-text'); el.classList.add('text-gray-400'); 
