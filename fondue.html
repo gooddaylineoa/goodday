@@ -377,10 +377,8 @@
             const stats = await callAPI("getDashboardStats");
             if (stats && stats.success) {
                 document.getElementById('dash-month').innerText = stats.monthLabel;
-                document.getElementById('dash-monthcount').innerText = stats.thisMonthCount;
                 document.getElementById('dash-total').innerText = stats.total;
         
-                // 🌟 ใส่เกณฑ์ขั้นต่ำ 5 รีวิวถึงจะโชว์ % คำชม
                 const MIN_RATINGS_FOR_PERCENT = 5;
                 if (stats.ratingCount >= MIN_RATINGS_FOR_PERCENT) {
                     document.getElementById('dash-positive').innerText = stats.positivePercent + '%';
@@ -391,15 +389,41 @@
                 }
         
                 document.getElementById('dash-avgrating').innerText = stats.avgRating;
-                document.getElementById('dash-ratingcount').innerText = stats.ratingCount;
                 document.getElementById('dash-pending').innerText = stats.pending;
                 document.getElementById('dash-inprogress').innerText = stats.inProgress;
                 document.getElementById('dash-done').innerText = stats.done;
         
-                // 🌟 เพิ่มส่วนคำนวณ % ต่อ total (ดูข้อ 3 ด้านล่าง)
                 updateStatusPercentBar(stats);
             }
-
+        
+            const feed = await callAPI("getPublicFeed", { uid: currentUser ? currentUser.lineUid : "" });
+            feedData = Array.isArray(feed) ? feed : [];
+            renderFeed();
+        
+            const points = await callAPI("getFondueMapPoints");
+            dashPoints = Array.isArray(points) ? points : [];
+            initDashMap();
+        }
+        
+        function updateStatusPercentBar(stats) {
+            const total = stats.pending + stats.inProgress + stats.done;
+            const pct = (n) => total > 0 ? Math.round((n / total) * 100) : 0;
+        
+            const pendingPct = pct(stats.pending);
+            const inProgressPct = pct(stats.inProgress);
+            const donePct = pct(stats.done);
+        
+            document.getElementById('dash-pending-pct').innerText = pendingPct + '%';
+            document.getElementById('dash-inprogress-pct').innerText = inProgressPct + '%';
+            document.getElementById('dash-done-pct').innerText = donePct + '%';
+            document.getElementById('dash-ratingcount2').innerText = `(${stats.ratingCount} เรื่อง)`;
+        
+            document.getElementById('bar-pending').style.width = pendingPct + '%';
+            document.getElementById('bar-inprogress').style.width = inProgressPct + '%';
+            document.getElementById('bar-done').style.width = donePct + '%';
+            document.getElementById('bar-total-label').innerText = total + ' เรื่อง';
+        }
+        
         function renderFeed() {
             const search = document.getElementById('dash-search').value.trim().toLowerCase();
             const cat = document.getElementById('dash-category').value;
