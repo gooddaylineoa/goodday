@@ -138,6 +138,7 @@
                 </div>
                 <hr class="my-4 border-gray-100">
                 <p class="font-bold text-gray-800 text-sm mb-2"><i class="fa-solid fa-location-dot theme-text mr-1"></i>ที่อยู่ปัจจุบัน</p>
+                    <div>
                     <input type="text" id="reg-subdist" class="form-input" placeholder="ตำบล/แขวง *">
                     <input type="text" id="reg-dist" class="form-input" placeholder="อำเภอ/เขต *">
                 </div>
@@ -288,18 +289,34 @@
             </div>
         </div>
 
-        <div id="page-library" class="page-section p-4 pt-6 bg-violet-50 min-h-screen">
+        <div id="page-library-branch" class="page-section p-4 pt-6 bg-violet-50 min-h-screen">
             <div class="flex items-center mb-6">
                 <button onclick="showPage('profile')" class="w-8 h-8 bg-white rounded-full text-gray-600 mr-3 shadow-sm border border-violet-200"><i class="fa-solid fa-arrow-left"></i></button>
-                <h2 class="text-lg font-bold text-violet-700">สมาชิกห้องสมุด</h2>
+                <h2 class="text-lg font-bold text-violet-700">สมัครสมาชิกห้องสมุด</h2>
             </div>
-            <div class="bg-white rounded-2xl shadow-sm border border-violet-100 p-6 text-center mt-10">
-                <div class="w-20 h-20 bg-violet-100 text-violet-500 rounded-full flex items-center justify-center text-4xl mx-auto mb-4"><i class="fa-solid fa-book-open-reader"></i></div>
-                <h3 class="font-bold text-gray-800 text-lg mb-2">ระบบสมาชิกห้องสมุด</h3>
-                <p class="text-gray-500 text-sm leading-relaxed">ฟีเจอร์นี้กำลังอยู่ระหว่างการพัฒนา<br>โปรดรอติดตามเร็วๆ นี้</p>
-                <span class="inline-block mt-4 bg-violet-100 text-violet-700 text-xs font-bold px-4 py-2 rounded-full">🚧 Coming Soon</span>
-            </div>
+            <p class="text-sm text-gray-500 mb-4 px-1">กรุณาเลือกสาขาที่คุณต้องการ</p>
+            <div class="space-y-3 mb-6" id="library-branch-list"></div>
+            <div id="lib-branch-error" class="bg-red-50 text-red-600 text-xs p-3 rounded-lg text-center font-bold hidden"></div>
+            <button onclick="confirmLibraryJoin(this)" class="w-full bg-violet-600 text-white py-3.5 rounded-xl font-semibold shadow-md hover:bg-violet-700 transition text-sm">ยืนยันสมัครสมาชิก</button>
         </div>
+        
+        <div id="page-library-card" class="page-section p-4 pt-6 bg-violet-50 min-h-screen">
+            <div class="flex items-center mb-6">
+                <button onclick="showPage('profile')" class="w-8 h-8 bg-white rounded-full text-gray-600 mr-3 shadow-sm border border-violet-200"><i class="fa-solid fa-arrow-left"></i></button>
+                <h2 class="text-lg font-bold text-violet-700">บัตรสมาชิกห้องสมุด</h2>
+            </div>
+            <div class="bg-gradient-to-r from-violet-500 to-purple-600 rounded-xl p-5 text-white shadow-sm relative overflow-hidden">
+                <div class="absolute right-[-10px] top-[-10px] opacity-20 text-8xl"><i class="fa-solid fa-book-open-reader"></i></div>
+                <span class="text-xs font-bold uppercase tracking-widest bg-white/20 px-3 py-1.5 rounded-full shadow-sm backdrop-blur-md">Library Member</span>
+                <p class="text-violet-100 text-sm mt-4 mb-1">Member ID</p>
+                <h2 id="lib-card-memberid" class="text-2xl font-bold tracking-widest mb-2">-</h2>
+                <h3 id="lib-card-name" class="text-lg font-semibold">-</h3>
+                <div class="grid grid-cols-2 gap-2 mt-4 text-xs border-t border-white/20 pt-3">
+                    <div><p class="text-violet-200 text-[10px]">สาขา</p><p class="font-bold" id="lib-card-branch">-</p></div>
+                    <div><p class="text-violet-200 text-[10px]">สมัครเมื่อ</p><p class="font-bold" id="lib-card-date">-</p></div>
+                </div>
+            </div>
+</div>
 
         <div id="page-waste-logbook" class="page-section p-4 pt-6 bg-gray-50 min-h-screen">
             <div class="flex items-center mb-4">
@@ -1378,7 +1395,7 @@
             const data = {
                 prefix: document.getElementById('reg-prefix').value.trim(), name: document.getElementById('reg-name').value.trim(), birthDate: finalDate, age: finalAge,
                 phone: document.getElementById('reg-phone').value.trim(), lineId: document.getElementById('reg-lineid').value.trim(), email: document.getElementById('reg-email').value.trim(), password: pass, lineUid: currentLineUid,
-                houseNo: document.getElementById('reg-house').value.trim(), village: document.getElementById('reg-moo').value.trim(), road: document.getElementById('reg-road').value.trim(), subDistrict: document.getElementById('reg-subdist').value.trim(), district: document.getElementById('reg-dist').value.trim(), province: document.getElementById('reg-prov').value, zipCode: document.getElementById('reg-zip').value.trim()
+                subDistrict: document.getElementById('reg-subdist').value.trim(), district: document.getElementById('reg-dist').value.trim(), province: document.getElementById('reg-prov').value, zipCode: document.getElementById('reg-zip').value.trim()
             };
             const res = await callAPI("registerUser", data);
             if(res.success) { alert("สมัครสมาชิกสำเร็จ ยินดีต้อนรับ!"); currentUser = res.user; localStorage.setItem('gooddaySession', JSON.stringify(currentUser)); renderProfile(); } 
@@ -1399,6 +1416,10 @@
             if(!currentUser) { showPage('login'); return; }
             document.getElementById('prof-memberid').innerText = currentUser.memberId || "GD-00000"; document.getElementById('prof-fullname').innerText = (currentUser.prefix || "") + " " + currentUser.name;
             updateHeaderUser();
+
+            if (document.getElementById('library-box-subtitle')) {
+                document.getElementById('library-box-subtitle').innerText = (currentUser.libraryMember === "ใช่") ? "ดูบัตรสมาชิกของคุณ" : "แตะเพื่อสมัครสมาชิก";
+            }
 
             if(currentUser.wasteMoney === "ใช่") { document.getElementById('box-join-waste').classList.add('hidden'); document.getElementById('box-active-waste').classList.remove('hidden'); } 
             else { document.getElementById('box-join-waste').classList.remove('hidden'); document.getElementById('box-active-waste').classList.add('hidden'); }
@@ -1907,7 +1928,49 @@
             });
         }
 
-        function openLibraryMember() { showPage('library'); }
+        const libraryBranches = ["เชียงใหม่", "ชลบุรี", "สงขลา", "อุบลราชธานี"];
+
+        function openLibraryMember() {
+            if (currentUser && currentUser.libraryMember === "ใช่") {
+                document.getElementById('lib-card-memberid').innerText = currentUser.memberId || "-";
+                document.getElementById('lib-card-name').innerText = (currentUser.prefix || "") + " " + currentUser.name;
+                document.getElementById('lib-card-branch').innerText = currentUser.libraryBranch || "-";
+                document.getElementById('lib-card-date').innerText = currentUser.libraryJoinDate || "-";
+                showPage('library-card');
+            } else {
+                const listEl = document.getElementById('library-branch-list');
+                listEl.innerHTML = libraryBranches.map(b => `
+                    <label class="cursor-pointer block">
+                        <input type="radio" name="lib-branch" value="${b}" class="peer hidden">
+                        <div class="p-4 rounded-xl bg-white border border-gray-200 font-semibold text-gray-700 peer-checked:border-violet-500 peer-checked:bg-violet-50 peer-checked:text-violet-700 shadow-sm transition">
+                            <i class="fa-solid fa-location-dot mr-2 text-violet-400"></i>${b}
+                        </div>
+                    </label>
+                `).join('');
+                document.getElementById('lib-branch-error').classList.add('hidden');
+                showPage('library-branch');
+            }
+        }
+
+        async function confirmLibraryJoin(btn) {
+            const err = document.getElementById('lib-branch-error');
+            const selected = document.querySelector('input[name="lib-branch"]:checked');
+            if (!selected) { err.innerText = "กรุณาเลือกสาขาก่อนยืนยัน"; err.classList.remove('hidden'); return; }
+            err.classList.add('hidden');
+            btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+            const res = await callAPI("joinLibrary", { memberId: currentUser.memberId, phone: currentUser.phone, branch: selected.value });
+            if (res.success) {
+                currentUser.libraryMember = "ใช่";
+                currentUser.libraryBranch = selected.value;
+                currentUser.libraryJoinDate = res.joinDate || new Date().toLocaleDateString('th-TH');
+                localStorage.setItem('gooddaySession', JSON.stringify(currentUser));
+                renderProfile();
+                Swal.fire('สำเร็จ!', 'สมัครสมาชิกห้องสมุดเรียบร้อยแล้ว', 'success').then(() => openLibraryMember());
+            } else {
+                err.innerText = res.message || "เกิดข้อผิดพลาด"; err.classList.remove('hidden');
+                btn.disabled = false; btn.innerText = "ยืนยันสมัครสมาชิก";
+            }
+        }
 
         function preprocessForOCR(imgEl) {
             const canvas = document.createElement('canvas');
