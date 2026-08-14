@@ -138,12 +138,6 @@
                 </div>
                 <hr class="my-4 border-gray-100">
                 <p class="font-bold text-gray-800 text-sm mb-2"><i class="fa-solid fa-location-dot theme-text mr-1"></i>ที่อยู่ปัจจุบัน</p>
-                <div class="grid grid-cols-2 gap-2">
-                    <input type="text" id="reg-house" class="form-input" placeholder="บ้านเลขที่ *">
-                    <input type="text" id="reg-moo" class="form-input" placeholder="หมู่ / หมู่บ้าน">
-                </div>
-                <input type="text" id="reg-road" class="form-input" placeholder="ซอย / ถนน">
-                <div class="grid grid-cols-2 gap-2">
                     <input type="text" id="reg-subdist" class="form-input" placeholder="ตำบล/แขวง *">
                     <input type="text" id="reg-dist" class="form-input" placeholder="อำเภอ/เขต *">
                 </div>
@@ -1347,11 +1341,35 @@
         }
 
         async function submitRegister(btn) {
-            const err = document.getElementById('reg2-error'); const pass = document.getElementById('reg-pass').value; const pass2 = document.getElementById('reg-pass2').value;
-            if(pass !== pass2) { err.innerText = "รหัสผ่านไม่ตรงกัน"; err.classList.remove('hidden'); return; }
-            if(!pass || !document.getElementById('reg-house').value || !document.getElementById('reg-subdist').value || !document.getElementById('reg-dist').value || !document.getElementById('reg-prov').value) { err.innerText = "กรุณากรอกข้อมูลที่มี * ให้ครบถ้วน"; err.classList.remove('hidden'); return; }
-            if(document.getElementById('reg-pdpa') && !document.getElementById('reg-pdpa').checked) { err.innerText = "กรุณายืนยันการยอมรับนโยบาย PDPA ก่อนสมัครสมาชิก"; err.classList.remove('hidden'); return; }
-            btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>'; err.classList.add('hidden');
+            const err = document.getElementById('reg2-error'); 
+            const pass = document.getElementById('reg-pass').value; 
+            const pass2 = document.getElementById('reg-pass2').value;
+        
+            // ตรวจสอบรหัสผ่านตรงกัน
+            if(pass !== pass2) { 
+                err.innerText = "รหัสผ่านไม่ตรงกัน"; 
+                err.classList.remove('hidden'); 
+                return; 
+            }
+        
+            // ตัด !document.getElementById('reg-house').value ออกไปแล้ว
+            if(!pass || !document.getElementById('reg-subdist').value || !document.getElementById('reg-dist').value || !document.getElementById('reg-prov').value) { 
+                err.innerText = "กรุณากรอกข้อมูลที่มี * ให้ครบถ้วน"; 
+                err.classList.remove('hidden'); 
+                return; 
+            }
+        
+            // ตรวจสอบ PDPA
+            if(document.getElementById('reg-pdpa') && !document.getElementById('reg-pdpa').checked) { 
+                err.innerText = "กรุณายืนยันการยอมรับนโยบาย PDPA ก่อนสมัครสมาชิก"; 
+                err.classList.remove('hidden'); 
+                return; 
+            }
+        
+            // เมื่อผ่านเงื่อนไขทั้งหมด ให้แสดงปุ่มโหลด
+            btn.disabled = true; 
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>'; 
+            err.classList.add('hidden');
 
             const isUnknownDate = document.getElementById('no-birthdate').checked;
             let finalDate = isUnknownDate ? "ไม่ระบุ" : document.getElementById('reg-birthdate').value;
