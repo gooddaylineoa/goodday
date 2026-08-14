@@ -122,48 +122,94 @@
             </div>
         </div>
 
-        <div id="page-reg-2" class="page-section p-4 pt-6">
-            <div class="flex items-center mb-6">
-                <button onclick="showPage('reg-1')" class="w-8 h-8 bg-gray-100 rounded-full text-gray-600 mr-3"><i class="fa-solid fa-arrow-left"></i></button>
-                <h2 class="text-lg font-bold theme-text">ข้อมูลที่อยู่ (2/2)</h2>
+        <div id="page-reg-2" class="page-section p-4 pt-6 max-w-lg mx-auto">
+    
+        <!-- ส่วนหัว (Header) -->
+        <div class="flex items-center mb-6">
+            <button onclick="showPage('reg-1')" class="w-9 h-9 bg-gray-100 hover:bg-gray-200 transition-colors rounded-full text-gray-600 mr-3 flex items-center justify-center shadow-sm">
+                <i class="fa-solid fa-arrow-left"></i>
+            </button>
+            <h2 class="text-lg font-bold theme-text">ข้อมูลที่อยู่ (2/2)</h2>
+        </div>
+    
+        <!-- ส่วนฟอร์มกรอกข้อมูล (ใช้ space-y-5 เว้นระยะห่างระหว่างกลุ่ม) -->
+        <div class="space-y-5">
+            
+            <!-- อีเมล -->
+            <div>
+                <label class="text-xs font-bold text-gray-500 mb-1.5 block">อีเมล</label>
+                <input type="email" id="reg-email" class="form-input w-full" placeholder="example@email.com">
             </div>
-            <div class="space-y-4">
+    
+            <!-- รหัสผ่าน (แบ่ง 2 คอลัมน์บนจอใหญ่, 1 คอลัมน์บนมือถือ) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                    <label class="text-xs font-bold text-gray-500 mb-1 block">อีเมล </label>
-                    <input type="email" id="reg-email" class="form-input" placeholder="example@email.com">
+                    <label class="text-xs font-bold text-gray-500 mb-1.5 block">
+                        รหัสผ่าน <span class="text-pink-500">*</span>
+                    </label>
+                    <input type="password" id="reg-pass" class="form-input w-full" placeholder="รหัสผ่าน">
                 </div>
-                <div class="grid grid-cols-2 gap-2">
-                    <div><label class="text-xs font-bold text-gray-500 mb-1 block">รหัสผ่าน *</label><input type="password" id="reg-pass" class="form-input" placeholder="รหัสผ่าน"></div>
-                    <div><label class="text-xs font-bold text-gray-500 mb-1 block">ยืนยันรหัสผ่าน *</label><input type="password" id="reg-pass2" class="form-input" placeholder="ยืนยันอีกครั้ง"></div>
+                <div>
+                    <label class="text-xs font-bold text-gray-500 mb-1.5 block">
+                        ยืนยันรหัสผ่าน <span class="text-pink-500">*</span>
+                    </label>
+                    <input type="password" id="reg-pass2" class="form-input w-full" placeholder="ยืนยันอีกครั้ง">
                 </div>
-                <hr class="my-4 border-gray-100">
-                <p class="font-bold text-gray-800 text-sm mb-2"><i class="fa-solid fa-location-dot theme-text mr-1"></i>ที่อยู่ปัจจุบัน</p>
-                    <div>
-                    <input type="text" id="reg-subdist" class="form-input" placeholder="ตำบล/แขวง *">
-                    <input type="text" id="reg-dist" class="form-input" placeholder="อำเภอ/เขต *">
-                </div>
-                <div class="grid grid-cols-2 gap-2">
-                    <select id="reg-prov" class="form-input bg-gray-50 font-bold"><option value="">-- จังหวัด * --</option></select>
-                    <input type="text" id="reg-zip" class="form-input" placeholder="รหัสไปรษณีย์ *">
-                </div>
-
-                <div class="mt-6 p-4 bg-gray-50 rounded-xl border border-gray-100 shadow-sm">
-                    <p class="font-bold text-gray-700 text-xs mb-2">กรุณาศึกษานโยบายการเก็บข้อมูลส่วนบุคคล (PDPA) โดยละเอียด</p>
-                    <div class="mb-4">
-                        <a href="https://www.ratchakitcha.soc.go.th/DATA/PDF/2562/A/069/T_0052.PDF" target="_blank" class="inline-block bg-white text-pink-600 px-4 py-2 rounded-full text-xs font-bold border border-pink-200 hover:bg-pink-50 transition shadow-sm">
-                            <i class="fa-solid fa-file-pdf mr-1"></i> คลิกเพื่ออ่าน
-                        </a>
+            </div>
+    
+            <hr class="my-5 border-gray-200">
+    
+            <!-- ข้อมูลที่อยู่ปัจจุบัน -->
+            <div class="w-full">
+                <p class="font-bold text-gray-800 text-sm mb-3 flex items-center">
+                    <i class="fa-solid fa-location-dot theme-text mr-2 text-base"></i> 
+                    ที่อยู่ปัจจุบัน
+                </p>
+                <div class="space-y-3">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <input type="text" id="reg-subdist" class="form-input w-full" placeholder="ตำบล/แขวง *">
+                        <input type="text" id="reg-dist" class="form-input w-full" placeholder="อำเภอ/เขต *">
                     </div>
-                    <p class="font-bold text-gray-700 text-xs mb-2">ท่านศึกษาและยอมรับนโยบายการเก็บข้อมูลส่วนบุคคลโดยละเอียดแล้วใช่หรือไม่ <span class="text-pink-500">*</span></p>
-                    <label class="flex items-center cursor-pointer gap-2">
-                        <input type="checkbox" id="reg-pdpa" class="w-5 h-5 text-pink-600 rounded border-gray-300 focus:ring-pink-500"> 
-                        <span class="text-xs font-medium text-gray-700">ใช่ ข้าพเจ้าได้ศึกษาและยอมรับเงื่อนไขข้อตกลงแล้ว</span>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <select id="reg-prov" class="form-input w-full bg-gray-50 text-gray-700">
+                            <option value="">-- จังหวัด * --</option>
+                        </select>
+                        <input type="text" id="reg-zip" class="form-input w-full" placeholder="รหัสไปรษณีย์ *">
+                    </div>
+                </div>
+            </div>
+    
+            <!-- กล่องนโยบาย PDPA -->
+            <div class="p-4 bg-gray-50 rounded-xl border border-gray-200 shadow-sm">
+                <div class="flex flex-col md:flex-row md:items-center justify-between mb-4 gap-3">
+                    <p class="font-bold text-gray-700 text-xs">นโยบายการเก็บข้อมูลส่วนบุคคล (PDPA)</p>
+                    <a href="https://www.ratchakitcha.soc.go.th/DATA/PDF/2562/A/069/T_0052.PDF" target="_blank" class="inline-flex items-center justify-center bg-white text-pink-600 px-4 py-2 rounded-lg text-xs font-bold border border-pink-200 hover:bg-pink-50 transition-colors shadow-sm">
+                        <i class="fa-solid fa-file-pdf mr-1.5 text-sm"></i> อ่านรายละเอียด
+                    </a>
+                </div>
+                
+                <!-- กรอบยืนยันย่อยด้านใน -->
+                <div class="bg-white p-3 rounded-lg border border-gray-200">
+                    <p class="font-bold text-gray-800 text-xs mb-2">ท่านยอมรับนโยบายหรือไม่? <span class="text-pink-500">*</span></p>
+                    <label class="flex items-start gap-2.5 cursor-pointer">
+                        <input type="checkbox" id="reg-pdpa" class="mt-0.5 w-5 h-5 text-pink-600 rounded border-gray-300 focus:ring-pink-500 shadow-sm"> 
+                        <span class="text-xs font-medium text-gray-600 leading-relaxed">
+                            ใช่ ข้าพเจ้าได้ศึกษาและยอมรับเงื่อนไขข้อตกลงโดยละเอียดแล้ว
+                        </span>
                     </label>
                 </div>
-                <div id="reg2-error" class="bg-red-50 text-red-600 text-xs p-3 rounded-lg text-center font-bold hidden"></div>
-                <button onclick="submitRegister(this)" class="w-full theme-pink text-white py-3.5 rounded-xl font-semibold shadow-md mt-4 text-sm">✅ ยืนยันสมัครสมาชิก</button>
             </div>
+    
+            <!-- กล่องแจ้งเตือน Error -->
+            <div id="reg2-error" class="bg-red-50 border border-red-200 text-red-600 text-xs p-3 rounded-lg text-center font-bold hidden shadow-sm"></div>
+    
+            <!-- ปุ่ม Submit -->
+            <button onclick="submitRegister(this)" class="w-full theme-pink text-white py-3.5 rounded-xl font-bold shadow-md hover:shadow-lg transition-all text-sm flex items-center justify-center gap-2 mt-2">
+                <i class="fa-solid fa-circle-check text-base"></i> ยืนยันสมัครสมาชิก
+            </button>
+    
         </div>
+    </div>
 
         <div id="page-profile" class="page-section p-4 pt-6">
             <div class="bg-gradient-to-r from-pink-500 to-rose-500 rounded-xl p-5 text-white shadow-sm mb-6 relative overflow-hidden">
@@ -1958,17 +2004,39 @@
             if (!selected) { err.innerText = "กรุณาเลือกสาขาก่อนยืนยัน"; err.classList.remove('hidden'); return; }
             err.classList.add('hidden');
             btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
-            const res = await callAPI("joinLibraryMember", { memberId: currentUser.memberId, phone: currentUser.phone, branch: selected.value });
-            if (res.success) {
-                currentUser.libraryMember = "ใช่";
-                currentUser.libraryBranch = selected.value;
-                currentUser.libraryJoinDate = res.joinDate || new Date().toLocaleDateString('th-TH');
-                localStorage.setItem('gooddaySession', JSON.stringify(currentUser));
-                renderProfile();
-                Swal.fire('สำเร็จ!', 'สมัครสมาชิกห้องสมุดเรียบร้อยแล้ว', 'success').then(() => openLibraryMember());
-            } else {
-                err.innerText = res.message || "เกิดข้อผิดพลาด"; err.classList.remove('hidden');
-                btn.disabled = false; btn.innerText = "ยืนยันสมัครสมาชิก";
+        
+            try {
+                const res = await callAPI("joinLibraryMember", { memberId: currentUser.memberId, phone: currentUser.phone, branch: selected.value });
+        
+                if (res.success) {
+                    currentUser.libraryMember = "ใช่";
+                    currentUser.libraryBranch = selected.value;
+                    currentUser.libraryJoinDate = res.joinDate || new Date().toLocaleDateString('th-TH');
+                    localStorage.setItem('gooddaySession', JSON.stringify(currentUser));
+        
+                    // ✅ เปลี่ยนหน้าไปบัตรสมาชิกทันที ไม่รอ Swal
+                    document.getElementById('lib-card-memberid').innerText = currentUser.memberId || "-";
+                    document.getElementById('lib-card-name').innerText = (currentUser.prefix || "") + " " + currentUser.name;
+                    document.getElementById('lib-card-branch').innerText = currentUser.libraryBranch || "-";
+                    document.getElementById('lib-card-date').innerText = currentUser.libraryJoinDate || "-";
+                    showPage('library-card');
+        
+                    // renderProfile ทำแบบไม่เปลี่ยนหน้าซ้อน (แค่ sync สถานะกล่องในโปรไฟล์)
+                    try { renderProfile(); showPage('library-card'); } catch(e) { console.error(e); }
+        
+                    Swal.fire('สำเร็จ!', 'สมัครสมาชิกห้องสมุดเรียบร้อยแล้ว', 'success');
+                } else {
+                    err.innerText = res.message || "เกิดข้อผิดพลาด";
+                    err.classList.remove('hidden');
+                }
+            } catch (e) {
+                console.error(e);
+                err.innerText = "เกิดข้อผิดพลาดไม่ทราบสาเหตุ กรุณาลองใหม่อีกครั้ง";
+                err.classList.remove('hidden');
+            } finally {
+                // ✅ รับประกันว่าปุ่มจะถูกคืนสถานะเสมอ ไม่ว่าจะสำเร็จหรือ error
+                btn.disabled = false;
+                btn.innerText = "ยืนยันสมัครสมาชิก";
             }
         }
 
