@@ -64,14 +64,23 @@
         <!-- ============================================================ -->
         <div id="page-dashboard" class="page-section active bg-gray-50 min-h-screen">
 
-            <div class="bg-white p-3 border-b border-gray-100 flex flex-wrap gap-x-3 gap-y-1 items-center text-[11px] text-gray-500 font-medium">
-                <span id="dash-month" class="font-bold text-gray-700">-</span>
-                <span>รับแจ้ง <b id="dash-monthcount" class="theme-text">0</b> จาก <b id="dash-total" class="theme-text">0</b> เรื่อง</span>
-                <span class="text-gray-300">|</span>
-                <span>คำชม <b id="dash-positive" class="text-green-600">0%</b></span>
-                <span class="text-gray-300">|</span>
-                <span class="flex items-center gap-1"><i class="fa-solid fa-star text-amber-400"></i> <b id="dash-avgrating">0.00</b> (<span id="dash-ratingcount">0</span> เรื่อง)</span>
+            <div class="p-4 bg-gradient-to-br from-orange-50 to-amber-50 border-b border-orange-100">
+            <p class="text-xs text-gray-500 font-medium mb-2">📅 <span id="dash-month">-</span></p>
+            <div class="grid grid-cols-3 gap-2 text-center">
+                <div>
+                    <p class="text-2xl font-black theme-text" id="dash-total">0</p>
+                    <p class="text-[10px] text-gray-500 font-bold">เรื่องทั้งหมด</p>
+                </div>
+                <div>
+                    <p class="text-2xl font-black text-amber-500" id="dash-avgrating">0.0</p>
+                    <p class="text-[10px] text-gray-500 font-bold">คะแนนเฉลี่ย ⭐</p>
+                </div>
+                <div>
+                    <p class="text-2xl font-black text-emerald-500" id="dash-positive">-%</p>
+                    <p class="text-[10px] text-gray-500 font-bold">พึงพอใจ</p>
+                </div>
             </div>
+        </div>
 
             <div class="p-3">
                 <div id="feed-scroll" class="flex gap-3 overflow-x-auto no-scrollbar pb-1">
@@ -105,18 +114,35 @@
                 <div class="stat-pill bg-orange-50 text-orange-600 border border-orange-100">
                     <p class="text-xl" id="dash-pending">0</p>
                     <p class="text-[11px] font-bold">รอรับเรื่อง</p>
+                    <p class="text-[10px] font-medium opacity-70" id="dash-pending-pct">0%</p>
                 </div>
                 <div class="stat-pill bg-amber-50 text-amber-600 border border-amber-100">
                     <p class="text-xl" id="dash-inprogress">0</p>
                     <p class="text-[11px] font-bold">กำลังดำเนินการ</p>
+                    <p class="text-[10px] font-medium opacity-70" id="dash-inprogress-pct">0%</p>
                 </div>
                 <div class="stat-pill bg-green-50 text-green-600 border border-green-100">
                     <p class="text-xl" id="dash-done">0</p>
                     <p class="text-[11px] font-bold">เสร็จสิ้น</p>
+                    <p class="text-[10px] font-medium opacity-70" id="dash-done-pct">0%</p>
                 </div>
                 <div class="stat-pill bg-blue-50 text-blue-600 border border-blue-100">
                     <p class="text-xl" id="dash-positive2">0%</p>
                     <p class="text-[11px] font-bold">พอใจการแก้ไข</p>
+                    <p class="text-[10px] font-medium opacity-70" id="dash-ratingcount2">(0 เรื่อง)</p>
+                </div>
+            </div>
+            
+            <!-- 🌟 เพิ่ม progress bar แบบ stacked แสดงสัดส่วนรวม -->
+            <div class="px-3 pb-6">
+                <div class="w-full h-3 rounded-full overflow-hidden flex bg-gray-100">
+                    <div id="bar-pending" class="h-full bg-orange-400" style="width:0%"></div>
+                    <div id="bar-inprogress" class="h-full bg-amber-400" style="width:0%"></div>
+                    <div id="bar-done" class="h-full bg-green-500" style="width:0%"></div>
+                </div>
+                <div class="flex justify-between text-[10px] text-gray-400 font-medium mt-1">
+                    <span>ภาพรวมสถานะทั้งหมด</span>
+                    <span id="bar-total-label">0 เรื่อง</span>
                 </div>
             </div>
         </div>
@@ -353,23 +379,26 @@
                 document.getElementById('dash-month').innerText = stats.monthLabel;
                 document.getElementById('dash-monthcount').innerText = stats.thisMonthCount;
                 document.getElementById('dash-total').innerText = stats.total;
-                document.getElementById('dash-positive').innerText = stats.positivePercent + '%';
-                document.getElementById('dash-positive2').innerText = stats.positivePercent + '%';
+        
+                // 🌟 ใส่เกณฑ์ขั้นต่ำ 5 รีวิวถึงจะโชว์ % คำชม
+                const MIN_RATINGS_FOR_PERCENT = 5;
+                if (stats.ratingCount >= MIN_RATINGS_FOR_PERCENT) {
+                    document.getElementById('dash-positive').innerText = stats.positivePercent + '%';
+                    document.getElementById('dash-positive2').innerText = stats.positivePercent + '%';
+                } else {
+                    document.getElementById('dash-positive').innerText = '- %';
+                    document.getElementById('dash-positive2').innerText = '- %';
+                }
+        
                 document.getElementById('dash-avgrating').innerText = stats.avgRating;
                 document.getElementById('dash-ratingcount').innerText = stats.ratingCount;
                 document.getElementById('dash-pending').innerText = stats.pending;
                 document.getElementById('dash-inprogress').innerText = stats.inProgress;
                 document.getElementById('dash-done').innerText = stats.done;
+        
+                // 🌟 เพิ่มส่วนคำนวณ % ต่อ total (ดูข้อ 3 ด้านล่าง)
+                updateStatusPercentBar(stats);
             }
-
-            const feed = await callAPI("getPublicFeed", { uid: currentUser ? currentUser.lineUid : "" });
-            feedData = Array.isArray(feed) ? feed : [];
-            renderFeed();
-
-            const points = await callAPI("getFondueMapPoints");
-            dashPoints = Array.isArray(points) ? points : [];
-            initDashMap();
-        }
 
         function renderFeed() {
             const search = document.getElementById('dash-search').value.trim().toLowerCase();
