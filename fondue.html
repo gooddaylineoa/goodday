@@ -132,7 +132,7 @@
                     <p class="text-[10px] font-medium opacity-70" id="dash-ratingcount2">(0 เรื่อง)</p>
                 </div>
             </div>
-            
+
             <!-- 🌟 เพิ่ม progress bar แบบ stacked แสดงสัดส่วนรวม -->
             <div class="px-3 pb-6">
                 <div class="w-full h-3 rounded-full overflow-hidden flex bg-gray-100">
@@ -257,6 +257,36 @@
             </div>
         </div>
 
+        <!-- ============================================================ -->
+        <!-- MODAL: รายละเอียดคอมเมนต์แบบเต็ม (ใหม่) -->
+        <!-- ============================================================ -->
+        <div id="feed-detail-modal" class="hidden fixed inset-0 bg-black bg-opacity-60 z-[9999] flex items-end sm:items-center justify-center" onclick="if(event.target===this) closeFeedDetail()">
+            <div class="w-full max-w-md mx-auto bg-white rounded-t-2xl sm:rounded-2xl max-h-[90vh] overflow-y-auto animate-fadeIn">
+                <div class="relative">
+                    <button onclick="closeFeedDetail()" class="absolute top-3 right-3 bg-white/90 text-gray-600 w-8 h-8 rounded-full flex items-center justify-center shadow z-10 active:scale-90 transition"><i class="fa-solid fa-xmark"></i></button>
+                    <div id="feed-detail-image-wrap" class="w-full h-60 bg-gray-100"></div>
+                </div>
+                <div class="p-4">
+                    <span id="feed-detail-category" class="text-[10px] bg-pink-50 text-pink-600 font-bold px-2 py-0.5 rounded border border-pink-100"></span>
+                    <p id="feed-detail-text" class="text-sm font-bold text-gray-800 mt-3 leading-relaxed whitespace-pre-line"></p>
+
+                    <div id="feed-detail-review-wrap" class="bg-amber-50 border border-amber-100 rounded-lg p-3 mt-3 hidden">
+                        <p class="text-xs font-bold text-amber-600" id="feed-detail-rating"></p>
+                        <p class="text-xs text-gray-600 mt-1 italic" id="feed-detail-review"></p>
+                    </div>
+
+                    <div class="flex items-center justify-between mt-4 pt-3 border-t border-gray-50 text-xs text-gray-400 font-medium">
+                        <span id="feed-detail-name"></span>
+                        <span id="feed-detail-date"></span>
+                    </div>
+
+                    <button id="feed-detail-like-btn" onclick="toggleLike(currentFeedDetailId, this)" class="w-full mt-4 border border-pink-200 text-pink-600 font-bold text-sm py-2.5 rounded-xl flex items-center justify-center gap-2 active:scale-95 transition">
+                        <i class="fa-solid fa-heart"></i> <span id="feed-detail-like-count">0</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <div class="fixed bottom-0 w-full max-w-md bg-white border-t flex justify-around py-2.5 text-[11px] font-medium text-gray-400 z-50 shadow-[0_-4px_15px_rgba(0,0,0,0.03)]">
             <button onclick="showPage('dashboard')" id="nav-dashboard" class="nav-btn flex flex-col items-center theme-text w-1/3 transition">
                 <i class="fa-solid fa-chart-simple text-xl mb-1.5"></i> หน้าหลัก
@@ -289,22 +319,23 @@
         let feedData = [];
         let currentRatingTicket = null;
         let currentRatingValue = 0;
+        let currentFeedDetailId = null; // NEW: เก็บ id ของการ์ดที่เปิดป็อปอัพอยู่
 
         document.addEventListener("DOMContentLoaded", function() {
             showPage('dashboard');
             loadDashboard();
-        
+
             liff.init({ liffId: LIFF_ID })
                 .then(async () => {
                     if (!liff.isLoggedIn()) {
                         liff.login();
                         return;
                     }
-        
+
                     try {
                         const profile = await liff.getProfile();
                         const res = await callAPI("autoLoginByUid", { uid: profile.userId });
-        
+
                         if (res && res.success !== false && res.name) {
                             currentUser = res;
                             currentUser.lineUid = profile.userId;
@@ -328,7 +359,7 @@
                     document.getElementById('login-status').innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i>`;
                     hideLoader();
                 });
-        
+
             setTimeout(hideLoader, 3000);
         });
 
@@ -378,7 +409,7 @@
             if (stats && stats.success) {
                 document.getElementById('dash-month').innerText = stats.monthLabel;
                 document.getElementById('dash-total').innerText = stats.total;
-        
+
                 const MIN_RATINGS_FOR_PERCENT = 5;
                 if (stats.ratingCount >= MIN_RATINGS_FOR_PERCENT) {
                     document.getElementById('dash-positive').innerText = stats.positivePercent + '%';
@@ -387,43 +418,43 @@
                     document.getElementById('dash-positive').innerText = '- %';
                     document.getElementById('dash-positive2').innerText = '- %';
                 }
-        
+
                 document.getElementById('dash-avgrating').innerText = stats.avgRating;
                 document.getElementById('dash-pending').innerText = stats.pending;
                 document.getElementById('dash-inprogress').innerText = stats.inProgress;
                 document.getElementById('dash-done').innerText = stats.done;
-        
+
                 updateStatusPercentBar(stats);
             }
-        
+
             const feed = await callAPI("getPublicFeed", { uid: currentUser ? currentUser.lineUid : "" });
             feedData = Array.isArray(feed) ? feed : [];
             renderFeed();
-        
+
             const points = await callAPI("getFondueMapPoints");
             dashPoints = Array.isArray(points) ? points : [];
             initDashMap();
         }
-        
+
         function updateStatusPercentBar(stats) {
             const total = stats.pending + stats.inProgress + stats.done;
             const pct = (n) => total > 0 ? Math.round((n / total) * 100) : 0;
-        
+
             const pendingPct = pct(stats.pending);
             const inProgressPct = pct(stats.inProgress);
             const donePct = pct(stats.done);
-        
+
             document.getElementById('dash-pending-pct').innerText = pendingPct + '%';
             document.getElementById('dash-inprogress-pct').innerText = inProgressPct + '%';
             document.getElementById('dash-done-pct').innerText = donePct + '%';
             document.getElementById('dash-ratingcount2').innerText = `(${stats.ratingCount} เรื่อง)`;
-        
+
             document.getElementById('bar-pending').style.width = pendingPct + '%';
             document.getElementById('bar-inprogress').style.width = inProgressPct + '%';
             document.getElementById('bar-done').style.width = donePct + '%';
             document.getElementById('bar-total-label').innerText = total + ' เรื่อง';
         }
-        
+
         function renderFeed() {
             const search = document.getElementById('dash-search').value.trim().toLowerCase();
             const cat = document.getElementById('dash-category').value;
@@ -441,7 +472,7 @@
             }
 
             scroll.innerHTML = list.map(f => `
-                <div class="min-w-[240px] max-w-[240px] bg-white border border-gray-100 rounded-xl shadow-sm overflow-hidden flex-shrink-0">
+                <div class="min-w-[240px] max-w-[240px] bg-white border border-gray-100 rounded-xl shadow-sm overflow-hidden flex-shrink-0 cursor-pointer active:scale-[0.98] transition" onclick="openFeedDetail('${f.id}')">
                     <div class="h-28 w-full bg-gray-100">
                         ${f.image ? `<img src="${f.image}" class="w-full h-full object-cover">` : `<div class="w-full h-full flex items-center justify-center text-gray-300"><i class="fa-solid fa-image text-3xl"></i></div>`}
                     </div>
@@ -455,7 +486,7 @@
                         </div>
                         <div class="flex items-center justify-between mt-2 pt-2 border-t border-gray-50">
                             <span class="text-[10px] text-gray-400"><i class="fa-regular fa-clock mr-1"></i>${f.ratedAt}</span>
-                            <button onclick="toggleLike('${f.id}', this)" class="flex items-center gap-1 text-xs font-bold ${f.likedByMe ? 'text-pink-600' : 'text-gray-400'}">
+                            <button onclick="event.stopPropagation(); toggleLike('${f.id}', this)" class="flex items-center gap-1 text-xs font-bold ${f.likedByMe ? 'text-pink-600' : 'text-gray-400'}">
                                 <i class="fa-solid fa-heart"></i> <span>${f.likes}</span>
                             </button>
                         </div>
@@ -464,13 +495,65 @@
             `).join('');
         }
 
+        // ================= NEW: ป็อปอัพรายละเอียดคอมเมนต์แบบเต็ม =================
+        function openFeedDetail(id) {
+            const item = feedData.find(f => f.id === id);
+            if (!item) return;
+            currentFeedDetailId = id;
+
+            const imgWrap = document.getElementById('feed-detail-image-wrap');
+            imgWrap.innerHTML = item.image
+                ? `<img src="${item.image}" class="w-full h-full object-cover">`
+                : `<div class="w-full h-full flex items-center justify-center text-gray-300"><i class="fa-solid fa-image text-4xl"></i></div>`;
+
+            document.getElementById('feed-detail-category').innerText = item.category;
+            document.getElementById('feed-detail-text').innerText = item.detail;
+            document.getElementById('feed-detail-name').innerText = 'โดย ' + item.name;
+            document.getElementById('feed-detail-date').innerHTML = `<i class="fa-regular fa-clock mr-1"></i>${item.ratedAt}`;
+
+            const reviewWrap = document.getElementById('feed-detail-review-wrap');
+            if (item.review) {
+                document.getElementById('feed-detail-rating').innerText = '★'.repeat(item.rating) + '☆'.repeat(5 - item.rating);
+                document.getElementById('feed-detail-review').innerText = item.review;
+                reviewWrap.classList.remove('hidden');
+            } else {
+                reviewWrap.classList.add('hidden');
+            }
+
+            updateFeedDetailLikeBtn(item);
+            document.getElementById('feed-detail-modal').classList.remove('hidden');
+        }
+
+        function updateFeedDetailLikeBtn(item) {
+            const btn = document.getElementById('feed-detail-like-btn');
+            if (!btn) return;
+            btn.className = `w-full mt-4 border font-bold text-sm py-2.5 rounded-xl flex items-center justify-center gap-2 active:scale-95 transition ${item.likedByMe ? 'border-pink-500 bg-pink-50 text-pink-600' : 'border-pink-200 text-pink-600'}`;
+            document.getElementById('feed-detail-like-count').innerText = item.likes;
+        }
+
+        function closeFeedDetail() {
+            document.getElementById('feed-detail-modal').classList.add('hidden');
+            currentFeedDetailId = null;
+        }
+        // ================= END NEW =================
+
         async function toggleLike(ticketId, btn) {
             if (!currentUser) { alert("กรุณาเข้าสู่ระบบก่อนกดถูกใจ"); return; }
+            if (!ticketId) return;
+            if (btn) btn.disabled = true;
+
             const res = await callAPI("toggleLikeFondue", { ticketId: ticketId, uid: currentUser.lineUid });
+
+            if (btn) btn.disabled = false;
+
             if (res && res.success) {
                 const item = feedData.find(f => f.id === ticketId);
                 if (item) { item.likes = res.likes; item.likedByMe = res.liked; }
                 renderFeed();
+                if (currentFeedDetailId === ticketId && item) updateFeedDetailLikeBtn(item);
+            } else {
+                // NEW: แจ้งเตือนเมื่อกดถูกใจไม่สำเร็จ (เดิมกดแล้วไม่มีอะไรเกิดขึ้นเลยถ้า API พัง)
+                alert("กดถูกใจไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
             }
         }
 
