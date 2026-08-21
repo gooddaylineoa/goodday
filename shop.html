@@ -140,10 +140,10 @@
                     <div id="box-addr-new" class="hidden space-y-2 mt-2 bg-gray-50 p-3 rounded-lg border border-gray-200">
                         <p class="text-xs font-bold text-gray-600 mb-2">กรอกข้อมูลที่อยู่จัดส่งใหม่</p>
                         <div class="grid grid-cols-2 gap-2">
-                            <input type="text" id="new-house" placeholder="บ้านเลขที่ *" class="form-input bg-white">
-                            <input type="text" id="new-moo" placeholder="หมู่" class="form-input bg-white">
-                        </div>
-                        <input type="text" id="new-road" placeholder="ซอย / ถนน" class="form-input bg-white">
+                        <input type="text" id="new-house" placeholder="บ้านเลขที่ *" class="form-input bg-white">
+                        <input type="text" id="new-moo" placeholder="หมู่ * (ไม่มีใส่ -)" class="form-input bg-white">
+                    </div>
+                    <input type="text" id="new-road" placeholder="ซอย / ถนน * (ไม่มีใส่ -)" class="form-input bg-white">
                         <div class="grid grid-cols-2 gap-2">
                             <input type="text" id="new-subdist" placeholder="ตำบล *" class="form-input bg-white">
                             <input type="text" id="new-dist" placeholder="อำเภอ *" class="form-input bg-white">
@@ -672,9 +672,10 @@
 
             if (delType === 'รับที่บ้าน') {
                 if (addrMode === 'profile') {
-                    if (!currentUser.address || !currentUser.address.house || !currentUser.address.prov) {
-                        alert("ข้อมูลที่อยู่ไม่สมบูรณ์ กรุณาเลือก 'ที่อยู่ใหม่' หรือไปแก้ไขที่ระบบสมาชิก"); return;
-                    }
+                    if (!finalAddress.house || !finalAddress.moo || !finalAddress.road || !finalAddress.subdist || !finalAddress.dist || !finalAddress.prov || !finalAddress.zip) {
+                    alert("กรุณากรอกข้อมูลที่อยู่ใหม่ให้ครบทุกช่อง\n(หากไม่มี หมู่ หรือ ซอย/ถนน ให้ใส่เครื่องหมาย - )"); 
+                    return;
+                }
                     finalAddress = currentUser.address;
                 } else {
                     finalAddress = {
