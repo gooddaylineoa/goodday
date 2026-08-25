@@ -1395,9 +1395,9 @@
 
         function nextToReg2() {
             const err = document.getElementById('reg1-error');
-            const prefix = document.getElementById('reg-prefix').value.trim(); const name = document.getElementById('reg-name').value.trim(); const phone = document.getElementById('reg-phone').value.trim();
+            const name = document.getElementById('reg-name').value.trim(); const phone = document.getElementById('reg-phone').value.trim();
             const isUnknownDate = document.getElementById('no-birthdate').checked; const bDate = document.getElementById('reg-birthdate').value; const age = document.getElementById('reg-age').value;
-            if(!prefix || !name || !phone) { err.innerText = "กรุณากรอกข้อมูลที่มี * ให้ครบถ้วน"; err.classList.remove('hidden'); return; }
+            if(!name || !phone) { err.innerText = "กรุณากรอกข้อมูลที่มี * ให้ครบถ้วน"; err.classList.remove('hidden'); return; }
             if(isUnknownDate && !age) { err.innerText = "กรุณาระบุอายุของคุณให้ครบถ้วน"; err.classList.remove('hidden'); return; }
             if(!isUnknownDate && !bDate) { err.innerText = "กรุณาเลือกวันเกิด หรือ ติ๊กเลือก 'ไม่ทราบวันเกิด'"; err.classList.remove('hidden'); return; }
             err.classList.add('hidden'); showPage('reg-2');
@@ -1439,7 +1439,7 @@
             let finalAge = document.getElementById('reg-age').value;
 
             const data = {
-                prefix: document.getElementById('reg-prefix').value.trim(), name: document.getElementById('reg-name').value.trim(), birthDate: finalDate, age: finalAge,
+                prefix: "", name: document.getElementById('reg-name').value.trim(), birthDate: finalDate, age: finalAge,
                 phone: document.getElementById('reg-phone').value.trim(), lineId: document.getElementById('reg-lineid').value.trim(), email: document.getElementById('reg-email').value.trim(), password: pass, lineUid: currentLineUid,
                 subDistrict: document.getElementById('reg-subdist').value.trim(), district: document.getElementById('reg-dist').value.trim(), province: document.getElementById('reg-prov').value, zipCode: document.getElementById('reg-zip').value.trim()
             };
